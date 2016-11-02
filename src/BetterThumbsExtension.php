@@ -14,7 +14,7 @@ use Bolt\Filesystem as BoltFilesystem;
 
 
 /**
- * BoltResponsiveImages extension class.
+ * BetterThumbs extension class.
  *
  * @author Cory Dowdy <cory@corydowdy.com>
  */
