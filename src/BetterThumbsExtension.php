@@ -38,7 +38,7 @@ class BetterThumbsExtension extends SimpleExtension
         $options = ['is_safe' => ['html']];
         $this->getConfig();
         return [
-            'img' => ['makeImage',  $options ],
+            'img' => ['image',  $options ],
 
         ];
     }
@@ -49,7 +49,7 @@ class BetterThumbsExtension extends SimpleExtension
      *
      * @return string
      */
-    public function makeImage( $file  )
+    public function image( $file  )
     {
         $app = $this->getContainer();
 
