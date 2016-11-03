@@ -43,7 +43,9 @@ class BetterThumbsController implements ControllerProviderInterface
         /** @var ControllerCollection $ctr */
         $ctr = $app['controllers_factory'];
 
-        $ctr->match('{path}', [$this, 'makeImage']);
+        $ctr->get('/{path}', [$this, 'makeImage'])
+            ->assert('path', '.+')
+            ->bind('betterthumbs');
 
         return $ctr;
     }
