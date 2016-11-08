@@ -61,10 +61,8 @@ class BetterThumbsController implements ControllerProviderInterface
         $Filesystem = new Filesystem($adapter);
 
         $ImageDriver = $this->config['Image_Driver'];
-
+        $presets = $this->config['presets'];
         $defaultSettings = $this->config['defaults'];
-
-
 
         $server = ServerFactory::create([
             'response' => new SymfonyResponseFactory(),
@@ -72,14 +70,16 @@ class BetterThumbsController implements ControllerProviderInterface
             'cache' => $Filesystem,
 
 //            'source_path_prefix' => $Filesystem,
-            'source_path_prefix' => 'files',
             'cache_path_prefix' => '.cache',
 
             'watermarks' => $Filesystem,
 
             'base_url' => '/img/',
             'driver' => $ImageDriver,
+
         ]);
+
+        $server->setPresets($presets);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {
