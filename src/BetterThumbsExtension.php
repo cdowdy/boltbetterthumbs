@@ -11,6 +11,11 @@ use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
 
+use League\Glide\Urls\UrlBuilderFactory;
+
+
+
+
 
 
 /**
@@ -52,10 +57,43 @@ class BetterThumbsExtension extends SimpleExtension
     public function image( $file  )
     {
         $app = $this->getContainer();
+        $config = $this->getConfig();
+        $defs = $config['defaults'];
 
+
+        // TODO: make sure you remove this dev sign key with a good one :) before pushing to production
+        $signkey = 'v-LK4WCdhcfcc%jt*VC2cj%nVpu+xQKvLUA%H86kRVk_4bgG8&CWM#k*b_7MUJpmTc=4GFmKFp7=K%67je-skxC5vz+r#xT?62tT?Aw%FtQ4Y3gvnwHTwqhxUh89wCa_';
+
+        /**
+         * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'
+         * we get double '/img//img/' in our URL's
+         * /img//img/file-name.jpg?s=signature-here
+         *
+         * We don't want that. We want urls like:
+         * /img/file-name.jpg?s=signature-here
+         *
+         * so in our template for secure urls we need to have '/img{{ img }}'
+         *
+         * conversely if we set the base url to an empty string '', it has the same result as setting it to '/'
+         */
+        $urlBuilder = UrlBuilderFactory::create('/', $signkey);
+
+
+        // placeholder for our modification parameters while testing out secure URL's
+        $params = [
+            'mark' => 'bthumb-watermark.png',
+            'markw'=> '60w',
+
+        ];
+
+        // Generate a Secure URL
+        $url = $urlBuilder->getUrl($file, $params );
 
         $context = [
-            'img' => $file,
+            'img' => $url,
+            'test' => $url,
+            'file' => $file,
+            'params' => $params,
         ];
 
         $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
@@ -63,6 +101,9 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
+    /**
+     * @return array
+     */
     protected function registerFrontendControllers()
     {
         $app = $this->getContainer();
