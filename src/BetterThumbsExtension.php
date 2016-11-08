@@ -62,7 +62,7 @@ class BetterThumbsExtension extends SimpleExtension
 
 
         // TODO: make sure you remove this dev sign key with a good one :) before pushing to production
-        $signkey = 'v-LK4WCdhcfcc%jt*VC2cj%nVpu+xQKvLUA%H86kRVk_4bgG8&CWM#k*b_7MUJpmTc=4GFmKFp7=K%67je-skxC5vz+r#xT?62tT?Aw%FtQ4Y3gvnwHTwqhxUh89wCa_';
+        $signkey = $config['secure_sign_key'];
 
         /**
          * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'

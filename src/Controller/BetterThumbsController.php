@@ -85,7 +85,9 @@ class BetterThumbsController implements ControllerProviderInterface
         try {
             // TODO: make sure you remove this dev sign key with a good one :) before pushing to production
             // Set complicated sign key
-            $signkey = 'v-LK4WCdhcfcc%jt*VC2cj%nVpu+xQKvLUA%H86kRVk_4bgG8&CWM#k*b_7MUJpmTc=4GFmKFp7=K%67je-skxC5vz+r#xT?62tT?Aw%FtQ4Y3gvnwHTwqhxUh89wCa_';
+//            $signkey = 'v-LK4WCdhcfcc%jt*VC2cj%nVpu+xQKvLUA%H86kRVk_4bgG8&CWM#k*b_7MUJpmTc=4GFmKFp7=K%67je-skxC5vz+r#xT?62tT?Aw%FtQ4Y3gvnwHTwqhxUh89wCa_';
+
+            $signkey = $this->config['secure_sign_key'];
 
             // Validate HTTP signature
             SignatureFactory::create($signkey)->validateRequest($path,  $request->query->all());
