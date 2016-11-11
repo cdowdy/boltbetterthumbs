@@ -7,14 +7,15 @@ use Bolt\Asset\File\JavaScript;
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
-use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
 
+use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+
+
 use League\Glide\Urls\UrlBuilderFactory;
-
-
-
 
 
 
@@ -49,20 +50,23 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
-    /**
-     * The callback function when {{ my_twig_function() }} is used in a template.
-     *
-     * @return string
-     */
-    public function image( $file  )
+
+    public function image( $file, $name = 'betterthumbs' )
     {
         $app = $this->getContainer();
         $config = $this->getConfig();
-        $defs = $config['defaults'];
+
+//        $configOptions = new Helpers\Thumbnail($config);
+
+        $configHelper = new ConfigHelper($config);
 
 
-        // TODO: make sure you remove this dev sign key with a good one :) before pushing to production
-        $signkey = $config['secure_sign_key'];
+//       $configOptions->setConfigName($name);
+//       $configName = $configOptions->getConfigName();
+        $configName = $this->configName($name);
+
+//        $signkey = $config['security']['secure_sign_key'];
+        $signkey = $configHelper->setSignKey();
 
         /**
          * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'
@@ -80,20 +84,18 @@ class BetterThumbsExtension extends SimpleExtension
 
 
         // placeholder for our modification parameters while testing out secure URL's
-        $params = [
-            'mark' => 'bthumb-watermark.png',
-            'markw'=> '60w',
-
-        ];
+        $params = ['p' => 'xlarge',];
 
         // Generate a Secure URL
         $url = $urlBuilder->getUrl($file, $params );
 
+
+
         $context = [
             'img' => $url,
-            'test' => $url,
-            'file' => $file,
-            'params' => $params,
+            'configName' => $configName,
+//            'widthDensity' => $widthDensity,
+//            'sizes' => $sizeAttrib,
         ];
 
         $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
@@ -115,12 +117,53 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
+    protected function configName($name)
+    {
+
+        if (empty($name)) {
+
+            $configName = 'betterthumbs';
+
+        } else {
+
+            $configName = $name;
+
+        }
+
+        return $configName;
+    }
+
+
+
     /**
      * @return array
      */
     protected function getDefaultConfig()
     {
         return [
+            'Image_Driver' => 'gd',
+            'security' => [
+                'secure_thumbs' => true,
+                'secure_sign_key' => ''
+            ],
+            'presets' => [
+                'small' => [
+                    'w' => 175,
+                    'fit' => 'contain'
+                ],
+                'medium' => [
+                    'w' => 350,
+                    'fit' => 'contain'
+                ],
+                'large' => [
+                    'w' => 700,
+                    'fit' => 'contain'
+                ],
+                'xlarge' => [
+                    'w' => 1400,
+                    'fit' => 'stretch'
+                ],
+            ],
             'default' => [
                 'widths' => [ 320, 480, 768 ],
                 'heights' => [ 0 ],
