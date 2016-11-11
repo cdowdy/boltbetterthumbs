@@ -7,6 +7,9 @@ use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
 
+use Bolt\Extension\cdowdy\betterthumbs\Helpers;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +29,8 @@ use League\Flysystem\Filesystem;
 class BetterThumbsController implements ControllerProviderInterface
 {
     protected $app;
+
+    protected $configHelper;
 
     private $config;
 
@@ -57,39 +62,43 @@ class BetterThumbsController implements ControllerProviderInterface
 
     public function makeImage(Application $app, $path, Request $request  )
     {
+        // get the path to the bolt installations files and use Flysystem to get that path
         $adapter = new Local($app['resources']->getPath('filespath') );
         $Filesystem = new Filesystem($adapter);
 
-        $ImageDriver = $this->config['Image_Driver'];
-        $presets = $this->config['presets'];
-        $defaultSettings = $this->config['defaults'];
+        // pull in my currently messy helper file and use $configHelper as the accessor to our config file
+        $configHelper = new ConfigHelper($this->config);
 
+        // Set the Image Driver
+        $ImageDriver = $configHelper->setImageDriver();
+
+        // Set any presets -> fallback to the ones I've set if there is non
+
+        $presets = $configHelper->setPresets();
+        // set and merge any defaults
+        $defaults = $configHelper->setDefaults();
+
+        // create a glide server
         $server = ServerFactory::create([
             'response' => new SymfonyResponseFactory(),
             'source' => $Filesystem,
             'cache' => $Filesystem,
-
-//            'source_path_prefix' => $Filesystem,
             'cache_path_prefix' => '.cache',
-
             'watermarks' => $Filesystem,
-
             'base_url' => '/img/',
             'driver' => $ImageDriver,
-
         ]);
-
+        // set our defaults and presets with glide's setters
+        $server->setDefaults($defaults);
         $server->setPresets($presets);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {
-            // TODO: make sure you remove this dev sign key with a good one :) before pushing to production
-            // Set complicated sign key
-//            $signkey = 'v-LK4WCdhcfcc%jt*VC2cj%nVpu+xQKvLUA%H86kRVk_4bgG8&CWM#k*b_7MUJpmTc=4GFmKFp7=K%67je-skxC5vz+r#xT?62tT?Aw%FtQ4Y3gvnwHTwqhxUh89wCa_';
 
-            $signkey = $this->config['secure_sign_key'];
 
-            // Validate HTTP signature
+            $signkey = $configHelper->setSignKey();
+
+                // Validate HTTP signature
             SignatureFactory::create($signkey)->validateRequest($path,  $request->query->all());
 
 
