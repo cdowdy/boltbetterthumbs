@@ -1,0 +1,74 @@
+# The Image Drive You Want to use.
+# Default is 'gd' which is the same one Bolt uses for it's thumbnail handling.
+# Options are:
+# * GD
+# * ImageMagick -> you'll need the imagick php extension for this to work http://php.net/manual/en/book.imagick.php
+Image_Driver: 'gd'
+
+# --------------------------------------------------------------------------------- #
+# SECURITY                                                                                                           #
+# Secure your thumbnails with a key. This is defaulted to True which means any thumbnail modification done that
+# is not signed with your key will not be allowed to be made.
+# a 128 character key or larger is recommended to be used.
+# --------------------------------------------------------------------------------- #
+security:
+  secure_thumbs: true
+  secure_sign_key: '5kLobJbjDNwpZgkbj4l0Mh1ZI1eeoa55BPVymrby/77aF0VaLOB40189PGhIt/bG0OlekrIAxJ4nfz6UP1yWRF12359BSZkul6q9AZA0Jtgg+Ok9CbfsEH5qZNQJiyy8zTmqVjvso1JewwBBu8LcnsFECzs2WBU0A9IGfcgj2So='
+
+
+# --------------------------------------------------------------------------------- #
+# Defaults
+# Defaults used for each and every image manipulation.
+# We've set the quality of images to 80 to match Bolt's thumbnail handler you can override this
+# with a setting of your choosing. But choose wisely big images = unnecessary load on the users end.
+# --------------------------------------------------------------------------------- #
+defaults:
+  q: 80
+
+# --------------------------------------------------------------------------------- #
+# Presets
+# Standard Image Manipulations used throughout your site
+# --------------------------------------------------------------------------------- #
+presets:
+  small:
+    w: 175
+    fit: stretch
+  medium:
+    w: 350
+    fit: stretch
+  large:
+    w: 700
+    fit: stretch
+  xlarge:
+    w: 1400
+    fit: stretch
+
+
+# --------------------------------------------------------------------------------- #
+# The extensions fall back defaults.
+# --------------------------------------------------------------------------------- #
+betterthumbs:
+
+# --------------------------------------------------------------------------------- #
+# a named image group. Here we decide if we are using the srcset attribute (which is this extensions default)
+# or if we are using the picture element.
+# --------------------------------------------------------------------------------- #
+srcset:
+  class: []
+  altText:
+  widthDensity: 'w'
+  sizes: [ '100vw'  ]
+  modifications:
+    w: [  340, 680, 1260 ]
+    h: [ ]
+    fit: 'stretch'
+
+test:
+  class: []
+  altText:
+  widthDensity: 'D'
+  sizes: [ '(min-width: 40em) 80vw', '100vw'  ]
+  modifications:
+    w: [  340, 680, 1260 ]
+    h: [ ]
+    fit: 'stretch'
