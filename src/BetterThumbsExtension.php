@@ -184,6 +184,52 @@ class BetterThumbsExtension extends SimpleExtension
 
 
     /**
+     * You can't rely on bolts methods to insert javascript/css in the location you want.
+     * So we have to hack around it. Use the Snippet Class with their location methods and insert
+     * Picturefill into the head. Add a check to make sure the script isn't loaded more than once ($_scriptAdded)
+     * and stop the insertion of the files multiple times because bolt's registerAssets method will blindly insert
+     * the files on every page
+     *
+     */
+
+    protected function addAssets()
+    {
+        $app = $this->getContainer();
+
+        $config = $this->getConfig();
+
+        $pfill = $config['picturefill'];
+
+        $extPath = $app['resources']->getUrl('extensions');
+
+        $vendor = 'vendor/cdowdy/';
+        $extName = 'betterthumbs/';
+
+        $pictureFillJS = $extPath . $vendor . $extName . 'picturefill/' . $this->_currentPictureFill . '/picturefill.min.js';
+        $pictureFill = <<<PFILL
+<script src="{$pictureFillJS}" async defer></script>
+PFILL;
+        $asset = new Snippet();
+        $asset->setCallback($pictureFill)
+            ->setZone(ZONE::FRONTEND)
+            ->setLocation(Target::AFTER_HEAD_CSS);
+
+
+        // add picturefill script only once for each time the extension is used
+        if ($pfill){
+            if ($this->_scriptAdded == FALSE ) {
+                $app['asset.queue.snippet']->add($asset);
+                $this->_scriptAdded = TRUE;
+            } else {
+
+                $this->_scriptAdded = TRUE;
+            }
+        }
+    }
+
+
+
+    /**
      * @return array
      */
     protected function getDefaultConfig()
