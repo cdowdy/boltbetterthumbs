@@ -27,6 +27,9 @@ use League\Glide\Urls\UrlBuilderFactory;
 class BetterThumbsExtension extends SimpleExtension
 {
 
+    private $_currentPictureFill = '3.0.2';
+    private $_scriptAdded = FALSE;
+
     /**
      * {@inheritdoc}
      */
@@ -63,7 +66,7 @@ class BetterThumbsExtension extends SimpleExtension
 
 //       $configOptions->setConfigName($name);
 //       $configName = $configOptions->getConfigName();
-        $configName = $this->configName($name);
+        $configName = $this->getNamedConfig($name);
 
 //        $signkey = $config['security']['secure_sign_key'];
         $signkey = $configHelper->setSignKey();
@@ -89,11 +92,12 @@ class BetterThumbsExtension extends SimpleExtension
         // Generate a Secure URL
         $url = $urlBuilder->getUrl($file, $params );
 
-
+        $widthHeights = $this->getWidthsHeights($configName, 'w');
 
         $context = [
             'img' => $url,
             'configName' => $configName,
+            'widthHeights' => $widthHeights,
 //            'widthDensity' => $widthDensity,
 //            'sizes' => $sizeAttrib,
         ];
@@ -116,21 +120,65 @@ class BetterThumbsExtension extends SimpleExtension
         ];
     }
 
-
-    protected function configName($name)
+    /**
+     * @param $name
+     * @return mixed
+     *
+     * get a "named config" from the extensions config file
+     */
+    protected function getNamedConfig($name)
     {
 
-        if (empty($name)) {
-
+        if (empty( $name ) ) {
             $configName = 'betterthumbs';
-
         } else {
-
-            $configName = $name;
-
+            $configName = $name ;
         }
 
-        return $configName;
+        return  $configName ;
+    }
+
+
+    /**
+     * @param $fallbackOption
+     * @return array
+     */
+    protected function getPresetFallbacks($fallbackOption)
+    {
+        $configFile = $this->getConfig();
+        $presets = $this->getNamedConfig('presets');
+        $fallback = [];
+
+        foreach ($configFile[$presets] as $fallbackItem) {
+            $fallbackElement = $fallbackItem[$fallbackOption];
+            array_push($fallback, $fallbackElement);
+        }
+
+        return $fallback;
+    }
+
+    /**
+     * @param $config
+     * @param $option
+     * @return array
+     */
+    protected function getWidthsHeights($config, $option )
+    {
+        $extConfig = $this->getNamedConfig($config);
+        $configFile = $this->getConfig();
+        $namedConfig = $configFile[$extConfig]['modifications'];
+
+        $configOption = $namedConfig[$option];
+
+        $grabFallback = $this->getPresetFallbacks($option);
+
+        if (isset($configOption) && !empty($configOption)) {
+            $configParam = $configOption;
+        } else {
+            $configParam = $grabFallback ;
+        }
+
+        return $configParam;
     }
 
 
