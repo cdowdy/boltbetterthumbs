@@ -12,6 +12,7 @@ use Bolt\Filesystem as BoltFilesystem;
 
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
+use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 
@@ -59,16 +60,11 @@ class BetterThumbsExtension extends SimpleExtension
         $app = $this->getContainer();
         $config = $this->getConfig();
 
-//        $configOptions = new Helpers\Thumbnail($config);
 
         $configHelper = new ConfigHelper($config);
 
-
-//       $configOptions->setConfigName($name);
-//       $configName = $configOptions->getConfigName();
         $configName = $this->getNamedConfig($name);
 
-//        $signkey = $config['security']['secure_sign_key'];
         $signkey = $configHelper->setSignKey();
 
         /**
@@ -93,11 +89,16 @@ class BetterThumbsExtension extends SimpleExtension
         $url = $urlBuilder->getUrl($file, $params );
 
         $widthHeights = $this->getWidthsHeights($configName, 'w');
+        $srcset = new SrcsetHandler($config);
+        $resolutions = $srcset->getResolutions($configName);
+        $sizes = $srcset->getSizesAttrib($configName);
 
         $context = [
             'img' => $url,
             'configName' => $configName,
             'widthHeights' => $widthHeights,
+            'res' => $resolutions,
+            'sizes' => $sizes,
 //            'widthDensity' => $widthDensity,
 //            'sizes' => $sizeAttrib,
         ];
@@ -118,6 +119,17 @@ class BetterThumbsExtension extends SimpleExtension
             '/img' => new BetterThumbsController($config),
 
         ];
+    }
+
+    /**
+     * @param $option
+     * @param $optionType
+     * @param $fallback
+     * @return mixed
+     */
+    protected function checkIndex( $option, $optionType, $fallback )
+    {
+        return ( isset( $option[$optionType]) ? $option[$optionType] : $fallback );
     }
 
     /**
@@ -180,6 +192,36 @@ class BetterThumbsExtension extends SimpleExtension
 
         return $configParam;
     }
+
+    /**
+     * @param $option1
+     * @param $option2
+     * @param $padValue
+     * @return array
+     */
+    protected function getCombinedArray($option1, $option2, $padValue)
+    {
+        $option1Count = count($option1);
+        $option2Count = count($option2);
+
+        if ($option1Count != $option2Count) {
+            $option1Array = array_pad($option1, $option2Count, $padValue);
+        } else {
+            $option1Array = $option1;
+        }
+
+        if ($option2Count != $option1Count) {
+            $option2Array = array_pad($option2, $option1Count, $padValue);
+        } else {
+            $option2Array = $option2;
+        }
+
+        $combinedArray = array_combine($option1Array, $option2Array);
+
+        return $combinedArray;
+
+    }
+
 
 
 
