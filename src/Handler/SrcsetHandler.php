@@ -44,14 +44,19 @@ class SrcsetHandler
         return $sizes;
     }
 
-    // TODO: allow a 'd' or 'D' to be passed but conver it to 'x'
-    protected function getWidthDensity($configName, $default = 'w')
-    {
 
+    public function getWidthDensity($configName, $default = 'w')
+    {
+        $valid = [ 'w', 'x', 'd' ];
         $widthDensity = isset($this->_extensionConfig[$configName][ 'widthDensity' ]);
 
         if (isset($widthDensity) && !empty($widthDensity)) {
             $wd = strtolower($this->_extensionConfig[$configName][ 'widthDensity' ]);
+
+            if ($wd == 'd' ) {
+                $wd = 'x';
+            }
+
         } else {
             $wd = $default;
         }
