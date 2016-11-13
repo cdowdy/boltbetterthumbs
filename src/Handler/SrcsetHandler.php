@@ -4,6 +4,8 @@
 namespace Bolt\Extension\cdowdy\betterthumbs\Handler;
 
 use Silex\Application;
+use League\Glide\Urls\UrlBuilderFactory;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 class SrcsetHandler
 {
@@ -94,6 +96,43 @@ class SrcsetHandler
             $resError = array_combine( $thumb, $resolutions);
         }
         return $resError;
+    }
+
+
+    // TODO: create thumbnail helper method
+    public function createSrcset($configName, array $sizeArray = [], $fileName, $optionsWidths, $resolutions )
+    {
+        // make thumbs an empty array
+        $thumb = array();
+        $srcSet = [];
+        $widthDensity = $this->getWidthDensity($this->_extensionConfig[$configName]);
+
+        // loop through the size array and generate a thumbnail and URL
+        // place those in an array to be used in the twig template
+        foreach ($sizeArray as $key => $value) {
+            $thumb[] .= $this->thumbnail($fileName, $key, $value, $cropping);
+        }
+
+        // use the array below if using the W descriptor
+        if ($widthDensity == 'w') {
+            $srcSet = array_combine($thumb, $optionsWidths);
+        }
+
+        if ($widthDensity == 'x') {
+            $srcSet = $this->resolutionErrors($thumb, $resolutions);
+        }
+
+        return $srcSet;
+    }
+
+    // todo: move this to a generic thumbnail helper class
+    public function buildSecureURL($file, $modifications )
+    {
+        $signKey = new ConfigHelper($this->_extensionConfig);
+
+        $secureURL = UrlBuilderFactory::create('/', $signKey->setSignKey() );
+
+        return $secureURL->getUrl($file, $modifications);
     }
 
 }
