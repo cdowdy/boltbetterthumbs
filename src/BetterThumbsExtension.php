@@ -73,34 +73,15 @@ class BetterThumbsExtension extends SimpleExtension
         $app = $this->getContainer();
         $config = $this->getConfig();
 
-
-        $configHelper = new ConfigHelper($config);
-
         $configName = $this->getNamedConfig($name);
 
-        $signkey = $configHelper->setSignKey();
-
-        /**
-         * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'
-         * we get double '/img//img/' in our URL's
-         * /img//img/file-name.jpg?s=signature-here
-         *
-         * We don't want that. We want urls like:
-         * /img/file-name.jpg?s=signature-here
-         *
-         * so in our template for secure urls we need to have '/img{{ img }}'
-         *
-         * conversely if we set the base url to an empty string '', it has the same result as setting it to '/'
-         */
         $srcset = new SrcsetHandler($config);
-//        $urlBuilder = UrlBuilderFactory::create('/', $signkey);
 
 
         // placeholder for our modification parameters while testing out secure URL's
         $params = ['p' => 'medium'];
 
         // Generate a Secure URL
-//        $url = $urlBuilder->getUrl($file, $params );
         $url = $srcset->buildSecureURL($file, $params);
 
         $widthHeights = $this->getWidthsHeights($configName, 'w');
@@ -134,6 +115,24 @@ class BetterThumbsExtension extends SimpleExtension
     protected function checkIndex( $option, $optionType, $fallback )
     {
         return ( isset( $option[$optionType]) ? $option[$optionType] : $fallback );
+    }
+
+
+    /**
+     * @param $option
+     * @return array
+     * take the option passed in from the template. Check if its in an array.
+     * if its not an array make it one.
+     * also check to make sure there is actual data in the array with array_filter
+     * we only want to print a class if there is something actually there.
+     */
+    protected function optionToArray( $option ) {
+        // check if the option that we need to be an array is in fact in an array
+        $isArray = is_array($option) ? $option : array($option);
+
+        // return the array and make sure it is not empty
+        return array_filter($isArray);
+
     }
 
     /**
