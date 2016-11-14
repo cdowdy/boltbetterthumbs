@@ -99,6 +99,19 @@ class SrcsetHandler
     }
 
 
+
+    /**
+     * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'
+     * we get double '/img//img/' in our URL's
+     * /img//img/file-name.jpg?s=signature-here
+     *
+     * We don't want that. We want urls like:
+     * /img/file-name.jpg?s=signature-here
+     *
+     * so in our template for secure urls we need to have '/img{{ img }}'
+     *
+     * conversely if we set the base url to an empty string '', it has the same result as setting it to '/'
+     */
     // TODO: create thumbnail helper method
     public function createSrcset($configName, array $sizeArray = [], $fileName, $optionsWidths, $resolutions )
     {
