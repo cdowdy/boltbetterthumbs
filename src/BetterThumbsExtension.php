@@ -32,6 +32,19 @@ class BetterThumbsExtension extends SimpleExtension
     private $_scriptAdded = FALSE;
 
     /**
+     * @return array
+     */
+    protected function registerFrontendControllers()
+    {
+        $app = $this->getContainer();
+        $config = $this->getConfig();
+        return [
+            '/img' => new BetterThumbsController($config),
+
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function registerTwigPaths()
@@ -79,19 +92,22 @@ class BetterThumbsExtension extends SimpleExtension
          *
          * conversely if we set the base url to an empty string '', it has the same result as setting it to '/'
          */
-        $urlBuilder = UrlBuilderFactory::create('/', $signkey);
+        $srcset = new SrcsetHandler($config);
+//        $urlBuilder = UrlBuilderFactory::create('/', $signkey);
 
 
         // placeholder for our modification parameters while testing out secure URL's
-        $params = ['p' => 'xlarge',];
+        $params = ['p' => 'medium'];
 
         // Generate a Secure URL
-        $url = $urlBuilder->getUrl($file, $params );
+//        $url = $urlBuilder->getUrl($file, $params );
+        $url = $srcset->buildSecureURL($file, $params);
 
         $widthHeights = $this->getWidthsHeights($configName, 'w');
-        $srcset = new SrcsetHandler($config);
+
         $resolutions = $srcset->getResolutions($configName);
         $sizes = $srcset->getSizesAttrib($configName);
+        $widthDensity = $srcset->getWidthDensity($configName);
 
         $context = [
             'img' => $url,
@@ -99,7 +115,7 @@ class BetterThumbsExtension extends SimpleExtension
             'widthHeights' => $widthHeights,
             'res' => $resolutions,
             'sizes' => $sizes,
-//            'widthDensity' => $widthDensity,
+            'widthDensity' => $widthDensity,
 //            'sizes' => $sizeAttrib,
         ];
 
@@ -108,18 +124,6 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
-    /**
-     * @return array
-     */
-    protected function registerFrontendControllers()
-    {
-        $app = $this->getContainer();
-        $config = $this->getConfig();
-        return [
-            '/img' => new BetterThumbsController($config),
-
-        ];
-    }
 
     /**
      * @param $option
