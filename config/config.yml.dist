@@ -54,16 +54,19 @@ betterthumbs:
 # or if we are using the picture element.
 # --------------------------------------------------------------------------------- #
 srcset:
+  save_data: false
   class: []
   altText:
   widthDensity: 'w'
   sizes: [ '100vw'  ]
+  resolutions: [ 1, 2, 2.5, 3 ]
   modifications:
     w: [  340, 680, 1260 ]
     h: [ ]
     fit: 'stretch'
 
 test:
+  save_data: true
   class: []
   altText:
   widthDensity: 'D'
