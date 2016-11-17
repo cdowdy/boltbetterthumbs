@@ -115,16 +115,18 @@ class SrcsetHandler
         $thumbHelper->setSourceImage($fileName);
         $thumbHelper->setModifications($modifications);
         $wd = $this->getWidthDensity();
-
+        // postfix all widths with a w
         array_walk($widths, function (&$value) {
             $value= $value . 'w';
         });
 
-
-
         foreach ($modifications as $parameters  ) {
             $thumb[] .= $thumbHelper->setModifications($parameters)->buildSecureURL();
         }
+        // prefix all images with '/img'
+        array_walk($thumb, function( &$key ) {
+           $key = '/img' . $key;
+        });
 
         if ($wd === 'w') {
             $srcset =  array_combine($thumb, $widths);
