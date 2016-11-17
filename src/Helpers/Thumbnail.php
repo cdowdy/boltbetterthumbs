@@ -4,7 +4,7 @@
 namespace Bolt\Extension\cdowdy\betterthumbs\Helpers;
 
 use Silex\Application;
-
+use League\Glide\Urls\UrlBuilderFactory;
 
 /**
  * Class Thumbnail
@@ -26,11 +26,6 @@ class Thumbnail
     /**
      * @var
      */
-    protected $_title;
-
-    /**
-     * @var
-     */
     protected $_height;
 
     /**
@@ -39,7 +34,7 @@ class Thumbnail
     protected $_width;
 
     /**
-     * @var
+     * @var array
      * Modifications done to the image through intervention (crop/filters etc)
      */
     protected $modifications = [];
@@ -48,21 +43,21 @@ class Thumbnail
      */
     protected $_extensionConfig;
 
-
+    /**
+     * @var
+     */
     protected $_configName;
 
-    protected $widthDensity;
-
-    protected $sizesAttrib = [];
 
     /**
      * Thumbnail constructor.
-     * @param $_extensionConfig
+     * @param array $_extensionConfig
+     * @param array $_configName
      */
-    public function __construct( array $_extensionConfig )
+    public function __construct( array $_extensionConfig, $_configName)
     {
         $this->_extensionConfig = $_extensionConfig;
-//        $this->_extensionConfig[$_configName] = $_configName;
+        $this->configName = $_configName;
     }
 
     /**
@@ -97,6 +92,24 @@ class Thumbnail
     }
 
     /**
+     * @return array
+     */
+    public function getModifications()
+    {
+        return $this->modifications;
+    }
+
+    /**
+     * @param array $modifications
+     */
+    public function setModifications(array $modifications)
+    {
+
+        $this->modifications = $modifications;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getAltText()
@@ -112,143 +125,27 @@ class Thumbnail
         $this->_altText = $altText;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->_title;
-    }
 
     /**
-     * @param mixed $title
+     * @return string
+     * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'
+     * we get double '/img//img/' in our URL's
+     * /img//img/file-name.jpg?s=signature-here
+     *
+     * We don't want that. We want urls like:
+     * /img/file-name.jpg?s=signature-here
+     *
+     * so in our template for secure urls we need to have '/img{{ img }}'
+     *
+     * conversely if we set the base url to an empty string '', it has the same result as setting it to '/'
      */
-    public function setTitle($title)
+    public function buildSecureURL()
     {
-        $this->_title = $title;
+        $signKey = new ConfigHelper($this->_extensionConfig);
+
+        $secureURL = UrlBuilderFactory::create('/', $signKey->setSignKey() );
+
+        return $secureURL->getUrl($this->_sourceImage, $this->modifications);
     }
-
-
-    /**
-     * @param bool $round
-     * @return float
-     */
-    public function getHeight( $round = true )
-    {
-        if ($round) {
-            return round($this->_height);
-        }
-
-        return $this->_height;
-    }
-
-
-    /**
-     * @param $height
-     * @param int $default
-     * @return $this
-     */
-    public function setHeight($height, $default = 200 )
-    {
-        $extensionConfig = $this->_extensionConfig;
-        $boltConfig = $this->BoltConfig;
-
-
-        if ( !is_numeric($height) ) {
-
-            if (empty($extensionConfig)) {
-
-                $this->_height = $boltConfig;
-
-            } elseif (empty($boltConfig)) {
-
-                $this->_height = $default;
-
-            } else {
-
-                $this->_height = $default;
-            }
-        }
-        $this->_height = $height;
-
-        return $this;
-    }
-
-
-    /**
-     * @param bool $round
-     * @return float
-     */
-    public function getWidth($round = true)
-    {
-        if ($round) {
-            return round($this->_width);
-        }
-
-        return $this->_width;
-    }
-
-
-    /**
-     * @param $width
-     * @param int $default
-     * @return $this
-     */
-    public function setWidth($width, $default = 200)
-    {
-        $extensionConfig = $this->_extensionConfig;
-//        $boltConfig = $this->BoltConfig;
-
-
-        if ( !is_numeric($width) ) {
-
-
-            if (empty($extensionConfig)) {
-
-                $this->_width = $boltConfig;
-
-            } elseif (empty($boltConfig)) {
-
-                $this->_width = $default;
-
-            } else {
-
-                $this->_width = $default;
-            }
-        }
-
-        $this->_width = $width;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getModifications()
-    {
-        return $this->modifications;
-    }
-
-
-    /**
-     * @param array $modifications
-     */
-    public function setModifications(array $modifications)
-    {
-        $this->modifications = $modifications;
-
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getWidthDensity()
-    {
-        return $this->widthDensity;
-    }
-
-
 
 }
