@@ -27,14 +27,17 @@ defaults:
 
 # --------------------------------------------------------------------------------- #
 # Presets
-# Standard Image Manipulations used throughout your site
+# Standard Image Manipulations used throughout your site.
+# THe '&presets' after 'presets:' is there for use in a repeated node. It gives these presets a name and allows
+# use to use these settings again somewhere else in a named config
 # --------------------------------------------------------------------------------- #
-presets:
+presets: &presets
   small:
     w: 175
     fit: stretch
   medium:
     w: 350
+    h: 350
     fit: stretch
   large:
     w: 700
@@ -46,9 +49,16 @@ presets:
 
 # --------------------------------------------------------------------------------- #
 # The extensions fall back defaults.
+# This uses yaml's "repeated nodes". This will take the settings set in Presets above and use them as
+# "defaults". You can use them as well in any named config you wish to use/create
 # --------------------------------------------------------------------------------- #
 betterthumbs:
-
+  save_data: true
+  altText: ~
+  widthDensity: 'w'
+  sizes: [ '100vw' ]
+  modifications:
+    <<: *presets
 # --------------------------------------------------------------------------------- #
 # a named image group. Here we decide if we are using the srcset attribute (which is this extensions default)
 # or if we are using the picture element.
@@ -57,13 +67,14 @@ srcset:
   save_data: false
   class: []
   altText:
-  widthDensity: 'w'
+
   sizes: [ '100vw'  ]
   resolutions: [ 1, 2, 2.5, 3 ]
   modifications:
-    w: [  340, 680, 1260 ]
-    h: [ ]
-    fit: 'stretch'
+    small: { 'w': 340 }
+    medium: { 'w': 680 }
+    large: { 'w': 800 }
+    xlarge: { 'w': 1260 }
 
 test:
   save_data: true
@@ -72,6 +83,14 @@ test:
   widthDensity: 'D'
   sizes: [ '(min-width: 40em) 80vw', '100vw'  ]
   modifications:
-    w: [  340, 680, 1260 ]
-    h: [ ]
-    fit: 'stretch'
+    small: { 'w': 175, 'fit': 'stretch' }
+    medium:
+      w: 350
+      h: 350
+      fit: stretch
+    large:
+      w: 700
+      fit: stretch
+    xlarge:
+      w: 1400
+      fit: stretch
