@@ -12,16 +12,16 @@ In your template place this tag wherever you want an image. Responsive Images us
  example using a record image
 
 ```twig  
-{{ img( record.image, 'default' ) }}  
+{{ img( record.image, 'presets' ) }}  
 ```  
 
 example using a file from "files"  
   
 ```twig  
-{{ img( 'image-from-files.jpg', 'default' ) }}   
+{{ img( 'image-from-files.jpg', 'presets' ) }}   
 ```
 
-If you don't give it a named config (the 'default' after the file name above), The extension will use 4 presets with these widths:  
+If you don't give it a named config (the 'presets' after the file name above), The extension will use 4 presets with these widths:  
 
 * 175 pixels wide
 * 350 pixels wide
@@ -40,4 +40,81 @@ Here is how the markup will look:
     /img/filename-here.jpg?p=xlarge&s=yXQAuVfPXmINowtyWqXMSykY6NO6s8be 1400w"
     src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
     alt="alt text">  
+```  
+
+## Extension Setup  
+__Image Driver__  
+
+This extension allows you to use either GD or ImageMagick for your image manipulations. The default setting is 'gd'. This is the same image driver Bolt's standard thumbs use and if your thumbs work in your current Bolt site then the default setting will be good for you here too. If you wish to use ImageMagick you must have php's imagick extension installed in your system. To change your image driver see the `Image_Driver` setting.  
+
+```yaml 
+Image_Driver: 'gd'  
+```  
+
+__Security__ 
+
+By default each thumbnail URL is signed. Without this signature an image cannot be generated. This prevents flood attacks and hundred/thousands etc of images from being generated and bringing your server down or filling up disk space. You'll need to set a key in the security section:  
+```yaml
+security:
+  secure_thumbs: true
+  secure_sign_key: 'your  key goes here'
+```  
+
+__Defaults__  
+
+You can set defaults that will be done to each and every image manipulation through this extension. You can set the quality, image format etc. To match Bolt's thumbnail settings a default quality of '80' is set.  
+```yaml 
+defaults: 
+    q: 80
+```  
+
+__Presets__  
+
+Image presets are groups of image manipulations you can quickly use instead of a named config. These are also the fallback settings if you don't set any modifications in your named config. So you could create a named config and leave out the modifications part and the modifications used will be whatever you've set in 'Presets'.  
+```yaml
+presets: &presets
+  small:
+    w: 175
+    fit: stretch
+  medium:
+    w: 350
+    fit: stretch
+  large:
+    w: 700
+    fit: stretch
+  xlarge:
+    w: 1400
+    fit: stretch
 ```
+
+## Config Setup  
+TODO:  
+* save_data
+* class
+* altText
+* widthDensity
+* sizes
+* resolutions  
+
+### Modifications: 
+The settings for each thumbnail are declarative. Meaning for every modification you wish to make to that particular thumbnail you must have it in the config. Example:  
+
+```yaml
+namedConfig:
+# other settings here!
+  modifications:
+    small:
+      w: 175
+      fit: stretch
+    medium:
+      w: 350
+      h: 350
+      fit: stretch
+    large:
+      w: 700
+      fit: stretch
+    xlarge:
+      w: 1400
+      fit: stretch
+```  
+This will give you four (4) thumbnails with widths of 175, 350, 700 and 1400 with a fit of 'stretch'. The Second thumbnail (named 'medium' in this example) will also have a height of 350 pixels. 
