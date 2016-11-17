@@ -16,6 +16,7 @@ use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 
+use Bolt\Tests\Provider\PagerServiceProviderTest;
 use League\Glide\Urls\UrlBuilderFactory;
 
 
@@ -68,36 +69,42 @@ class BetterThumbsExtension extends SimpleExtension
 
 
 
-    public function image( $file, $name = 'betterthumbs' )
+    public function image( $file, $name = 'betterthumbs', array $options = [] )
     {
         $app = $this->getContainer();
         $config = $this->getConfig();
 
         $configName = $this->getNamedConfig($name);
-
-        $srcset = new SrcsetHandler($config);
-
+        // this lets us create a srcset array
+        $srcset = new SrcsetHandler($config, $configName);
+        // this is used to create our regular 'src' (fallback) image
+        $thumbHelper = new Thumbnail($config, $configName);
 
         // placeholder for our modification parameters while testing out secure URL's
         $params = ['p' => 'medium'];
 
-        // Generate a Secure URL
-        $url = $srcset->buildSecureURL($file, $params);
+        // Set our Source Image file name and it's modifications
+        $thumbHelper->setSourceImage($file)->setModifications($params);
+        // build the secure url for the src/fallback image
+        $url = $thumbHelper->buildSecureURL();
 
-        $widthHeights = $this->getWidthsHeights($configName, 'w');
 
-        $resolutions = $srcset->getResolutions($configName);
-        $sizes = $srcset->getSizesAttrib($configName);
-        $widthDensity = $srcset->getWidthDensity($configName);
+        // Get The Modification Parameters passed in through the config and merge them with the ones
+        // passed in from the template
+        $parameters = $this->getModificationParams($configName, $options);
+        // get the options passed in to the parameters and prepare it for our srcset array.
+        $optionWidths = $this->flatten_array($parameters, 'w');
+        // get the resolutions passed in from our config file
+        $resolutions = $srcset->getResolutions();
+        // get the width or density type passed in from our config file
+//        $widthDensity = $srcset->getWidthDensity();
+
+
+        $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $parameters);
 
         $context = [
-            'img' => $url,
-            'configName' => $configName,
-            'widthHeights' => $widthHeights,
-            'res' => $resolutions,
-            'sizes' => $sizes,
-            'widthDensity' => $widthDensity,
-//            'sizes' => $sizeAttrib,
+            'srcImg' => $url,
+            'srcset' => $thumb,
         ];
 
         $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
@@ -105,6 +112,10 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
+   function combineWidthHeightArrays($option1, $option2, $padValue )
+   {
+
+   }
 
     /**
      * @param $option
@@ -135,6 +146,50 @@ class BetterThumbsExtension extends SimpleExtension
 
     }
 
+    function getModificationParams($config, array $options = [] )
+    {
+        $extConfig = $this->getConfig();
+        $configName = $this->getNamedConfig($config);
+        $modificationParams = isset($extConfig[$configName]['modifications']) ? $extConfig[$configName]['modifications'] : [] ;
+//        $modificationParams = array_key_exists('modifications', $extConfig[$configName]);
+        $presetParams = $extConfig['presets'];
+
+        // replace parameters in 'presets' with the params in a named config
+        if (isset($modificationParams) || array_key_exists('modifications', $extConfig[$configName]) ) {
+            $defaults = array_merge($presetParams, $modificationParams);
+        } else {
+            $defaults = $presetParams;
+        }
+
+        return array_merge($defaults, $options);
+    }
+
+    // TODO: take these options, merge them if they are set in a template then pass them to the srcset handler
+    function getOptions($filename, $config, $options =[])
+    {
+        $configName = $this->getNamedConfig($config);
+
+        $altText = $this->getAltText($configName, $filename);
+        $class = $this->getHTMLClass($configName);
+        $sizes = $srcsetHandler->getSizesAttrib($configName);
+        $resolutions = $this->getResolutions();
+        $widthDensity = $this->getWidthDensity();
+
+        $defaults = [
+            'widthDensity' => $widthDensity,
+            'resolutions' => $defaultRes,
+            'sizes' => $sizes,
+            'altText' => $altText,
+            'lazyLoad' => $lazyLoaded,
+            'class' => $class
+
+        ];
+
+        $defOptions = array_merge($defaults, $options);
+
+        return $defOptions;
+    }
+
     /**
      * @param $name
      * @return mixed
@@ -155,76 +210,28 @@ class BetterThumbsExtension extends SimpleExtension
 
 
     /**
-     * @param $fallbackOption
+     * Flatten The multidimensional array in the extensions config under Presets.
+     *
+     * @param array $array
+     * @param string $fallbackOption
      * @return array
      */
-    protected function getPresetFallbacks($fallbackOption)
+    protected function flatten_array(array $array, $fallbackOption)
     {
-        $configFile = $this->getConfig();
-        $presets = $this->getNamedConfig('presets');
+
         $fallback = [];
 
-        foreach ($configFile[$presets] as $fallbackItem) {
-            $fallbackElement = $fallbackItem[$fallbackOption];
-            array_push($fallback, $fallbackElement);
-        }
+            foreach ($array as $key => $value) {
+                if (array_key_exists($fallbackOption, $value )) {
+                    $fallback[] = $value[$fallbackOption];
+                } else {
+                    $fallback[] = 0;
+                }
+
+            }
 
         return $fallback;
     }
-
-    /**
-     * @param $config
-     * @param $option
-     * @return array
-     */
-    protected function getWidthsHeights($config, $option )
-    {
-        $extConfig = $this->getNamedConfig($config);
-        $configFile = $this->getConfig();
-        $namedConfig = $configFile[$extConfig]['modifications'];
-
-        $configOption = $namedConfig[$option];
-
-        $grabFallback = $this->getPresetFallbacks($option);
-
-        if (isset($configOption) && !empty($configOption)) {
-            $configParam = $configOption;
-        } else {
-            $configParam = $grabFallback ;
-        }
-
-        return $configParam;
-    }
-
-    /**
-     * @param $option1
-     * @param $option2
-     * @param $padValue
-     * @return array
-     */
-    protected function getCombinedArray($option1, $option2, $padValue)
-    {
-        $option1Count = count($option1);
-        $option2Count = count($option2);
-
-        if ($option1Count != $option2Count) {
-            $option1Array = array_pad($option1, $option2Count, $padValue);
-        } else {
-            $option1Array = $option1;
-        }
-
-        if ($option2Count != $option1Count) {
-            $option2Array = array_pad($option2, $option1Count, $padValue);
-        } else {
-            $option2Array = $option2;
-        }
-
-        $combinedArray = array_combine($option1Array, $option2Array);
-
-        return $combinedArray;
-
-    }
-
 
 
 
