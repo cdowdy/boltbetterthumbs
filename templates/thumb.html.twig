@@ -1,1 +1,10 @@
-<img src="/img/{{ img }}?or=90" alt="">
+<p>From Extension Template. Make Sure URL's are "secure" with HTTP Signature.</p>
+<img src="/img{{ srcImg }}" alt="">
+
+<p>Test srcset output</p>
+
+<img sizes="100vw"
+     srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not loop.last  %} , {% endif %}{% endfor %}"
+     src="/img{{ srcImg }}"
+     alt="">
+
