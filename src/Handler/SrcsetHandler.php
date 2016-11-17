@@ -5,6 +5,7 @@ namespace Bolt\Extension\cdowdy\betterthumbs\Handler;
 
 use Silex\Application;
 use League\Glide\Urls\UrlBuilderFactory;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 class SrcsetHandler
@@ -15,45 +16,43 @@ class SrcsetHandler
      * @var array
      */
     protected $_extensionConfig;
+    protected $_configname;
+    /**
+     * @var array
+     * */
+    protected $_sizesAttrib;
+
 
     /**
      * SrcsetHandler constructor.
      * @param array $_extensionConfig
      */
-    public function __construct(array $_extensionConfig)
+    public function __construct(array $_extensionConfig, $configname)
     {
         $this->_extensionConfig = $_extensionConfig;
+        $this->_configname = $configname;
     }
 
 
-    protected function getImageOptions( $filename, $config, array $options )
+
+    public function getSizesAttrib( $default = ['100vw'] )
     {
-
-    }
-
-    // get all the modifications being done to the image and pass them to / create an array
-    protected function setImageModifications(array $modifications = [] )
-    {
-
-    }
-
-    public function getSizesAttrib($configName, $default = ['100vw'] )
-    {
-        $sizes = isset( $this->_extensionConfig[$configName]['sizes'])
-            ? $this->_extensionConfig[$configName]['sizes']
+        $sizes = isset($this->_extensionConfig[$this->_configname]['sizes'])
+            ? $this->_extensionConfig[$this->_configname]['sizes']
             : $default;
 
         return $sizes;
     }
 
 
-    public function getWidthDensity($configName, $default = 'w')
+
+    public function getWidthDensity($default = 'w')
     {
         $valid = [ 'w', 'x', 'd' ];
-        $widthDensity = isset($this->_extensionConfig[$configName][ 'widthDensity' ]);
+        $widthDensity = isset($this->_extensionConfig[$this->_configname][ 'widthDensity' ]);
 
         if (isset($widthDensity) && !empty($widthDensity)) {
-            $wd = strtolower($this->_extensionConfig[$configName][ 'widthDensity' ]);
+            $wd = strtolower($this->_extensionConfig[$this->_configname][ 'widthDensity' ]);
 
             if ($wd == 'd' ) {
                 $wd = 'x';
@@ -67,10 +66,10 @@ class SrcsetHandler
     }
 
 
-    public function getResolutions($configName, $defaultResolutions = [ 1, 2, 3 ])
+    public function getResolutions($defaultResolutions = [ 1, 2, 3 ])
     {
-
-        $resolutions = isset( $this->_extensionConfig[$configName]['resolutions']) ? $this->_extensionConfig[$configName]['resolutions'] : $defaultResolutions;
+        $configName = $this->_extensionConfig[$this->_configname];
+        $resolutions = isset( $configName['resolutions']) ? $configName['resolutions'] : $defaultResolutions;
 
         return $resolutions;
     }
@@ -95,57 +94,46 @@ class SrcsetHandler
         if ($resCount === $thumbCount ) {
             $resError = array_combine( $thumb, $resolutions);
         }
+
+        // walk through the array and add an x to each resolution in the array
+        array_walk($resError, function (&$value) {
+            $value= $value . 'x';
+        });;
+
         return $resError;
     }
 
 
 
-    /**
-     * set the "base url" for the Secure URL to '/' since if we use the "base_url" option of '/img/'
-     * we get double '/img//img/' in our URL's
-     * /img//img/file-name.jpg?s=signature-here
-     *
-     * We don't want that. We want urls like:
-     * /img/file-name.jpg?s=signature-here
-     *
-     * so in our template for secure urls we need to have '/img{{ img }}'
-     *
-     * conversely if we set the base url to an empty string '', it has the same result as setting it to '/'
-     */
-    // TODO: create thumbnail helper method
-    public function createSrcset($configName, array $sizeArray = [], $fileName, $optionsWidths, $resolutions )
+
+
+    public function createSrcset($fileName, $widths, $resolutions, array $modifications )
     {
         // make thumbs an empty array
-        $thumb = array();
-        $srcSet = [];
-        $widthDensity = $this->getWidthDensity($this->_extensionConfig[$configName]);
+        $thumb = [];
+        $thumbHelper = new Thumbnail($this->_extensionConfig, $this->_configname);
+        $thumbHelper->setSourceImage($fileName);
+        $thumbHelper->setModifications($modifications);
+        $wd = $this->getWidthDensity();
 
-        // loop through the size array and generate a thumbnail and URL
-        // place those in an array to be used in the twig template
-        foreach ($sizeArray as $key => $value) {
-            $thumb[] .= $this->thumbnail($fileName, $key, $value, $cropping);
+        array_walk($widths, function (&$value) {
+            $value= $value . 'w';
+        });
+
+
+
+        foreach ($modifications as $parameters  ) {
+            $thumb[] .= $thumbHelper->setModifications($parameters)->buildSecureURL();
         }
 
-        // use the array below if using the W descriptor
-        if ($widthDensity == 'w') {
-            $srcSet = array_combine($thumb, $optionsWidths);
+        if ($wd === 'w') {
+            $srcset =  array_combine($thumb, $widths);
         }
 
-        if ($widthDensity == 'x') {
-            $srcSet = $this->resolutionErrors($thumb, $resolutions);
+        if ($wd === 'x') {
+            $srcset =  $this->resolutionErrors($thumb, $resolutions);
         }
-
-        return $srcSet;
-    }
-
-    // todo: move this to a generic thumbnail helper class
-    public function buildSecureURL($file, $modifications )
-    {
-        $signKey = new ConfigHelper($this->_extensionConfig);
-
-        $secureURL = UrlBuilderFactory::create('/', $signKey->setSignKey() );
-
-        return $secureURL->getUrl($file, $modifications);
+        return $srcset;
     }
 
 }
