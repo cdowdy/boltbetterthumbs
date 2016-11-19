@@ -75,36 +75,56 @@ class BetterThumbsExtension extends SimpleExtension
         $config = $this->getConfig();
 
         $configName = $this->getNamedConfig($name);
-        // this lets us create a srcset array
+
+        // Modifications from config merged with presets set in the config
+        $configModifications = $this->getModificationParams($configName, $options);
+
+
+        // get our options and merge them with ones passed from the template
+        $defaultsMerged = $this->getOptions($file, $configName, $options );
+        // classes merged from template
+        $mergedClasses = $defaultsMerged['class'];
+        $htmlClass = $this->optionToArray($mergedClasses);
+        $altText = $defaultsMerged['altText'];
+
+
+
+
+//        $finalModifications = array_merge($configModifications, $mergedParams);
+        $srcImgParams = current($configModifications);
+
+        // get our helpers and handlers setup
+        // This will create a srcset Array
         $srcset = new SrcsetHandler($config, $configName);
-        // this is used to create our regular 'src' (fallback) image
-        $thumbHelper = new Thumbnail($config, $configName);
-
-        // placeholder for our modification parameters while testing out secure URL's
-        $params = ['p' => 'medium'];
-
-        // Set our Source Image file name and it's modifications
-        $thumbHelper->setSourceImage($file)->setModifications($params);
-        // build the secure url for the src/fallback image
-        $url = $thumbHelper->buildSecureURL();
+        // This will create our fallback/src img, set alt text, classes, source image
+        $fallbackImage = new Thumbnail($config, $configName);
+        // set our source image for the src image, set the modifications for this image and finally set the
+        // alt text for the entire image element
+        $fallbackImage->setSourceImage($file)
+            ->setModifications($srcImgParams)
+            ->setAltText($altText);
+        // create our src image secure URL
+        $srcImg = $fallbackImage->buildSecureURL();
 
 
         // Get The Modification Parameters passed in through the config and merge them with the ones
         // passed in from the template
-        $parameters = $this->getModificationParams($configName, $options);
+//        $parameters = $this->getModificationParams($configName, $options);
         // get the options passed in to the parameters and prepare it for our srcset array.
-        $optionWidths = $this->flatten_array($parameters, 'w');
+        $optionWidths = $this->flatten_array($configModifications, 'w');
         // get the resolutions passed in from our config file
-        $resolutions = $srcset->getResolutions();
-        // get the width or density type passed in from our config file
-//        $widthDensity = $srcset->getWidthDensity();
+//        $resolutions = $srcset->getResolutions($options['resolutions']);
+        $resolutions = $defaultsMerged['resolutions'];
 
-
-        $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $parameters);
+//
+        $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $configModifications);
 
         $context = [
-            'srcImg' => $url,
+            'srcImg' => $srcImg,
             'srcset' => $thumb,
+            'modWithOptions' => $configModifications,
+            'classes' => $htmlClass,
+            'altText' => $altText,
         ];
 
         $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
@@ -112,10 +132,6 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
-   function combineWidthHeightArrays($option1, $option2, $padValue )
-   {
-
-   }
 
     /**
      * @param $option
@@ -146,12 +162,11 @@ class BetterThumbsExtension extends SimpleExtension
 
     }
 
-    function getModificationParams($config, array $options = [] )
+    function getModificationParams($config , array $options = [] )
     {
         $extConfig = $this->getConfig();
         $configName = $this->getNamedConfig($config);
         $modificationParams = isset($extConfig[$configName]['modifications']) ? $extConfig[$configName]['modifications'] : [] ;
-//        $modificationParams = array_key_exists('modifications', $extConfig[$configName]);
         $presetParams = $extConfig['presets'];
 
         // replace parameters in 'presets' with the params in a named config
@@ -161,33 +176,77 @@ class BetterThumbsExtension extends SimpleExtension
             $defaults = $presetParams;
         }
 
-        return array_merge($defaults, $options);
+        if (isset($options['modifications'])) {
+            $mergedMods = array_merge( $defaults, $options['modifications']);
+        } else {
+            $mergedMods = $defaults;
+        }
+
+//        return array_merge($defaults, $options);
+        return $mergedMods;
     }
 
-    // TODO: take these options, merge them if they are set in a template then pass them to the srcset handler
-    function getOptions($filename, $config, $options =[])
+    protected function setAltText($namedconfig, $filename)
     {
-        $configName = $this->getNamedConfig($config);
 
-        $altText = $this->getAltText($configName, $filename);
+        $configName = $this->getNamedConfig($namedconfig);
+        $configFile = $this->getConfig();
+
+        $altText = $this->checkIndex($configFile[$configName], 'altText', NULL);
+
+
+        if ($altText == '~') {
+            $altText = '' ;
+        } elseif (empty($altText)) {
+            $tempAltText = pathinfo($filename);
+            $altText = $tempAltText[ 'filename' ];
+        } else {
+            $altText = $configFile[$configName]['altText'];
+        }
+
+        return $altText;
+    }
+
+
+    protected function getOptions($filename, $config, $options =[])
+    {
+
+        $configName = $this->getNamedConfig($config);
+        $config = $this->getConfig();
+        $srcsetHandler = new SrcsetHandler($config, $configName);
+
+        $altText = $this->setAltText($configName, $filename);
         $class = $this->getHTMLClass($configName);
-        $sizes = $srcsetHandler->getSizesAttrib($configName);
-        $resolutions = $this->getResolutions();
-        $widthDensity = $this->getWidthDensity();
+//        $sizes = $srcsetHandler->getSizesAttrib($configName);
+        $defaultRes = $srcsetHandler->getResolutions();
+//        $widthDensity = $this->getWidthDensity();
+//        $parameters = $this->getModificationParams($configName);
 
         $defaults = [
-            'widthDensity' => $widthDensity,
+//            'widthDensity' => $widthDensity,
             'resolutions' => $defaultRes,
-            'sizes' => $sizes,
+//            'sizes' => $sizes,
             'altText' => $altText,
-            'lazyLoad' => $lazyLoaded,
-            'class' => $class
+//            'lazyLoad' => $lazyLoaded,
+            'class' => $class,
+//            'modifications' => $parameters,
 
         ];
 
         $defOptions = array_merge($defaults, $options);
 
         return $defOptions;
+    }
+
+
+    protected function getHTMLClass($namedConfig)
+    {
+        $configName = $this->getNamedConfig($namedConfig);
+        $config = $this->getConfig();
+
+        $class = $this->checkIndex( $config[$configName], 'class', NULL);
+
+        return $class;
     }
 
     /**
@@ -310,23 +369,6 @@ PFILL;
                     'fit' => 'stretch'
                 ],
             ],
-            'default' => [
-                'widths' => [ 320, 480, 768 ],
-                'heights' => [ 0 ],
-                'widthDensity' => 'w',
-                'sizes' => [ '100vw'  ],
-                'cropping' => 'resize',
-                'altText' => '',
-                'class' => ''
-            ],
-            'allowed_types' => [
-                'webp',
-                'jpeg',
-                'jpg',
-                'png',
-                'gif',
-                'jxr'
-            ]
         ];
     }
 
