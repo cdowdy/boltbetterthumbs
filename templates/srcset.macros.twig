@@ -31,8 +31,8 @@ alt="{{ altText }}"
 {% macro buildImg( sizes, widthDensity, classes, srcset, srcImg, altText ) %}
  {% import _self as build %}
 {% spaceless %}
-{% if widthDensity == 'w' %}{{ build.sizes(sizes) }}{% endif %}
 {{ build.htmlClasses(classes) }}
+{% if widthDensity == 'w' %}{{ build.sizes(sizes) }}{% endif %}
 {{ build.srcset( srcset ) }}
 {{ build.srcImg( srcImg ) }}
 {{ build.altText( altText ) }}
