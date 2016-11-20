@@ -12,11 +12,24 @@ use League\Glide\Urls\UrlBuilderFactory;
  */
 class Thumbnail
 {
+    /**
+     * @var array
+     */
+    protected $_extensionConfig;
 
     /**
      * @var
      */
+    protected $_configName;
+    /**
+     * @var
+     */
     protected $_sourceImage;
+
+    /**
+     * @var array
+     */
+    protected $_classes;
 
     /**
      * @var
@@ -38,15 +51,7 @@ class Thumbnail
      * Modifications done to the image through intervention (crop/filters etc)
      */
     protected $modifications = [];
-    /**
-     * @var array
-     */
-    protected $_extensionConfig;
 
-    /**
-     * @var
-     */
-    protected $_configName;
 
 
     /**
@@ -92,6 +97,24 @@ class Thumbnail
     }
 
     /**
+     * @return mixed
+     */
+    public function getClasses()
+    {
+        return $this->_classes;
+    }
+
+    /**
+     * @param mixed $classes
+     */
+    public function setClasses(array $classes)
+    {
+        $this->_classes = $classes;
+    }
+
+
+
+    /**
      * @return array
      */
     public function getModifications()
@@ -99,9 +122,6 @@ class Thumbnail
         return $this->modifications;
     }
 
-    /**
-     * @param array $modifications
-     */
     public function setModifications(array $modifications)
     {
 
