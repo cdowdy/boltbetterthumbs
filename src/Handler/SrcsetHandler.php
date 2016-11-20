@@ -22,6 +22,8 @@ class SrcsetHandler
      * */
     protected $_sizesAttrib;
 
+    protected $_widthDensity;
+
 
     /**
      * SrcsetHandler constructor.
@@ -34,7 +36,10 @@ class SrcsetHandler
     }
 
 
-
+    /**
+     * @param array $default
+     * @return array
+     */
     public function getSizesAttrib( $default = ['100vw'] )
     {
         $sizes = isset($this->_extensionConfig[$this->_configname]['sizes'])
@@ -44,28 +49,30 @@ class SrcsetHandler
         return $sizes;
     }
 
-
-
-    public function getWidthDensity($default = 'w')
+    /**
+     * @return mixed
+     */
+    public function getWidthDensity()
     {
-        $valid = [ 'w', 'x', 'd' ];
-        $widthDensity = isset($this->_extensionConfig[$this->_configname][ 'widthDensity' ]);
-
-        if (isset($widthDensity) && !empty($widthDensity)) {
-            $wd = strtolower($this->_extensionConfig[$this->_configname][ 'widthDensity' ]);
-
-            if ($wd == 'd' ) {
-                $wd = 'x';
-            }
-
-        } else {
-            $wd = $default;
-        }
-
-        return $wd;
+        return $this->_widthDensity;
     }
 
 
+    /**
+     * @param $widthDensity
+     */
+    public function setWidthDensity($widthDensity)
+    {
+
+        $this->_widthDensity = $widthDensity;
+
+    }
+
+
+    /**
+     * @param array $defaultResolutions
+     * @return array
+     */
     public function getResolutions($defaultResolutions = [ 1, 2, 3 ])
     {
         $configName = $this->_extensionConfig[$this->_configname];
@@ -74,6 +81,11 @@ class SrcsetHandler
         return $resolutions;
     }
 
+    /**
+     * @param $thumb
+     * @param $resolutions
+     * @return array
+     */
     public function resolutionErrors($thumb, $resolutions)
     {
         $resError = [];
@@ -104,13 +116,18 @@ class SrcsetHandler
     }
 
 
-
-
-
+    /**
+     * @param $fileName
+     * @param $widths
+     * @param $resolutions
+     * @param array $modifications
+     * @return array
+     */
     public function createSrcset($fileName, $widths, $resolutions, array $modifications )
     {
         // make thumbs an empty array
         $thumb = [];
+        $srcset = [];
         $thumbHelper = new Thumbnail($this->_extensionConfig, $this->_configname);
         $thumbHelper->setSourceImage($fileName);
         $thumbHelper->setModifications($modifications);
