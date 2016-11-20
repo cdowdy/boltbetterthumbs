@@ -1,0 +1,40 @@
+{# the sizes attribute passed from the config merged with the one from the template #}
+{% macro sizes( sizes ) %}
+sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
+{% endmacro sizes %}
+
+{#
+    gather the class array from the template or the config file and loop
+    over the contents in the array
+#}
+{% macro htmlClasses( classes ) %}
+{% if classes %}class="{% for c in classes %}{{ c }} {% endfor %}"{% endif %}
+{% endmacro htmlClasses %}
+
+{# Create the srcset attribute #}
+{% macro srcset( srcset ) %}
+srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not loop.last  %}, {% endif %}{% endfor %}"
+{% endmacro srcset %}
+
+
+{# the src image #}
+{% macro srcImg( srcImg ) %}
+src="{{ srcImg }}"
+{% endmacro srcImg %}
+
+{# build the alt text attrib #}
+{% macro altText( altText ) %}
+alt="{{ altText }}"
+{% endmacro altText %}
+
+{# Build the Image Attriubtes. Combine classes, id's, data-attribs, alt text, src image and srcset #}
+{% macro buildImg( sizes, widthDensity, classes, srcset, srcImg, altText ) %}
+ {% import _self as build %}
+{% spaceless %}
+{% if widthDensity == 'w' %}{{ build.sizes(sizes) }}{% endif %}
+{{ build.htmlClasses(classes) }}
+{{ build.srcset( srcset ) }}
+{{ build.srcImg( srcImg ) }}
+{{ build.altText( altText ) }}
+{% endspaceless %}
+{% endmacro buildImg %}
