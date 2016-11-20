@@ -85,46 +85,50 @@ class BetterThumbsExtension extends SimpleExtension
         // classes merged from template
         $mergedClasses = $defaultsMerged['class'];
         $htmlClass = $this->optionToArray($mergedClasses);
+        // alt text mergd from the twig template
         $altText = $defaultsMerged['altText'];
+        // width denisty merged from the twig template
+        $widthDensity = $defaultsMerged['widthDensity'];
+        // sizes attribute merged from the twig template and made sure it's an array
+        $sizesAttrib = $this->optionToArray($defaultsMerged['sizes']);
+        // get the resolutions passed in from our config file
+        $resolutions = $defaultsMerged['resolutions'];
 
 
-
-
-//        $finalModifications = array_merge($configModifications, $mergedParams);
+        // the 'src' image parameters. get the first modifications in the first array
         $srcImgParams = current($configModifications);
 
         // get our helpers and handlers setup
         // This will create a srcset Array
         $srcset = new SrcsetHandler($config, $configName);
+
+        // set the width density passed from our config
+        $srcset->setWidthDensity($widthDensity);
+
         // This will create our fallback/src img, set alt text, classes, source image
         $fallbackImage = new Thumbnail($config, $configName);
+
         // set our source image for the src image, set the modifications for this image and finally set the
         // alt text for the entire image element
         $fallbackImage->setSourceImage($file)
             ->setModifications($srcImgParams)
             ->setAltText($altText);
+
         // create our src image secure URL
         $srcImg = $fallbackImage->buildSecureURL();
 
-
-        // Get The Modification Parameters passed in through the config and merge them with the ones
-        // passed in from the template
-//        $parameters = $this->getModificationParams($configName, $options);
         // get the options passed in to the parameters and prepare it for our srcset array.
         $optionWidths = $this->flatten_array($configModifications, 'w');
-        // get the resolutions passed in from our config file
-//        $resolutions = $srcset->getResolutions($options['resolutions']);
-        $resolutions = $defaultsMerged['resolutions'];
 
-//
+
         $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $configModifications);
-
         $context = [
             'srcImg' => $srcImg,
             'srcset' => $thumb,
-            'modWithOptions' => $configModifications,
+            'widthDensity' => $widthDensity,
             'classes' => $htmlClass,
             'altText' => $altText,
+            'sizes' => $sizesAttrib,
         ];
 
         $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
@@ -207,6 +211,36 @@ class BetterThumbsExtension extends SimpleExtension
         return $altText;
     }
 
+    protected function checkWidthDensity($configName, $default = 'w' )
+    {
+        $extConfig = $this->getConfig();
+        $namedConfig = $this->getNamedConfig($configName);
+        $valid = [ 'w', 'x', 'd' ];
+        $widthDensity = isset($extConfig[$namedConfig][ 'widthDensity' ]);
+
+        if (isset($widthDensity) && !empty($widthDensity)) {
+            $wd = strtolower($extConfig[$namedConfig][ 'widthDensity' ]);
+
+            if ($wd == 'd' ) {
+                $wd = 'x';
+            }
+
+        } else {
+            $wd = $default;
+        }
+        return $wd;
+    }
+
+    public function setSizesAttrib($config)
+    {
+        $configName = $this->getNamedConfig($config);
+        $config = $this->getConfig();
+
+        $sizesAttrib =  isset( $config[$configName]['sizes']) ? $config[$configName]['sizes'] : ['100vw'];
+
+        return $sizesAttrib;
+    }
+
 
     protected function getOptions($filename, $config, $options =[])
     {
@@ -217,20 +251,16 @@ class BetterThumbsExtension extends SimpleExtension
 
         $altText = $this->setAltText($configName, $filename);
         $class = $this->getHTMLClass($configName);
-//        $sizes = $srcsetHandler->getSizesAttrib($configName);
+        $sizes = $srcsetHandler->getSizesAttrib($configName);
         $defaultRes = $srcsetHandler->getResolutions();
-//        $widthDensity = $this->getWidthDensity();
-//        $parameters = $this->getModificationParams($configName);
+        $widthDensity = $this->checkWidthDensity($configName);
 
         $defaults = [
-//            'widthDensity' => $widthDensity,
+            'widthDensity' => $widthDensity,
             'resolutions' => $defaultRes,
-//            'sizes' => $sizes,
+            'sizes' => $sizes,
             'altText' => $altText,
-//            'lazyLoad' => $lazyLoaded,
             'class' => $class,
-//            'modifications' => $parameters,
-
         ];
 
         $defOptions = array_merge($defaults, $options);
