@@ -172,6 +172,14 @@ class BetterThumbsExtension extends SimpleExtension
 
     }
 
+
+    /**
+     * @param $config
+     * @param array $options
+     * @return array
+     * gets modification params from the config, merges them if empty with presets
+     * and allows them to be merged with options passed in from a template
+     */
     function getModificationParams($config , array $options = [] )
     {
         $extConfig = $this->getConfig();
@@ -186,13 +194,14 @@ class BetterThumbsExtension extends SimpleExtension
             $defaults = $presetParams;
         }
 
+        // if any options are in the template $options['modifications'] then
+        // merge them with our defaults set in our config
         if (isset($options['modifications'])) {
             $mergedMods = array_merge( $defaults, $options['modifications']);
         } else {
             $mergedMods = $defaults;
         }
 
-//        return array_merge($defaults, $options);
         return $mergedMods;
     }
 
