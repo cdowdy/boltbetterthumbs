@@ -399,6 +399,31 @@ PFILL;
                     'fit' => 'stretch'
                 ],
             ],
+            'betterthumbs' => [
+                'save_data' => FALSE,
+                'altText' => '',
+                'widthDensity' => 'w',
+                'sizes' => [ '100vw'],
+                'modifications' => [
+                    'small' => [
+                        'w' => 175,
+                        'fit' => 'contain'
+                    ],
+                    'medium' => [
+                        'w' => 350,
+                        'fit' => 'contain'
+                    ],
+                    'large' => [
+                        'w' => 700,
+                        'fit' => 'contain'
+                    ],
+                    'xlarge' => [
+                        'w' => 1400,
+                        'fit' => 'stretch'
+                    ],
+                ],
+            ],
+
         ];
     }
 
