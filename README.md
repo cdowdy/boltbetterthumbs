@@ -34,11 +34,11 @@ Here is how the markup will look:
 
 ```html 
 <img sizes="100vw"  
-    srcset="/img/filename-here.jpg?p=small&s=324da5bd33624470fd09fd670aad0341 175w,
-    /img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc 350w,
-    /img/filename-here.jpg?p=large&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 700w,
-    /img/filename-here.jpg?p=xlarge&s=yXQAuVfPXmINowtyWqXMSykY6NO6s8be 1400w"
-    src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
+    srcset="/img/filename-here.jpg?p=small&amp;s=324da5bd33624470fd09fd670aad0341 175w,
+    /img/filename-here.jpg?p=medium&amp;s=a21a21ea8dc43a94c0666a20ccaefbcc 350w,
+    /img/filename-here.jpg?p=large&amp;s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 700w,
+    /img/filename-here.jpg?p=xlarge&amp;s=yXQAuVfPXmINowtyWqXMSykY6NO6s8be 1400w"
+    src="/img/filename-here.jpg?p=medium&amp;s=a21a21ea8dc43a94c0666a20ccaefbcc"
     alt="alt text">  
 ```  
 
