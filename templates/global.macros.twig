@@ -1,0 +1,31 @@
+{#
+    gather the class array from the template or the config file and loop
+    over the contents in the array
+#}
+{% macro htmlClasses( classes ) %}
+    {% if classes %}class="{% for c in classes %}{{ c }} {% endfor %}"{% endif %}
+{% endmacro htmlClasses %}
+
+
+{# set the id if its present #}
+{% macro setID( id ) %}
+    {% if id %}id="{{ id }}"{% endif %}
+{% endmacro setID %}
+
+
+{# set data-attributes if present #}
+{% macro setDataAttrib( dataAttributes ) %}
+    {% if dataAttributes %}data-{% for key, value in dataAttributes %}{{ key }}="{{ value }}"{% endfor %}{% endif %}
+{% endmacro setDataAttrib %}
+
+
+{# the src image #}
+{% macro srcImg( srcImg ) %}
+    src="{{ srcImg }}"
+{% endmacro srcImg %}
+
+
+{# build the alt text attrib #}
+{% macro altText( altText ) %}
+    alt="{{ altText }}"
+{% endmacro altText %}
