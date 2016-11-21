@@ -125,33 +125,9 @@ This will give you four (4) thumbnails with widths of 175, 350, 700 and 1400 wit
   
   
  
- | Modification Name | Function |  
- | ------------- | ------ |  
- | Orientation        | or       |  
- | Crop               | crop    |  
- | Width               | w    |  
- | Height               | h    |  
- | Fit                 | fit |  
- | Device Pixel Ratio | dpr |  
- | Brightness         | bri |  
- | Contrast         | con |  
- | Gamma           | gam |  
- | Sharpen          | sharp |  
- | Blur             | blur |  
- | Pixelate         | pixel |  
- | Filter           | filt |  
- | Watermark Path | mark |  
- | Watermark Width | markw |  
- | Watermark Height | markh |  
- | Watermark X-offset | markx |  
- | Watermark Y-offset | marky |    
- | Watermark Padding | markpad |  
- | Watermark Position | markpos |  
- | Watermark Alpha | markalpha |  
- | Background      | bg |  
- | Border           | border |  
- | Quality          | q |  
- | Format          | fm |    
+| header | Header |  
+| ----- | ----- |
+
  
  
  All available modifications and what they mean can be found at [Glide's Website](http://glide.thephpleague.com/1.0/api/quick-reference/).
