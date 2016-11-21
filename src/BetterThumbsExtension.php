@@ -68,8 +68,7 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
-
-    public function image( $file, $name = 'betterthumbs', array $options = [] )
+    public function image($file, $name = 'betterthumbs', array $options = [])
     {
         $app = $this->getContainer();
         $config = $this->getConfig();
@@ -81,7 +80,7 @@ class BetterThumbsExtension extends SimpleExtension
 
 
         // get our options and merge them with ones passed from the template
-        $defaultsMerged = $this->getOptions($file, $configName, $options );
+        $defaultsMerged = $this->getOptions($file, $configName, $options);
         // classes merged from template
         $mergedClasses = $defaultsMerged['class'];
         $htmlClass = $this->optionToArray($mergedClasses);
@@ -106,22 +105,23 @@ class BetterThumbsExtension extends SimpleExtension
         $srcset->setWidthDensity($widthDensity);
 
         // This will create our fallback/src img, set alt text, classes, source image
-        $fallbackImage = new Thumbnail($config, $configName);
+        $thumbnail = new Thumbnail($config, $configName);
 
         // set our source image for the src image, set the modifications for this image and finally set the
         // alt text for the entire image element
-        $fallbackImage->setSourceImage($file)
+        $thumbnail->setSourceImage($file)
             ->setModifications($srcImgParams)
             ->setAltText($altText);
 
         // create our src image secure URL
-        $srcImg = $fallbackImage->buildSecureURL();
+        $srcImg = $thumbnail->buildSecureURL();
 
         // get the options passed in to the parameters and prepare it for our srcset array.
         $optionWidths = $this->flatten_array($configModifications, 'w');
 
 
         $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $configModifications);
+
         $context = [
             'srcImg' => $srcImg,
             'srcset' => $thumb,
