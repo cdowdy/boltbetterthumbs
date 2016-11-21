@@ -90,7 +90,6 @@ presets: &presets
 ## Config Setup  
 TODO:  
 * save_data
-* class
 * altText
 * widthDensity
 * sizes
