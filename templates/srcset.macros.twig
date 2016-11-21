@@ -3,13 +3,6 @@
 sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
 {% endmacro sizes %}
 
-{#
-    gather the class array from the template or the config file and loop
-    over the contents in the array
-#}
-{% macro htmlClasses( classes ) %}
-{% if classes %}class="{% for c in classes %}{{ c }} {% endfor %}"{% endif %}
-{% endmacro htmlClasses %}
 
 {# Create the srcset attribute #}
 {% macro srcset( srcset ) %}
@@ -17,24 +10,13 @@ srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not 
 {% endmacro srcset %}
 
 
-{# the src image #}
-{% macro srcImg( srcImg ) %}
-src="{{ srcImg }}"
-{% endmacro srcImg %}
-
-{# build the alt text attrib #}
-{% macro altText( altText ) %}
-alt="{{ altText }}"
-{% endmacro altText %}
-
 {# Build the Image Attriubtes. Combine classes, id's, data-attribs, alt text, src image and srcset #}
-{% macro buildImg( sizes, widthDensity, classes, srcset, srcImg, altText ) %}
- {% import _self as build %}
+{% macro buildImg( sizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, altText ) %}
+    {# pulls in macros used by both srcset and picture element #}
+    {% import 'global.macros.twig' as global %}
 {% spaceless %}
-{{ build.htmlClasses(classes) }}
-{% if widthDensity == 'w' %}{{ build.sizes(sizes) }}{% endif %}
-{{ build.srcset( srcset ) }}
-{{ build.srcImg( srcImg ) }}
-{{ build.altText( altText ) }}
+ {{ global.setID(id) }} {{ global.htmlClasses(classes) }} {{ global.setDataAttrib( dataAttributes ) }}
+ {% if widthDensity == 'w' %}{{ _self.sizes(sizes) }}{% endif %} {{ _self.srcset( srcset ) }} {{ global.srcImg( srcImg ) }}
+ {{ global.altText( altText ) }}
 {% endspaceless %}
 {% endmacro buildImg %}
