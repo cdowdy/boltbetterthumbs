@@ -91,6 +91,8 @@ class BetterThumbsController implements ControllerProviderInterface
         // set our defaults and presets with glide's setters
         $server->setDefaults($defaults);
         $server->setPresets($presets);
+        // set a switch to use the cached image in the future
+//        $server->setCacheWithFileExtensions(true);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {
