@@ -117,4 +117,39 @@ namedConfig:
       w: 1400
       fit: stretch
 ```  
-This will give you four (4) thumbnails with widths of 175, 350, 700 and 1400 with a fit of 'stretch'. The Second thumbnail (named 'medium' in this example) will also have a height of 350 pixels. 
+This will give you four (4) thumbnails with widths of 175, 350, 700 and 1400 with a fit of 'stretch'. The Second thumbnail (named 'medium' in this example) will also have a height of 350 pixels.  
+ 
+ Using the ``fit`` of 'stretch' allows us to upscale images to fit a certain width. In this example an image that is 800px wide will be upscaled to 1400.  
+ 
+ The available modifications are:  
+ 
+ | Modification Name | Function |
+ | ------------- | ------ |
+ | Orientation        | or       |
+ | Crop               | crop    |
+ | Width               | w    |
+ | Height               | h    |
+ | Fit                 | fit |
+ | Device Pixel Ratio | dpr |
+ | Brightness         | bri |
+ | Contrast         | con |
+ | Gamma           | gam |
+ | Sharpen          | sharp |
+ | Blur             | blur |
+ | Pixelate         | pixel |
+ | Filter           | filt |
+ | Watermark Path | mark |
+ | Watermark Width | markw |
+ | Watermark Height | markh |
+ | Watermark X-offset | markx |
+ | Watermark Y-offset | marky |  
+ | Watermark Padding | markpad |
+ | Watermark Position | markpos |
+ | Watermark Alpha | markalpha |
+ | Background      | bg |
+ | Border           | border |
+ | Quality          | q |
+ | Format          | fm |  
+ 
+ 
+ All available modifications and what they mean can be found at [Glide's Website](http://glide.thephpleague.com/1.0/api/quick-reference/).
