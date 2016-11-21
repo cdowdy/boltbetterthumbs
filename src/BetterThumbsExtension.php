@@ -381,6 +381,7 @@ PFILL;
                 'secure_thumbs' => true,
                 'secure_sign_key' => ''
             ],
+            'defaults' => [ 'q' => 80 ],
             'presets' => [
                 'small' => [
                     'w' => 175,
