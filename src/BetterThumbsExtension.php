@@ -84,6 +84,10 @@ class BetterThumbsExtension extends SimpleExtension
         // classes merged from template
         $mergedClasses = $defaultsMerged['class'];
         $htmlClass = $this->optionToArray($mergedClasses);
+        // ID passed from config merged with the template
+        $id = $defaultsMerged['id'];
+        // if any data-attriubtes are set print em out
+        $dataAttributes = $defaultsMerged['data_attrib'];
         // alt text mergd from the twig template
         $altText = $defaultsMerged['altText'];
         // width denisty merged from the twig template
@@ -127,6 +131,8 @@ class BetterThumbsExtension extends SimpleExtension
             'srcset' => $thumb,
             'widthDensity' => $widthDensity,
             'classes' => $htmlClass,
+            'id' => $id,
+            'dataAttributes' => $dataAttributes,
             'altText' => $altText,
             'sizes' => $sizesAttrib,
         ];
@@ -250,7 +256,9 @@ class BetterThumbsExtension extends SimpleExtension
         $srcsetHandler = new SrcsetHandler($config, $configName);
 
         $altText = $this->setAltText($configName, $filename);
-        $class = $this->getHTMLClass($configName);
+        $class = $this->addClassId($configName, 'class');
+        $id = $this->addClassId($configName, 'id');
+        $dataAttributes = $this->addClassId($configName, 'data_attrib');
         $sizes = $srcsetHandler->getSizesAttrib($configName);
         $defaultRes = $srcsetHandler->getResolutions();
         $widthDensity = $this->checkWidthDensity($configName);
@@ -261,6 +269,8 @@ class BetterThumbsExtension extends SimpleExtension
             'sizes' => $sizes,
             'altText' => $altText,
             'class' => $class,
+            'id' => $id,
+            'data_attrib' => $dataAttributes,
         ];
 
         $defOptions = array_merge($defaults, $options);
@@ -269,15 +279,38 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
-    protected function getHTMLClass($namedConfig)
+    /**
+     * @param $namedConfig
+     * @param $optionType
+     * @return array|string
+     *
+     * adds any classes, ID's or data-attributes passed in from the template
+     */
+    protected function addClassId( $namedConfig, $optionType )
     {
         $configName = $this->getNamedConfig($namedConfig);
         $config = $this->getConfig();
 
-        $class = $this->checkIndex( $config[$configName], 'class', NULL);
+        $typeToAdd = $this->checkIndex( $config[$configName], $optionType, NULL );
 
-        return $class;
+        if (is_array( $typeToAdd ) ) {
+            $trimmedType = array_map( 'trim', $typeToAdd );
+        } else {
+            $trimmedType = trim($typeToAdd);
+        }
+
+        return $trimmedType;
     }
+
+//    protected function getHTMLClass($namedConfig)
+//    {
+//        $configName = $this->getNamedConfig($namedConfig);
+//        $config = $this->getConfig();
+//
+//        $class = $this->checkIndex( $config[$configName], 'class', NULL);
+//
+//        return $class;
+//    }
 
     /**
      * @param $name
