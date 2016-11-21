@@ -96,6 +96,30 @@ TODO:
 * sizes
 * resolutions  
 
+### Img Tag Attributes:  
+
+You can set HTML classes, ID's, and data-attributes in your named config. Classes you wish to provide should be in array, and data-attribs in a hash.  
+
+```yaml 
+namedConfg:  
+  class: [ 'your-class', 'anotherClass' ]  
+  id: 'js-hook'  
+  data_attrib: { 'responsive': 'images'}
+```  
+
+The rendered img tag will look like so:  
+
+```html 
+<img id="js-hook" class="your-class anotherClass" data-responsive="images"  
+    sizes="100vw"  
+    srcset="/img/filename-here.jpg?p=small&s=324da5bd33624470fd09fd670aad0341 175w,
+    /img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc 350w,
+    /img/filename-here.jpg?p=large&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 700w,
+    /img/filename-here.jpg?p=xlarge&s=yXQAuVfPXmINowtyWqXMSykY6NO6s8be 1400w"
+    src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
+    alt="alt text">  
+```  
+
 ### Modifications: 
 The settings for each thumbnail are declarative. Meaning for every modification you wish to make to that particular thumbnail you must have it in the config. Example:  
 
