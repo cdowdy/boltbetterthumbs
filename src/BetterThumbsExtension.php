@@ -180,7 +180,7 @@ class BetterThumbsExtension extends SimpleExtension
      * gets modification params from the config, merges them if empty with presets
      * and allows them to be merged with options passed in from a template
      */
-    function getModificationParams($config , array $options = [] )
+    protected function getModificationParams($config , array $options = [] )
     {
         $extConfig = $this->getConfig();
         $configName = $this->getNamedConfig($config);
@@ -205,6 +205,11 @@ class BetterThumbsExtension extends SimpleExtension
         return $mergedMods;
     }
 
+    /**
+     * @param $namedconfig
+     * @param $filename
+     * @return mixed|string
+     */
     protected function setAltText($namedconfig, $filename)
     {
 
@@ -226,6 +231,11 @@ class BetterThumbsExtension extends SimpleExtension
         return $altText;
     }
 
+    /**
+     * @param $configName
+     * @param string $default
+     * @return string
+     */
     protected function checkWidthDensity($configName, $default = 'w' )
     {
         $extConfig = $this->getConfig();
@@ -246,7 +256,11 @@ class BetterThumbsExtension extends SimpleExtension
         return $wd;
     }
 
-    public function setSizesAttrib($config)
+    /**
+     * @param $config
+     * @return array
+     */
+    protected function setSizesAttrib($config)
     {
         $configName = $this->getNamedConfig($config);
         $config = $this->getConfig();
@@ -257,6 +271,12 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
+    /**
+     * @param $filename
+     * @param $config
+     * @param array $options
+     * @return array
+     */
     protected function getOptions($filename, $config, $options =[])
     {
 
@@ -470,6 +490,9 @@ PFILL;
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function isSafe()
     {
         return true;
