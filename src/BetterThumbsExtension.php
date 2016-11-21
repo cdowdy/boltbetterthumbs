@@ -13,6 +13,7 @@ use Bolt\Filesystem as BoltFilesystem;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
+use Bolt\Extension\cdowdy\betterthumbs\Handler\PictureHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 
@@ -63,6 +64,7 @@ class BetterThumbsExtension extends SimpleExtension
         $this->getConfig();
         return [
             'img' => ['image',  $options ],
+            'picture' => ['picture', $options ],
 
         ];
     }
@@ -138,6 +140,55 @@ class BetterThumbsExtension extends SimpleExtension
         ];
 
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
+
+        return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
+    public function picture( $file, $name = 'betterthumbs', array $options = [] )
+    {
+        $config = $this->getConfig();
+
+        $configName = $this->getNamedConfig($name);
+
+        // get our options and merge them with ones passed from the template
+        $defaultsMerged = $this->getOptions($file, $configName, $options);
+        // classes merged from template
+        $mergedClasses = $defaultsMerged['class'];
+        $htmlClass = $this->optionToArray($mergedClasses);
+        // ID passed from config merged with the template
+        $id = $defaultsMerged['id'];
+        // if any data-attriubtes are set print em out
+        $dataAttributes = $defaultsMerged['data_attrib'];
+        // alt text mergd from the twig template
+        $altText = $defaultsMerged['altText'];
+
+        $thumbnail = new Thumbnail($config, $configName);
+
+        // placeholder picture element src image parameters
+        $srcImgParams = [
+            'con' => 10,
+        ];
+
+        // set our source image for the src image, set the modifications for this image and finally set the
+        // alt text for the entire image element
+        $thumbnail->setSourceImage($file)
+            ->setModifications($srcImgParams)
+            ->setAltText($altText);
+
+        $srcImg = $thumbnail->buildSecureURL();
+
+        $pictureHandler = new PictureHandler($config, $configName);
+
+
+        $context = [
+            'srcImg' => $srcImg,
+            'classes' => $htmlClass,
+            'id' => $id,
+            'dataAttributes' => $dataAttributes,
+            'altText' => $altText,
+        ];
+
+        $renderTemplate = $this->renderTemplate('picture.thumb.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
