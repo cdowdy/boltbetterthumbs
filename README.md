@@ -294,7 +294,7 @@ This will give you four (4) thumbnails with widths of 175, 350, 700 and 1400 wit
  All available modifications and what they mean can be found at [Glide's Website](http://glide.thephpleague.com/1.0/api/quick-reference/).  
  
  
- ##  Advanced Usage Template Overrides  
+ ## Advanced Usage Template Overrides  
  
  Every setting in your named config can be over ridden from your template. This makes it nice not having to have a bunch of configuration setup. You can use a named config and plug in your new settings right in your template. Example using a config named 'blogposts' and then overriding some settings in a template.  
  
