@@ -129,7 +129,30 @@ namedConfig:
   altText: 'alt text here'  
   # or to turn off alt text if you're using the figure wrapping element  
   altText: ~  
-```
+```  
+
+__Sizes:__  
+
+Sizes is an array. If you are unfamiliar with this image attribute see: [Responsive Images 101, Part 5: Sizes](https://cloudfour.com/thinks/responsive-images-101-part-5-sizes/). If no sizes are provided and you are using the width descriptor it will fall back to `100vw`.  
+
+```yaml  
+namedConfig:  
+  #other config settings
+  sizes: [ '(max-width: 480px) 100vw', '(max-width: 900px) 33vw', '254px']   
+```  
+
+Rendered img tag:  
+  
+```html  
+<img id="js-hook" class="your-class anotherClass" data-responsive="images"  
+    sizes="(max-width: 480px) 100vw, (max-width: 900px) 33vw, 254px"    
+    srcset="/img/filename-here.jpg?p=small&s=324da5bd33624470fd09fd670aad0341 175w,
+      /img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc 350w,
+      /img/filename-here.jpg?p=large&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 700w,
+      /img/filename-here.jpg?p=xlarge&s=yXQAuVfPXmINowtyWqXMSykY6NO6s8be 1400w"
+    src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
+    alt="alt text">  
+```  
 
 __Modifications:__  
 
