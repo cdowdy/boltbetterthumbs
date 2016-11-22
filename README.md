@@ -291,4 +291,67 @@ This will give you four (4) thumbnails with widths of 175, 350, 700 and 1400 wit
 | Format          | fm |  
  
  
- All available modifications and what they mean can be found at [Glide's Website](http://glide.thephpleague.com/1.0/api/quick-reference/).
+ All available modifications and what they mean can be found at [Glide's Website](http://glide.thephpleague.com/1.0/api/quick-reference/).  
+ 
+ 
+ ## Advanced Usage: Template Overrides  
+ 
+ Every setting in your named config can be over ridden from your template. This makes it nice not having to have a bunch of configuration setup. You can use a named config and plug in your new settings right in your template. Example using a config named 'blogposts' and then overriding some settings in a template.  
+ 
+```yaml 
+# The extensions config
+blogpost:  
+ class: [ 'latest-posts' ]  
+ id: 'cool-id'  
+ data_attrib: { 'posts': 'read'}  
+ altText: 'Bears in a stream'  
+ widthDensity: 'w'  
+ sizes: [ '100vw' ]
+ modifications:
+   small: { 'w': 340 }
+   medium: { 'w': 680 }
+   large: { 'w': 800 }
+   xlarge: { 'w' : 1000 }
+```  
+ 
+ In our template:  
+   
+ ```twig 
+<div class="container">
+  <figure>  
+    {{ img( record.image, 'blogposts', { 'id': 'new-id', 'widthDensity' : 'x', 'resolutions' : [ 1, 2, 3 ], altText: FALSE }) }}
+    <figcaption>  
+      <p>This is a figcaption that I've written!</p>
+    </figcaption> 
+  </figure>  
+</div> 
+ ```  
+ The rendered Image will now be:  
+ 
+```html  
+<div>  
+  <figure>  
+    <img clas="latest-posts" id="new-id" data-posts="read" 
+       srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x,  
+           /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
+           /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x,
+       src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
+       alt="">  
+    <figcaption>
+      <p>This is a figcaption that I've written!</p>
+    </figcaption> 
+  </figure>  
+</div> 
+```  
+
+For better readability you may want to put each override on it's own line.  
+  
+```twig  
+{{ img( record.image, 'blogposts', { 
+    'id': 'new-id', 
+    'widthDensity' : 'x', 
+    'resolutions' : [ 1, 2, 3 ], 
+    'altText': FALSE 
+  }) 
+}}
+```
