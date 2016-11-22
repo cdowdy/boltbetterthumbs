@@ -158,7 +158,81 @@ Decide if you want to use the image width or screen density for your responsive 
 namedConfig:  
   #other settings here
   widthDensity: 'w' # or 'x'
-```
+```  
+
+__Resolutions:__  
+
+To use the density descriptor ('x') mentioned above you need to supply a range of resolutions.  
+
+```yaml    
+namedConfig:
+  widthDensity: x  
+  resolutions: [ 1, 2, 3 ]  
+```  
+
+If no resolutions are supplied and the 'x' descriptor is used the extension will default to three (3) screen densities.    
+
+* 1x  
+* 2x 
+* 3x  
+
+The settings above will also use the widths set in the "preset" config section. If you don't change the preset widths or set widths in your config modification section your images will be served like so:  
+ 
+* 1x screens => 175px wide image  
+* 2x screens => 350px wide image  
+* 3x screens => 700px wide image  
+ 
+This makes the extension kind of rigid when it comes to defaults but in my opinion there really isn't a good way to set defaults for this.   
+ 
+** if you're using resolution switching the number of widths or heights you want to use should also match the number of resolutions. For 4 images you would also need 4 resolutions. If the number of Resolutions is not the same as the number of Widths or Heights items will be removed to make them match.**  
+ 
+examples: 
+  
+  
+Config with more resolutions than widths set:  
+ 
+ ```yaml    
+ yourImageSettings: 
+   widthDensity: x  
+   resolutions: [ 1, 2, 2.5, 3 ] 
+   modifications:  
+     small: { 'w': 340 }
+     medium: { 'w': 680 }
+     large: { 'w': 800 }
+ ```  
+ 
+rendered HTML - the last resolution (3) is removed.    
+ 
+```html  
+<img srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x, 
+        /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
+        /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 2.5x,
+    src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
+    alt="your-image">  
+```  
+ 
+More Widths than Resolutions:  
+ 
+```yaml    
+yourImageSettings: 
+  widthDensity: x  
+  resolutions: [ 1, 2, 3 ] 
+  modifications: 
+    small: { 'w': 340 }
+    medium: { 'w': 680 }
+    large: { 'w': 800 }
+    xlarge: { 'w' : 1000 }
+```  
+ 
+ rendered HTML - the last width (1000) is removed.    
+ 
+```html  
+<img srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x,  
+        /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
+        /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x,
+    src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
+    alt="your-image">  
+```  
 
 __Modifications:__  
 
