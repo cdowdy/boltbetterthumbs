@@ -184,7 +184,7 @@ The settings above will also use the widths set in the "preset" config section. 
  
 This makes the extension kind of rigid when it comes to defaults but in my opinion there really isn't a good way to set defaults for this.   
  
-** if you're using resolution switching the number of widths or heights you want to use should also match the number of resolutions. For 4 images you would also need 4 resolutions. If the number of Resolutions is not the same as the number of Widths or Heights items will be removed to make them match.**  
+**if you're using resolution switching the number of widths or heights you want to use should also match the number of resolutions. For 4 images you would also need 4 resolutions. If the number of Resolutions is not the same as the number of Widths or Heights items will be removed to make them match.**  
  
 examples: 
   
