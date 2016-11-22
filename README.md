@@ -90,12 +90,12 @@ presets: &presets
 ## Config Setup  
 TODO:  
 * save_data
-* altText
+
 * widthDensity
 * sizes
 * resolutions  
 
-### Img Tag Attributes:  
+__Img Tag Attributes__  
 
 You can set HTML classes, ID's, and data-attributes in your named config. Classes you wish to provide should be in array, and data-attribs in a hash.  
 
@@ -119,7 +119,20 @@ The rendered img tag will look like so:
     alt="alt text">  
 ```  
 
-### Modifications: 
+__Alt Text:__  
+
+Alt text should be included for each image tag. If this option is left blank it will fallback to the filename. In most instances this is not good alt text. So you the user should supply the alt text. In instances where alt text would be redundant you can turn off alt text by using a tilde (~) in the extensions config or the word FLASE in your templates. To help determine if your alt text is redundant or sufficient see http://webaim.org/techniques/alttext/#context  
+
+```yaml  
+namedConfig:  
+  #other config settings
+  altText: 'alt text here'  
+  # or to turn off alt text if you're using the figure wrapping element  
+  altText: '~'  
+```
+
+__Modifications:__  
+
 The settings for each thumbnail are declarative. Meaning for every modification you wish to make to that particular thumbnail you must have it in the config. Example:  
 
 ```yaml
