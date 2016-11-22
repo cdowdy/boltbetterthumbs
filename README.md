@@ -128,7 +128,7 @@ namedConfig:
   #other config settings
   altText: 'alt text here'  
   # or to turn off alt text if you're using the figure wrapping element  
-  altText: '~'  
+  altText: ~  
 ```
 
 __Modifications:__  
