@@ -372,7 +372,7 @@ More template overrides to modifications would follow the same pattern.
 {{ img(record.image, 'blogposts', {
     'modifications': { 
         'small': {'w': 400, 'filt':'sepia' },
-        'medium: { 'w': 600, 'h': 600, 'fm': 'png' }
+        'medium': { 'w': 600, 'h': 600, 'fm': 'png' }
     } ,
 } ) }}
 ```  
