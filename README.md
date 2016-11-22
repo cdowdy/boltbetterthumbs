@@ -354,4 +354,25 @@ For better readability you may want to put each override on it's own line.
     'altText': FALSE 
   }) 
 }}
-```
+```  
+
+__OverRiding 'Modifications'__  
+
+To override any modifications you'll need to prefix all modifications with the word 'modifications', followed by the config setting you wish to over ride and the values. To override this examples 'blogpost' named config's smallest thumbnail and adding a sepia filter would look as follows: 
+
+```twig  
+{{ img(record.image, 'blogposts', {
+    'modifications': { 'small': {'w': 400, 'filt':'sepia' } } ,
+} ) }}
+```  
+
+More template overrides to modifications would follow the same pattern.  
+
+```twig  
+{{ img(record.image, 'blogposts', {
+    'modifications': { 
+        'small': {'w': 400, 'filt':'sepia' },
+        'medium: { 'w': 600, 'h': 600, 'fm': 'png' }
+    } ,
+} ) }}
+```  
