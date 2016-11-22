@@ -90,9 +90,6 @@ presets: &presets
 ## Config Setup  
 TODO:  
 * save_data
-
-* widthDensity
-* sizes
 * resolutions  
 
 __Img Tag Attributes__  
@@ -153,6 +150,16 @@ Rendered img tag:
     src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
     alt="alt text">  
 ```  
+
+__Width Density:__  
+
+Decide if you want to use the image width or screen density for your responsive images. This extension defaults to using the width descriptor ('w'). For more information on these see: [Responsive Images 101, Part 4: Srcset Width Descriptors](https://cloudfour.com/thinks/responsive-images-101-part-4-srcset-width-descriptors/) and [Responsive Images 101, Part 3: Srcset Display Density](https://cloudfour.com/thinks/responsive-images-101-part-3-srcset-display-density/)  
+
+```yaml  
+namedConfig:  
+  #other settings here
+  widthDensity: 'w' # or 'x'
+```
 
 __Modifications:__  
 
