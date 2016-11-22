@@ -141,8 +141,7 @@ namedConfig:
 Rendered img tag:  
   
 ```html  
-<img id="js-hook" class="your-class anotherClass" data-responsive="images"  
-    sizes="(max-width: 480px) 100vw, (max-width: 900px) 33vw, 254px"    
+<img sizes="(max-width: 480px) 100vw, (max-width: 900px) 33vw, 254px"    
     srcset="/img/filename-here.jpg?p=small&s=324da5bd33624470fd09fd670aad0341 175w,
       /img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc 350w,
       /img/filename-here.jpg?p=large&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 700w,
