@@ -90,7 +90,7 @@ presets: &presets
 ## Config Setup  
 TODO:  
 * save_data
-* resolutions  
+
 
 __Img Tag Attributes__  
 
