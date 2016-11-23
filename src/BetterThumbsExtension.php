@@ -81,6 +81,8 @@ class BetterThumbsExtension extends SimpleExtension
         $app = $this->getContainer();
         $config = $this->getConfig();
 
+        $this->addAssets();
+
         $configName = $this->getNamedConfig($name);
 
         // Modifications from config merged with presets set in the config
