@@ -205,7 +205,7 @@ rendered HTML - the last resolution (3) is removed.
 ```html  
 <img srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x, 
         /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
-        /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 2.5x,
+        /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 2.5x"
     src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
     alt="your-image">  
 ```  
@@ -228,7 +228,7 @@ yourImageSettings:
 ```html  
 <img srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x,  
         /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
-        /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x,
+        /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x"
     src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
     alt="your-image">  
 ```  
@@ -333,7 +333,7 @@ blogpost:
     <img class="latest-posts" id="new-id" data-posts="read" 
        srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x,  
            /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
-           /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x,
+           /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x"
        src="/img/filename-here.jpg?p=medium&s=a21a21ea8dc43a94c0666a20ccaefbcc"
        alt="">  
     <figcaption>
