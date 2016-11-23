@@ -20,7 +20,7 @@ example using a file from "files"
 {{ img( 'image-from-files.jpg', 'betterthumbs' ) }}   
 ```
 
-If you don't give it a named config (the 'presets' after the file name above), The extension will use 4 presets with these widths:  
+If you don't give it a named config (the 'betterthumbs' after the file name above), The extension will use 4 presets with these widths:  
 
 * 175 pixels wide
 * 350 pixels wide
@@ -330,7 +330,7 @@ blogpost:
 ```html  
 <div>  
   <figure>  
-    <img clas="latest-posts" id="new-id" data-posts="read" 
+    <img class"="latest-posts" id="new-id" data-posts="read" 
        srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x,  
            /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
            /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x,
