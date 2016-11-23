@@ -330,7 +330,7 @@ blogpost:
 ```html  
 <div>  
   <figure>  
-    <img class"="latest-posts" id="new-id" data-posts="read" 
+    <img class="latest-posts" id="new-id" data-posts="read" 
        srcset="/img/filename-here.jpg?w=340&s=324da5bd33624470fd09fd670aad0341 1x,  
            /img/filename-here.jpg?w=680&s=a21a21ea8dc43a94c0666a20ccaefbcc 2x,
            /img/filename-here.jpg?w=800&s=DtCRxm0D0tO48OTQEGb81xeaucwrEFdD 3x,
