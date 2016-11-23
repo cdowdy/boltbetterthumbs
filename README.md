@@ -1,12 +1,11 @@
-bolt extension that uses [Glide](http://glide.thephpleague.com/) for thumbnails. 
+# Bolt BetterThumbs Extension  
 
-Will give you srcset and picture element support :)  
-
----------------------------------------
-Bad boy is no where near production ready :)  
+A bolt extension that uses [Glide](http://glide.thephpleague.com/) for thumbnails. With this extension you get responsive images (using img and srcset) by default and the ability to load a polyfill to support older browsers that don't recognize responsive images. No extra work needed on your end with exception of setting your thumbnail widths.  
 
 
------------------------------------------
+-----------------------------------------  
+# Quick Usage with Defaults:  
+
 In your template place this tag wherever you want an image. Responsive Images using `srcset` is the default output:  
  
  example using a record image
