@@ -1,8 +1,8 @@
 {
   "name": "cdowdy/betterthumbs",
-  "description": "A Bolt Extension For Better Thumbnails Using Glide.",
+  "description": "A Bolt Extension For Better Thumbnails and responsive images using Glide.",
   "type": "bolt-extension",
-  "keywords": ["picture", "responsive images", "picture element", "HTML5 Picture", "Secure Thumbnails"],
+  "keywords": [ "responsive images", "srcset", "HTML5 srcset", "Secure Thumbnails", "thumbnails", "thumbnail", "thumbnail security", "ImageMagick", "imagick", "change Image format"],
   "require": {
     "bolt/bolt": "^3.0"
   },
