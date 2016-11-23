@@ -11,13 +11,13 @@ In your template place this tag wherever you want an image. Responsive Images us
  example using a record image
 
 ```twig  
-{{ img( record.image, 'presets' ) }}  
+{{ img( record.image, 'betterthumbs' ) }}  
 ```  
 
 example using a file from "files"  
   
 ```twig  
-{{ img( 'image-from-files.jpg', 'presets' ) }}   
+{{ img( 'image-from-files.jpg', 'betterthumbs' ) }}   
 ```
 
 If you don't give it a named config (the 'presets' after the file name above), The extension will use 4 presets with these widths:  
