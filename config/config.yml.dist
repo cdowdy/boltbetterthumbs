@@ -2,13 +2,23 @@
 # Default is 'gd' which is the same one Bolt uses for it's thumbnail handling.
 # Options are:
 # * GD
-# * ImageMagick -> you'll need the imagick php extension for this to work http://php.net/manual/en/book.imagick.php
+# * ImageMagick -> you'll need the imagick php extension for this to work
+# http://php.net/manual/en/book.imagick.php
 Image_Driver: 'gd'
 
 # --------------------------------------------------------------------------------- #
-# SECURITY                                                                                                           #
-# Secure your thumbnails with a key. This is defaulted to True which means any thumbnail modification done that
-# is not signed with your key will not be allowed to be made.
+# To use picturefill for older browsers that don't recognize img srcset
+# picturefill docs and usage page: http://scottjehl.github.io/picturefill/
+# values are true or false.
+# true means "yes use picturefill"
+# false means "no I don't want to use picturefill"
+# --------------------------------------------------------------------------------- #
+picturefill: false
+
+# --------------------------------------------------------------------------------- #
+# SECURITY
+# Secure your thumbnails with a key. This is defaulted to True which means any thumbnail
+#modification done that is not signed with your key will not be allowed to be made.
 # a 128 character key or larger is recommended to be used.
 # --------------------------------------------------------------------------------- #
 security:
@@ -28,8 +38,8 @@ defaults:
 # --------------------------------------------------------------------------------- #
 # Presets
 # Standard Image Manipulations used throughout your site.
-# THe '&presets' after 'presets:' is there for use in a repeated node. It gives these presets a name and allows
-# use to use these settings again somewhere else in a named config
+# The '&presets' after 'presets:' is there for use in a repeated node. It gives these presets a name
+# and allows us to use these settings again somewhere else in a named config
 # --------------------------------------------------------------------------------- #
 presets: &presets
   small:
