@@ -60,28 +60,21 @@ betterthumbs:
   modifications:
     <<: *presets
 # --------------------------------------------------------------------------------- #
-# a named image group. Here we decide if we are using the srcset attribute (which is this extensions default)
-# or if we are using the picture element.
+# a named image configuration group.
 # --------------------------------------------------------------------------------- #
 srcset:
-  save_data: false
-  class: []
-  altText:
-
   sizes: [ '100vw'  ]
-  resolutions: [ 1, 2, 2.5, 3 ]
   modifications:
     small: { 'w': 340 }
     medium: { 'w': 680 }
     large: { 'w': 800 }
     xlarge: { 'w': 1260 }
 
-test:
-  save_data: true
+
+ScreenDensity:
   class: []
-  altText:
-  widthDensity: 'D'
-  sizes: [ '(min-width: 40em) 80vw', '100vw'  ]
+  altText: '~'
+  widthDensity: 'x'
   modifications:
     small: { 'w': 175, 'fit': 'stretch' }
     medium:
@@ -94,3 +87,21 @@ test:
     xlarge:
       w: 1400
       fit: stretch
+
+
+
+# --------------------------------------------------------------------------------- #
+#
+# All available configuration options:
+#
+# --------------------------------------------------------------------------------- #
+
+# class: []
+# id: ''
+# data_attrib: { 'key': 'value'}
+# altText: ''
+# widthDensity: 'w' or 'x'
+# sizes: []
+# resolutions: [ ]
+# modifications:
+#  modifications here:::
