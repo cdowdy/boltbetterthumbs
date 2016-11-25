@@ -4,7 +4,8 @@
   "type": "bolt-extension",
   "keywords": [ "responsive images", "srcset", "HTML5 srcset", "Secure Thumbnails", "thumbnails", "thumbnail", "thumbnail security", "ImageMagick", "imagick", "change Image format"],
   "require": {
-    "bolt/bolt": "^3.0"
+    "bolt/bolt": "^3.0",
+    "league/glide-symfony": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.7"
@@ -22,12 +23,6 @@
     "psr-4": {
       "Bolt\\Extension\\cdowdy\\betterthumbs\\": [ "",
         "src/"
-      ],
-      "League\\Glide\\" : [
-        "lib/league/glide/src"
-      ],
-      "League\\Glide\\Responses\\" : [
-        "lib/league/glide-symfony/src/Responses"
       ]
     }
   },
