@@ -42,6 +42,17 @@ Here is how the markup will look:
 ```  
 
 ## Extension Setup  
+
+__Server Setup__  
+
+If you're using Nginx you'll need to add a location block to your Nginx "sites-available" config file. You can place this by Bolt's similar directive found on Bolt's doc's site under [Webserver Installation](https://docs.bolt.cm/3.2/installation/webserver/nginx#)  
+
+```nginx
+# Generated thumbnail images from the betterthumbs extension
+location ~* /img/(.*)$ {  
+  try_files $uri $uri/ /index.php?$query_string;
+}
+```
 __Image Driver__  
 
 This extension allows you to use either GD or ImageMagick for your image manipulations. The default setting is 'gd'. This is the same image driver Bolt's standard thumbs use and if your thumbs work in your current Bolt site then the default setting will be good for you here too. If you wish to use ImageMagick you must have php's imagick extension installed in your system. To change your image driver see the `Image_Driver` setting.  
