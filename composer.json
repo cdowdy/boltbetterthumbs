@@ -23,7 +23,14 @@
     "psr-4": {
       "Bolt\\Extension\\cdowdy\\betterthumbs\\": [ "",
         "src/"
-      ]
+      ],
+      "League\\Glide\\" : [
+        "lib/league/glide/src"
+      ],
+      "League\\Glide\\Responses\\" : [
+        "lib/league/glide-symfony/src/Responses"
+      ],
+      "Intervention\\Image\\" : [ "lib/intervention/image/src/intervention/Image"]
     }
   },
   "autoload-dev": {
