@@ -16,6 +16,10 @@ use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\PictureHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
+use Pimple as Container;
+use Symfony\Component\Console\Command\Command;
+
+
 
 use Bolt\Tests\Provider\PagerServiceProviderTest;
 use League\Glide\Urls\UrlBuilderFactory;
@@ -45,6 +49,17 @@ class BetterThumbsExtension extends SimpleExtension
 
         ];
     }
+
+    /**
+     * @param Container $container
+     * @return array
+     */
+//    protected function registerNutCommands(Container $container)
+//    {
+//        return [
+//            new Nut\BetterThumbsCommand($container),
+//        ];
+//    }
 
     /**
      * {@inheritdoc}
