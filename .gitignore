@@ -1,0 +1,8 @@
+.DS_*
+vendor/
+tests/tmp/
+composer.lock
+/.idea
+/node_modules
+
+
