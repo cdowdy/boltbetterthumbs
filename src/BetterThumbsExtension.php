@@ -156,7 +156,7 @@ class BetterThumbsExtension extends SimpleExtension
 
         ];
 
-        $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
+        $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
