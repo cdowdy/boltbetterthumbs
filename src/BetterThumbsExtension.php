@@ -86,8 +86,13 @@ class BetterThumbsExtension extends SimpleExtension
         $configName = $this->getNamedConfig($name);
 
         // Modifications from config merged with presets set in the config
-        $configModifications = $this->getModificationParams($configName, $options);
-
+        $mods = $this->getModificationParams($configName);
+        // if there is template modifications place those in the mods array
+        if (isset($options['modifications'])) {
+            $finalMods = array_replace_recursive($mods, $options['modifications']);
+        } else {
+            $finalMods = $mods;
+        }
 
         // get our options and merge them with ones passed from the template
         $defaultsMerged = $this->getOptions($file, $configName, $options);
@@ -109,7 +114,7 @@ class BetterThumbsExtension extends SimpleExtension
 
 
         // the 'src' image parameters. get the first modifications in the first array
-        $srcImgParams = current($configModifications);
+        $srcImgParams = current($finalMods);
 
         // get our helpers and handlers setup
         // This will create a srcset Array
@@ -131,10 +136,12 @@ class BetterThumbsExtension extends SimpleExtension
         $srcImg = $thumbnail->buildSecureURL();
 
         // get the options passed in to the parameters and prepare it for our srcset array.
-        $optionWidths = $this->flatten_array($configModifications, 'w');
+        $optionWidths = $this->flatten_array($finalMods, 'w');
 
 
-        $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $configModifications);
+        $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $finalMods);
+
+
 
         $context = [
             'srcImg' => $srcImg,
@@ -145,9 +152,11 @@ class BetterThumbsExtension extends SimpleExtension
             'dataAttributes' => $dataAttributes,
             'altText' => $altText,
             'sizes' => $sizesAttrib,
+
+
         ];
 
-        $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
+        $renderTemplate = $this->renderTemplate('thumb.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
@@ -185,6 +194,20 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
+
+    protected function checkWidths($namedConfig, $modsToCheck, $fallback )
+    {
+        $extConfig = $this->getConfig();
+        $configName = $this->getNamedConfig($namedConfig);
+
+        if (empty($extConfig[$configName]['modifications'])) {
+            return $this->flatten_array($extConfig['presets'], 'w');
+        } else {
+            return $this->flatten_array($modsToCheck, $fallback);
+        }
+    }
+
+
     /**
      * @param $config
      * @param array $options
@@ -192,7 +215,7 @@ class BetterThumbsExtension extends SimpleExtension
      * gets modification params from the config, merges them if empty with presets
      * and allows them to be merged with options passed in from a template
      */
-    protected function getModificationParams($config , array $options = [] )
+    protected function getModificationParams($config)
     {
         $extConfig = $this->getConfig();
         $configName = $this->getNamedConfig($config);
@@ -206,16 +229,10 @@ class BetterThumbsExtension extends SimpleExtension
             $defaults = $presetParams;
         }
 
-        // if any options are in the template $options['modifications'] then
-        // merge them with our defaults set in our config
-        if (isset($options['modifications'])) {
-            $mergedMods = array_merge( $defaults, $options['modifications']);
-        } else {
-            $mergedMods = $defaults;
-        }
-
-        return $mergedMods;
+        return $defaults;
     }
+
+
 
     /**
      * @param $namedconfig
