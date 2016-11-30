@@ -22,6 +22,8 @@ class ConfigHelper
 
     protected $_presets;
 
+    protected $_max_image_size;
+
     /**
      * ConfigHelper constructor.
      * @param array $_extensionConfig
@@ -75,6 +77,30 @@ class ConfigHelper
 
         return $secureKey;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxImageSize()
+    {
+        return $this->_max_image_size;
+    }
+
+    /**
+     * @param mixed $max_image_size
+     */
+    public function setMaxImageSize($max_image_size)
+    {
+        $configMax  = $this->_extensionConfig['security']['max_image_size'];
+
+        if (empty($max_image_size)) {
+            $this->_max_image_size = 2000*2000;
+        } else {
+            $this->_max_image_size = $max_image_size;
+        }
+    }
+
+
 
 
     public function setDefaults()

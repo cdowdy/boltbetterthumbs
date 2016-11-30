@@ -77,6 +77,9 @@ class BetterThumbsController implements ControllerProviderInterface
         $presets = $configHelper->setPresets();
         // set and merge any defaults
         $defaults = $configHelper->setDefaults();
+        // set and get the max image size:
+        $configHelper->setMaxImageSize($this->config['security']['max_image_size']);
+        $maxImgSize = $configHelper->getMaxImageSize();
 
         // create a glide server
         $server = ServerFactory::create([
@@ -84,6 +87,7 @@ class BetterThumbsController implements ControllerProviderInterface
             'source' => $Filesystem,
             'cache' => $Filesystem,
             'cache_path_prefix' => '.cache',
+            'max_image_size' => $maxImgSize,
             'watermarks' => $Filesystem,
             'base_url' => '/img/',
             'driver' => $ImageDriver,
@@ -93,6 +97,7 @@ class BetterThumbsController implements ControllerProviderInterface
         $server->setPresets($presets);
         // set a switch to use the cached image in the future
 //        $server->setCacheWithFileExtensions(true);
+        var_dump($server);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {

@@ -20,10 +20,17 @@ picturefill: false
 # Secure your thumbnails with a key. This is defaulted to True which means any thumbnail
 #modification done that is not signed with your key will not be allowed to be made.
 # a 128 character key or larger is recommended to be used.
+#
+# max_image_size: limits how large images can be generated see: http://glide.thephpleague.com/1.0/config/security/#max-image-size
+# you should put a number here how large you want the image to be. Like the example from Glide's docs of
+# 2000*2000 the max would be 4000000.
+# Use the result of the multiplication here. ex 300 * 300 would be:
+# max_image_size: 90000
 # --------------------------------------------------------------------------------- #
 security:
   secure_thumbs: true
   secure_sign_key: '5kLobJbjDNwpZgkbj4l0Mh1ZI1eeoa55BPVymrby/77aF0VaLOB40189PGhIt/bG0OlekrIAxJ4nfz6UP1yWRF12359BSZkul6q9AZA0Jtgg+Ok9CbfsEH5qZNQJiyy8zTmqVjvso1JewwBBu8LcnsFECzs2WBU0A9IGfcgj2So='
+  max_image_size: 4000000
 
 
 # --------------------------------------------------------------------------------- #
