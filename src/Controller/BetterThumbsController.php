@@ -97,7 +97,7 @@ class BetterThumbsController implements ControllerProviderInterface
         $server->setPresets($presets);
         // set a switch to use the cached image in the future
 //        $server->setCacheWithFileExtensions(true);
-        var_dump($server);
+
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {
