@@ -80,7 +80,7 @@ defaults:
 
 __Presets__  
 
-Image presets are groups of image manipulations you can quickly use instead of a named config. These are also the fallback settings if you don't set any modifications in your named config. So you could create a named config and leave out the modifications part and the modifications used will be whatever you've set in 'Presets'.  
+Image presets are groups of image manipulations you can quickly use instead of a named config. These are also the **fallback settings if you don't set any modifications in your named config**. So you could create a named config and leave out the modifications part and the modifications used will be whatever you've set in 'Presets'.  
 ```yaml
 presets: &presets
   small:

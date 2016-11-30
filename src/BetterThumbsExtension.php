@@ -172,7 +172,9 @@ class BetterThumbsExtension extends SimpleExtension
         $srcImg = $thumbnail->buildSecureURL();
 
         // get the options passed in to the parameters and prepare it for our srcset array.
-        $optionWidths = $this->flatten_array($finalMods, 'w');
+//        $optionWidths = $this->flatten_array($finalMods, 'w');
+        // Check widths method. Should give use the presets width if modifications is empty
+        $optionWidths = $this->checkWidths($configName, $finalMods);
 
 
         $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $finalMods);
@@ -189,9 +191,8 @@ class BetterThumbsExtension extends SimpleExtension
             'altText' => $altText,
             'sizes' => $sizesAttrib,
 
-
         ];
-
+        // TODO: put the srcset.thumb.html template back in before commit
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
@@ -231,15 +232,17 @@ class BetterThumbsExtension extends SimpleExtension
 
 
 
-    protected function checkWidths($namedConfig, $modsToCheck, $fallback )
+    protected function checkWidths($namedConfig, $finalModsWidths )
     {
         $extConfig = $this->getConfig();
         $configName = $this->getNamedConfig($namedConfig);
-
-        if (empty($extConfig[$configName]['modifications'])) {
-            return $this->flatten_array($extConfig['presets'], 'w');
+        /**
+         * if modifications are set use those. Otherwise fallback to the presets and use the widths
+         */
+        if (isset($extConfig[$configName]['modifications']) || array_key_exists('modifications', $extConfig[$configName]) ) {
+            return $this->flatten_array($finalModsWidths, 'w');
         } else {
-            return $this->flatten_array($modsToCheck, $fallback);
+            return $this->flatten_array($extConfig['presets'], 'w');
         }
     }
 
@@ -255,17 +258,18 @@ class BetterThumbsExtension extends SimpleExtension
     {
         $extConfig = $this->getConfig();
         $configName = $this->getNamedConfig($config);
-        $modificationParams = isset($extConfig[$configName]['modifications']) ? $extConfig[$configName]['modifications'] : [] ;
         $presetParams = $extConfig['presets'];
 
-        // replace parameters in 'presets' with the params in a named config
-        if (isset($modificationParams) || array_key_exists('modifications', $extConfig[$configName]) ) {
-            return array_merge($presetParams, $modificationParams);
+        // if modifications are set in the config use those. If not fallback to the presets
+        if (isset($extConfig[$configName]['modifications']) || array_key_exists('modifications', $extConfig[$configName]) ) {
+
+            return $extConfig[$configName]['modifications'];
+
         } else {
+
             return $presetParams;
         }
 
-//        return $defaults;
     }
 
 

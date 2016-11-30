@@ -125,26 +125,45 @@ class SrcsetHandler
      */
     public function createSrcset($fileName, $widths, $resolutions, array $modifications )
     {
+
         // make thumbs an empty array
         $thumb = [];
         $srcset = [];
+
         $thumbHelper = new Thumbnail($this->_extensionConfig, $this->_configname);
         $thumbHelper->setSourceImage($fileName);
         $thumbHelper->setModifications($modifications);
         $wd = $this->getWidthDensity();
+
+        // Get our presets from the config
+        $configHelper = new ConfigHelper($this->_extensionConfig);
+        $presets = array_keys($configHelper->setPresets());
+
+
         // postfix all widths with a w
         array_walk($widths, function (&$value) {
             $value= $value . 'w';
         });
 
-        foreach ($modifications as $parameters  ) {
-            $thumb[] .= $thumbHelper->setModifications($parameters)->buildSecureURL();
+        // if modifcations are preset use those
+        // otherwise fallback to presets and use the 'p=preset-name' shorthand
+        if (isset($this->_extensionConfig[$this->_configname]['modifications']) ||
+            array_key_exists('modifications', $this->_extensionConfig[$this->_configname])) {
+            foreach ($modifications as $parameters  ) {
+                $thumb[] .= $thumbHelper->setModifications($parameters)->buildSecureURL();
+            }
+        } else {
+            foreach ($presets as $preset) {
+                $thumb[] .= $thumbHelper->setModifications(['p' => $preset ] )->buildSecureURL();
+            }
         }
+
         // prefix all images with '/img'
         array_walk($thumb, function( &$key ) {
            $key = '/img' . $key;
         });
 
+       // if modifications are empty need to get the widths from presets
         if ($wd === 'w') {
             $srcset =  array_combine($thumb, $widths);
         }
