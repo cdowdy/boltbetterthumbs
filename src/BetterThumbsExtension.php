@@ -3,12 +3,15 @@
 namespace Bolt\Extension\cdowdy\betterthumbs;
 
 //use Bolt\Application;
-use Bolt\Asset\File\JavaScript;
+
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
+use Silex\ControllerCollection;
+use Symfony\Component\HttpFoundation\Request;
+//use Symfony\Component\HttpFoundation\Response;
 
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
@@ -19,10 +22,7 @@ use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 use Pimple as Container;
 use Symfony\Component\Console\Command\Command;
 
-
-
-use Bolt\Tests\Provider\PagerServiceProviderTest;
-use League\Glide\Urls\UrlBuilderFactory;
+//use League\Glide\Urls\UrlBuilderFactory;
 
 
 
@@ -48,6 +48,27 @@ class BetterThumbsExtension extends SimpleExtension
             '/img' => new BetterThumbsController($config),
 
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function registerBackendRoutes(ControllerCollection $collection)
+    {
+        $collection->match('/betterthumbs-docs', [$this, 'bthumbsDocs']);
+    }
+
+    /**
+     * Handles GET requests on /bolt/betterthumbs-docs and return a template.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function bthumbsDocs(Request $request)
+    {
+        $html = $this->renderTemplate('betterthumbs.docs.twig', ['title' => 'My Custom Page']);
+        return new \Twig_Markup($html, 'UTF-8');
     }
 
     /**
@@ -225,10 +246,10 @@ class BetterThumbsExtension extends SimpleExtension
 
     /**
      * @param $config
-     * @param array $options
-     * @return array
+     * @return array gets modification params from the config, merges them if empty with presets
      * gets modification params from the config, merges them if empty with presets
      * and allows them to be merged with options passed in from a template
+     * @internal param array $options
      */
     protected function getModificationParams($config)
     {
@@ -239,12 +260,12 @@ class BetterThumbsExtension extends SimpleExtension
 
         // replace parameters in 'presets' with the params in a named config
         if (isset($modificationParams) || array_key_exists('modifications', $extConfig[$configName]) ) {
-            $defaults = array_merge($presetParams, $modificationParams);
+            return array_merge($presetParams, $modificationParams);
         } else {
-            $defaults = $presetParams;
+            return $presetParams;
         }
 
-        return $defaults;
+//        return $defaults;
     }
 
 
@@ -284,7 +305,7 @@ class BetterThumbsExtension extends SimpleExtension
     {
         $extConfig = $this->getConfig();
         $namedConfig = $this->getNamedConfig($configName);
-        $valid = [ 'w', 'x', 'd' ];
+//        $valid = [ 'w', 'x', 'd' ];
         $widthDensity = isset($extConfig[$namedConfig][ 'widthDensity' ]);
 
         if (isset($widthDensity) && !empty($widthDensity)) {
