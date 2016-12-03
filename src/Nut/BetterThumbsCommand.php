@@ -15,14 +15,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
+//use RecursiveDirectoryIterator;
+//use RecursiveIteratorIterator;
+//use SplFileInfo;
 
 use League\Glide\ServerFactory;
-use League\Glide\Responses\SymfonyResponseFactory;
-use League\Glide\Signatures\SignatureFactory;
-use League\Glide\Signatures\SignatureException;
+
 
 
 use League\Flysystem\Adapter\Local;
