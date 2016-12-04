@@ -59,45 +59,17 @@ class BetterThumbsController implements ControllerProviderInterface
         return $ctr;
     }
 
-
-    public function makeImage(Application $app, $path, Request $request  )
+    public function makeImage(Application $app, $path, Request $request )
     {
-        // get the path to the bolt installations files and use Flysystem to get that path
-        $adapter = new Local($app['resources']->getPath('filespath') );
-        $Filesystem = new Filesystem($adapter);
-
         // pull in my currently messy helper file and use $configHelper as the accessor to our config file
         $configHelper = new ConfigHelper($this->config);
-
-        // Set the Image Driver
-        $ImageDriver = $configHelper->setImageDriver();
-
-        // Set any presets -> fallback to the ones I've set if there is non
-
         $presets = $configHelper->setPresets();
         // set and merge any defaults
         $defaults = $configHelper->setDefaults();
-        // set and get the max image size:
-        $configHelper->setMaxImageSize($this->config['security']['max_image_size']);
-        $maxImgSize = $configHelper->getMaxImageSize();
 
-        // create a glide server
-        $server = ServerFactory::create([
-            'response' => new SymfonyResponseFactory(),
-            'source' => $Filesystem,
-            'cache' => $Filesystem,
-            'cache_path_prefix' => '.cache',
-            'max_image_size' => $maxImgSize,
-            'watermarks' => $Filesystem,
-            'base_url' => '/img/',
-            'driver' => $ImageDriver,
-        ]);
-        // set our defaults and presets with glide's setters
-        $server->setDefaults($defaults);
-        $server->setPresets($presets);
-        // set a switch to use the cached image in the future
-//        $server->setCacheWithFileExtensions(true);
-
+        $app['betterthumbs']->setDefaults($defaults);
+        $app['betterthumbs']->setPresets($presets);
+        $app['betterthumbs']->setCacheWithFileExtensions(true);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {
@@ -105,7 +77,7 @@ class BetterThumbsController implements ControllerProviderInterface
 
             $signkey = $configHelper->setSignKey();
 
-                // Validate HTTP signature
+            // Validate HTTP signature
             SignatureFactory::create($signkey)->validateRequest($path,  $request->query->all());
 
 
@@ -117,6 +89,69 @@ class BetterThumbsController implements ControllerProviderInterface
 
         // ob_clean / ob_end_clean is needed here ¯\_(ツ)_/¯
         ob_clean();
-        return $server->getImageResponse($path, $request->query->all());
+        return $app['betterthumbs']->getImageResponse($path, $request->query->all());
     }
+
+
+//    public function makeImage(Application $app, $path, Request $request  )
+//    {
+//        // get the path to the bolt installations files and use Flysystem to get that path
+//        $adapter = new Local($app['resources']->getPath('filespath') );
+//        $Filesystem = new Filesystem($adapter);
+//
+//        // pull in my currently messy helper file and use $configHelper as the accessor to our config file
+//        $configHelper = new ConfigHelper($this->config);
+//
+//        // Set the Image Driver
+//        $ImageDriver = $configHelper->setImageDriver();
+//
+//        // Set any presets -> fallback to the ones I've set if there is non
+//
+//        $presets = $configHelper->setPresets();
+//        // set and merge any defaults
+//        $defaults = $configHelper->setDefaults();
+//        // set and get the max image size:
+//        $configHelper->setMaxImageSize($this->config['security']['max_image_size']);
+//        $maxImgSize = $configHelper->getMaxImageSize();
+//
+//        // create a glide server
+//        $server = ServerFactory::create([
+//            'response' => new SymfonyResponseFactory(),
+//            'source' => $Filesystem,
+//            'cache' => $Filesystem,
+//            'cache_path_prefix' => '.cache',
+//            'max_image_size' => $maxImgSize,
+//            'watermarks' => $Filesystem,
+//            'base_url' => '/img/',
+//            'driver' => $ImageDriver,
+//        ]);
+//        // set our defaults and presets with glide's setters
+//        $server->setDefaults($defaults);
+//        $server->setPresets($presets);
+//        // set a switch to use the cached image in the future
+//        $server->setCacheWithFileExtensions(true);
+//
+//
+//
+//        // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
+//        try {
+//
+//
+//            $signkey = $configHelper->setSignKey();
+//
+//                // Validate HTTP signature
+//            SignatureFactory::create($signkey)->validateRequest($path,  $request->query->all());
+//
+//
+//        } catch (SignatureException $e) {
+////            throw new SignatureException( $e->getMessage() );
+//            // the 401 works but maybe we should actually send bolts not found image?
+//            return new Response('Operation Not Allowed', Response::HTTP_UNAUTHORIZED);
+//        }
+//
+//        // ob_clean / ob_end_clean is needed here ¯\_(ツ)_/¯
+//        ob_clean();
+//        return $server->getImageResponse($path, $request->query->all());
+//    }
+
 }

@@ -7,8 +7,11 @@ namespace Bolt\Extension\cdowdy\betterthumbs;
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
+use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
+use League\Glide\ServerFactory;
+use Silex\Application;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +21,14 @@ use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\PictureHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+use Bolt\Extension\cdowdy\betterthumbs\Nut\BetterThumbsCommand;
 
 use Pimple as Container;
 use Symfony\Component\Console\Command\Command;
 
+use League\Glide\Responses\SymfonyResponseFactory;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 //use League\Glide\Urls\UrlBuilderFactory;
 
 
@@ -50,37 +57,55 @@ class BetterThumbsExtension extends SimpleExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function registerBackendRoutes(ControllerCollection $collection)
+    protected function registerServices(Application $app)
     {
-        $collection->match('/betterthumbs-docs', [$this, 'bthumbsDocs']);
+        $app['betterthumbs'] = $app->share(
+            function ($app) {
+                $adapter = new Local($app['resources']->getPath('filespath') );
+                $Filesystem = new Filesystem($adapter);
+
+                // pull in my currently messy helper file and use $configHelper as the accessor to our config file
+                $configHelper = new ConfigHelper($this->getConfig());
+
+                // Set the Image Driver
+                $ImageDriver = $configHelper->setImageDriver();
+
+                // set and get the max image size:
+                $configHelper->setMaxImageSize($this->getConfig()['security']['max_image_size']);
+                $maxImgSize = $configHelper->getMaxImageSize();
+                return ServerFactory::create([
+                    'response' => new SymfonyResponseFactory(),
+                    'source' => $Filesystem,
+                    'cache' => $Filesystem,
+                    'cache_path_prefix' => '.cache',
+                    'max_image_size' => $maxImgSize,
+                    'watermarks' => $Filesystem,
+                    'base_url' => '/img/',
+                    'driver' => $ImageDriver,
+                ]);
+            }
+        );
     }
 
-    /**
-     * Handles GET requests on /bolt/betterthumbs-docs and return a template.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    public function bthumbsDocs(Request $request)
+    protected function registerBackendControllers()
     {
-        $html = $this->renderTemplate('betterthumbs.docs.twig', ['title' => 'My Custom Page']);
-        return new \Twig_Markup($html, 'UTF-8');
+        $config = $this->getConfig();
+
+        return [
+            '/betterthumbs' => new BetterThumbsBackendController($config),
+        ];
     }
 
     /**
      * @param Container $container
      * @return array
      */
-//    protected function registerNutCommands(Container $container)
-//    {
-//        return [
-//            new Nut\BetterThumbsCommand($container),
-//        ];
-//    }
+    protected function registerNutCommands(Container $container)
+    {
+        return [
+            new Nut\BetterThumbsCommand($container),
+        ];
+    }
 
     /**
      * {@inheritdoc}

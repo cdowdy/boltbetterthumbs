@@ -70,17 +70,11 @@ class BetterThumbsCommand extends Command
 
     protected function doDelete($default = NULL)
     {
-        $adapter = new Local($this->app['resources']->getPath('filespath') );
-        $Filesystem = new Filesystem($adapter);
-
         $filespath = $this->app['resources']->getPath('filespath') . '/.cache';
         $allFiles = array_diff(scandir($filespath), array('.', '..'));
 
-        $server = ServerFactory::create([
-            'source' => $Filesystem,
-            'cache' => $Filesystem,
-            'cache_path_prefix' => '.cache',
-        ]);
+
+        $server = $this->app['betterthumbs'];
         if( $default ) {
             $server->deleteCache($default);
         } else {
