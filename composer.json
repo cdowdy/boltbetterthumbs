@@ -46,7 +46,9 @@
     "bolt-screenshots": [
       "screenshots/regular-screen.png",
       "screenshots/sepia-screen.png",
-      "screenshots/watermarked-screen.png"
+      "screenshots/watermarked-screen.png",
+      "screenshots/pixel-screen.png",
+      "screenshots/gamma-screen.png"
     ]
   }
 }
