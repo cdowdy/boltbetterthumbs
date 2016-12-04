@@ -44,8 +44,9 @@
     "bolt-class": "Bolt\\Extension\\cdowdy\\betterthumbs\\BetterThumbsExtension",
     "bolt-icon": "betterthumbs-icon.png",
     "bolt-screenshots": [
-      "screenshots/screenshot1.png",
-      "screenshots/screenshot2.png"
+      "screenshots/regular-screen.png",
+      "screenshots/sepia-screen.png",
+      "screenshots/watermarked-screen.png"
     ]
   }
 }
