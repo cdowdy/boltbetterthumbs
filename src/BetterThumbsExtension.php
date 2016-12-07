@@ -41,7 +41,13 @@ use League\Flysystem\Filesystem;
 class BetterThumbsExtension extends SimpleExtension
 {
 
+    /**
+     * @var string
+     */
     private $_currentPictureFill = '3.0.2';
+    /**
+     * @var bool
+     */
     private $_scriptAdded = FALSE;
 
     /**
@@ -57,6 +63,10 @@ class BetterThumbsExtension extends SimpleExtension
         ];
     }
 
+
+    /**
+     * @param Application $app
+     */
     protected function registerServices(Application $app)
     {
         $app['betterthumbs'] = $app->share(
@@ -247,7 +257,11 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
-
+    /**
+     * @param $namedConfig
+     * @param $finalModsWidths
+     * @return array
+     */
     protected function checkWidths($namedConfig, $finalModsWidths )
     {
         $extConfig = $this->getConfig();
