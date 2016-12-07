@@ -386,3 +386,30 @@ More template overrides to modifications would follow the same pattern.
     } ,
 } ) }}
 ```  
+
+
+## Deleting Images From the Cache
+
+
+This extension also comes with a "nut" command to remove images.  
+
+You can remove all the images from the cache or a specific image. As it is currently if you remove a specific image it also removes all of its derivatives.  
+
+To remove all the images open up a terminal/command prompt and enter:  
+
+```bash  
+php app/nut betterthumbs:cacheClear all  
+
+# windows users with a broken symlink can use:  
+php vendor/bolt/bolt/app/nut betterthumbs:cacheClear all
+```  
+
+To remove a specific image and all its modifications from the cache use the you must know the filename and use it in place of "all".  
+
+```bash
+php app/nut betterthumbs:cacheClear filename.jpg  
+
+# windows users with a broken symlink can use:  
+php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg  
+```
+
