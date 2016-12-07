@@ -7,29 +7,29 @@ namespace Bolt\Extension\cdowdy\betterthumbs;
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
-use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
+//use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
 use League\Glide\ServerFactory;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\HttpFoundation\Response;
+
 
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
-use Bolt\Extension\cdowdy\betterthumbs\Handler\PictureHandler;
+//use Bolt\Extension\cdowdy\betterthumbs\Handler\PictureHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 use Bolt\Extension\cdowdy\betterthumbs\Nut\BetterThumbsCommand;
 
 use Pimple as Container;
-use Symfony\Component\Console\Command\Command;
+
 
 use League\Glide\Responses\SymfonyResponseFactory;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-//use League\Glide\Urls\UrlBuilderFactory;
+
 
 
 
@@ -85,15 +85,6 @@ class BetterThumbsExtension extends SimpleExtension
                 ]);
             }
         );
-    }
-
-    protected function registerBackendControllers()
-    {
-        $config = $this->getConfig();
-
-        return [
-            '/betterthumbs' => new BetterThumbsBackendController($config),
-        ];
     }
 
     /**
@@ -425,15 +416,6 @@ class BetterThumbsExtension extends SimpleExtension
         return $trimmedType;
     }
 
-//    protected function getHTMLClass($namedConfig)
-//    {
-//        $configName = $this->getNamedConfig($namedConfig);
-//        $config = $this->getConfig();
-//
-//        $class = $this->checkIndex( $config[$configName], 'class', NULL);
-//
-//        return $class;
-//    }
 
     /**
      * @param $name
