@@ -7,7 +7,7 @@ namespace Bolt\Extension\cdowdy\betterthumbs;
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
-//use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
+use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
 use League\Glide\ServerFactory;
@@ -60,6 +60,19 @@ class BetterThumbsExtension extends SimpleExtension
         return [
             '/img' => new BetterThumbsController($config),
 
+        ];
+    }
+
+    /**
+     * @return array
+     * backend controller for docs page
+     */
+    protected function registerBackendControllers()
+    {
+        $config = $this->getConfig();
+
+        return [
+            '/betterthumbs' => new BetterThumbsBackendController($config),
         ];
     }
 
