@@ -908,18 +908,58 @@ waterMarkedIMG:
         <!-- /#watermark -->
 
         <section id="bg">
-        <h1 class="heading">Background</h1>
-        <div class="ext-docs-card">
-            <p><strong>Coming Soon!</strong></p>
-        </div>
-    </section>
+            <h1 class="heading">Background</h1>
+            <p>
+                Adds a colored background to an image. See <a href="http://glide.thephpleague.com/1.0/api/colors/">Glide's page on color formats</a> available to use.
+            </p>
+
+            <p>
+                The parameter used to add a background to an image is <code class="language-yaml">bg</code>
+            </p>
+
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      bg: 'papayawhip'</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'bg': '1fbbcf'  &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+        </section>
         <!-- /#bg -->
 
         <section id="border">
             <h1 class="heading">Image Borders</h1>
-            <div class="ext-docs-card">
-                <p><strong>Coming Soon!</strong></p>
-            </div>
+            <p>
+                Adds a border to an image. <strong>Required:</strong> <code>width, color, method</code>
+            </p>
+            <ul>
+                <li>Width: in pixels or <a href="http://glide.thephpleague.com/1.0/api/relative-dimensions/">relative dimensions</a></li>
+                <li>Color. see <a href="http://glide.thephpleague.com/1.0/api/colors/">Glide's page on color formats</a></li>
+                <li>Method:
+                    <ul>
+                        <li>overlay: Place border on top of image (default).</li>
+                        <li>shrink: Shrink image within border (canvas does not change).</li>
+                        <li>expand: Expands canvas to accommodate border</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      w: 500
+      border: '10,black,expand'</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'border': '3,1fbbcf,overlay'  &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
         </section>
         <!-- /#border -->
 
