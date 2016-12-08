@@ -501,7 +501,7 @@ yourNamedConfig:
             <p>In a twig template</p>
             <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
-         'small': &lbrace;'w': 400, 'h' 400', 'bri':'25' &rbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'bri': 25 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
@@ -513,7 +513,7 @@ yourNamedConfig:
                 The parameter needed to adjust contrast is <code class="language-yaml"> con </code>.
             </p>
 
-                     <pre class="language-yaml"><code>namedConfig:
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -521,7 +521,7 @@ yourNamedConfig:
             <p>In a twig template</p>
             <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
-         'small': &lbrace;'w': 400, 'h' 400', 'con':'25' &rbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'con': 25 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
@@ -532,7 +532,8 @@ yourNamedConfig:
             <p>
                 The parameter needed for gamma correction is <code class="language-yaml"> gam </code>.
             </p>
-                    <pre class="language-yaml"><code>namedConfig:
+
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -540,7 +541,7 @@ yourNamedConfig:
             <p>In a twig template</p>
             <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
-         'small': &lbrace;'w': 400, 'h' 400', 'gam':'0.55' &rbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'gam': 0.55 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
@@ -552,7 +553,7 @@ yourNamedConfig:
                 The parameter needed to adjust sharpness is <code class="language-yaml"> sharp </code>.
             </p>
 
-                                <pre class="language-yaml"><code>namedConfig:
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -560,7 +561,7 @@ yourNamedConfig:
             <p>In a twig template</p>
             <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
-         'small': &lbrace;'w': 400, 'h' 400', 'sharp':'2' &rbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'sharp': 2 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
@@ -569,9 +570,77 @@ yourNamedConfig:
 
         <section id="effects">
             <h1 class="heading">Image Effects</h1>
-            <div class="ext-docs-card">
-                <p><strong>Coming Soon!</strong></p>
-            </div>
+            <p>
+                There are four (4) image effects you can apply to an image.
+            </p>
+            <ol>
+                <li>Blur: <strong>Very Performance Intensive with large amounts of Blur When Using the GD (default) Driver.</strong>
+                </li>
+                <li>Pixelate</li>
+                <li>Filters (greyscale or sepia)</li>
+            </ol>
+
+            <h2 class="subheading">Blurring an Image</h2>
+            <p><strong>Very Performance Intensive When Using The Default GD Driver</strong></p>
+            <p>
+                Adds a blur effect to an image. Values available for this range from <code>0</code> to <code>100</code>
+            </p>
+            <p>
+                The parameter used to add a blur effect is <code class="language-yaml">blur</code>
+            </p>
+
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      blur: 10</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'blur': 2 &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
+            <h2 class="subheading">Pixelating an Image</h2>
+            <p>
+                Adds a pixelation effect to an image. Values available for this range from <code>0</code> to <code>1000</code>
+            </p>
+            <p>
+                The parameter used to add a pixelation effect is <code class="language-yaml">pixel</code>
+            </p>
+
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      pixel: 10</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'pixel': 100  &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
+            <h2 class="subheading">Adding a Filter to an Image</h2>
+            <p>
+                Adds a greyscale or sepaia tone filter to an image
+            </p>
+            <p>
+                The parameter used to add a filter to an image is <code class="language-yaml">filt</code>
+            </p>
+
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      filt: 'greyscale'</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'filt': 'sepia'  &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
         </section>
         <!-- /#effects -->
 
