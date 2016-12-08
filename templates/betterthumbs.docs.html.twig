@@ -444,17 +444,126 @@ yourNamedConfig:
 
         <section id="pixeldensity">
             <h1 class="heading">Pixel Density</h1>
-            <div class="ext-docs-card">
-                <p><strong>Coming Soon!</strong></p>
-            </div>
+            <p>
+                You can adjust the pixel density for the image. Values you can use are from one (1) to eight (8). The default density is 1. <strong>A width or a height is required</strong>.
+            </p>
+            <p>Usage Examples</p>
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      w: 200
+      dpr: '1'
+    medium:
+      w: 350
+      dpr: '2'
+    large:
+      w: 700
+      dpr: '3'
+    xlarge:
+      w: 1400
+      dpr: 'stretch'</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'dpr':'1' &rbrace;,
+         'medium': &lbrace;'w': 600, 'h' 600', 'dpr':'2' &rbrace;,
+         'large': &lbrace;'w': 800, 'h' 800', 'dpr':'3' &rbrace;,
+         'xlarge': &lbrace;'w': 100, 'h' 100', 'dpr':'3.5' &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
         </section>
         <!-- /#pixeldensity -->
 
         <section id="adjustments">
             <h1 class="heading">Image Adjustments</h1>
-            <div class="ext-docs-card">
-                <p><strong>Coming Soon!</strong></p>
-            </div>
+            <p>
+                You can adjust/correct four (4) areas of an image.
+            </p>
+            <ol>
+                <li>Brightness</li>
+                <li>Contrast</li>
+                <li>Gamma Correction</li>
+                <li>Sharpness</li>
+            </ol>
+            <h2 class="subheading">Adjusting Brightness</h2>
+            <p>
+                Values available to adjust bright range from <code>-100</code> to <code>100</code>. A value of <code>0</code> represents no change.
+            </p>
+            <p>
+                The parameter needed to adjust brightness is <code class="language-yaml"> bri </code>.
+            </p>
+            <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      bri: 80</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'bri':'25' &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
+            <h2 class="subheading">Adjusting Contrast</h2>
+            <p>
+                Values available to adjust contrast range from <code>-100</code> to <code>100</code>. A value of <code>0</code> represents no change.
+            </p>
+            <p>
+                The parameter needed to adjust contrast is <code class="language-yaml"> con </code>.
+            </p>
+
+                     <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      con: 80</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'con':'25' &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
+            <h2 class="subheading">Gamma Correction</h2>
+            <p>
+                Values available for gamma correction range from <code>0.1</code> to <code>9.99</code>.
+            </p>
+            <p>
+                The parameter needed for gamma correction is <code class="language-yaml"> gam </code>.
+            </p>
+                    <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      gam: 2.22</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'gam':'0.55' &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
+            <h2 class="subheading">Adjust Sharpness</h2>
+            <p>
+                Values available to adjust sharpness range from <code>0</code> to <code>100</code>.
+            </p>
+            <p>
+                The parameter needed to adjust sharpness is <code class="language-yaml"> sharp </code>.
+            </p>
+
+                                <pre class="language-yaml"><code>namedConfig:
+# other settings:
+  modifications:
+    small:
+      sharp: 80</code></pre>
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+    'modifications': &lbrace;
+         'small': &lbrace;'w': 400, 'h' 400', 'sharp':'2' &rbrace;
+    &rbrace; ,
+&rbrace; ) &rbrace;&rbrace;</code></pre>
+
         </section>
         <!-- /#adjustments -->
 
