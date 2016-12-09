@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="{{ htmllang() }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>BetterThumbs Files</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.files.37b1d986.min.css">
+    <style>
+
+    </style>
+    <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
+    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.file.delete.61961c48.min.js"></script>
+
+
+</head>
+<body class="">
+<header class="ext-docs-masthead ext-docs-header-container ">
+    <div class="ext-docs-header-title">
+        <h1><a href="{{paths.bolt}}">Bolt Admin</a></h1>
+    </div>
+    <div class="ext-docs-header-title">
+        <h2>BetterThumbs Files</h2>
+    </div>
+</header>
+
+<main class="row">
+    {% if path %}
+    <div class="small-12 large-8 columns">
+        <h1 class="heading">Delete All Images From The BetterThumbs Cache</h1>
+    </div>
+    <div class="small-12 large-4">
+        <button type="button" data-all="{{ path|json_encode }}"
+                class="delete-all">Delete All Images </button>
+    </div>
+    <hr>
+
+    <h1 class="heading">Delete An Image From Cache</h1>
+    <div id="image-grid" class="row small-up-2 large-up-3">
+
+        {% for p in path %}
+        <div id="cachedImage-{{ p }}-{{ loop.index }}" class="column image-container">
+
+            <img id="{{ p }}-{{ loop.index }}"
+                 class="image-to-delete"
+                 src="/files/{{ p }}"
+                 width="200"
+                 alt="{{ p }}">
+            <button class="deletebutton" type="button" id="{{ p }}">
+                Delete Image
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+        {% else %}
+        <div class="small-12 small-centered  columns">
+            <h1 class="heading">No Images Found In The Better Thumbs Cache...</h1>
+        </div>
+    {% endif %}
+
+</main>
+
+</body>
+</html>
