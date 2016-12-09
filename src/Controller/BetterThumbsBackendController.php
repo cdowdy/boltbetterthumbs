@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-
+use League\Glide\Urls\UrlBuilderFactory;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
@@ -53,6 +53,13 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         $ctr->get('/docs', [$this, 'bthumbsDocs'])
             ->bind('betterthumbs_docs');
 
+        $ctr->post('/files/delete', [$this, 'deleteSingle'])
+            ->bind('betterthumbs_delete');
+
+        $ctr->post('/files/delete/all', [$this, 'deleteAll'])
+            ->bind('betterthumbs_delete_all');
+
+
         return $ctr;
     }
 
@@ -63,20 +70,45 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
     public function bthumbsFiles(Application $app)
     {
-        // get the path to the bolt installations files and use Flysystem to get that path
-        $adapter = new Local($app['resources']->getPath('filespath') );
-        $Filesystem = new Filesystem($adapter);
+        $configHelper = $configHelper = new ConfigHelper($this->config);
+        $signkey = $configHelper->setSignKey();
+
         $filespath = $app['resources']->getPath('filespath') . '/.cache';
         $allFiles = array_diff(scandir($filespath), array('.', '..'));
 
-        $contents = $Filesystem->listContents();
+        $secureURL = UrlBuilderFactory::create('/', $signkey );
+        foreach ($allFiles as $file) {
+          $cachedImg[] =  $secureURL->getUrl($file, ['w' => 200, 'h' => 200, 'fit' => 'contain' ]);
+        }
 
         $context = [
             'path' => $allFiles,
-            'fsystem' => $contents,
         ];
 
 
         return $app['twig']->render('betterthumbs.files.html.twig', $context);
+    }
+
+    public function deleteSingle(Application $app, Request $request)
+    {
+        $betterthumbs = $app['betterthumbs'];
+
+        return $betterthumbs->deleteCache($request->request->get('img'));
+
+    }
+
+    public function deleteAll(Application $app, Request $request)
+    {
+        $betterthumbs = $app['betterthumbs'];
+
+        $all = $request->request->get('all') ;
+        $removed = [];
+        foreach ($all as $key => $image ) {
+            $removed = $betterthumbs->deleteCache($image);
+        }
+
+        return $removed;
+
+
     }
 }
