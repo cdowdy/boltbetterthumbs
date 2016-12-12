@@ -48,7 +48,9 @@
       "screenshots/sepia-screen.png",
       "screenshots/watermarked-screen.png",
       "screenshots/pixel-screen.png",
-      "screenshots/gamma-screen.png"
+      "screenshots/gamma-screen.png",
+      "screenshots/betterthumbs-files.png",
+      "screenshots/betterthumbs-docs.png"
     ]
   }
 }
