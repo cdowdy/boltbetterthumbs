@@ -77,12 +77,19 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         $allFiles = array_diff(scandir($filespath), array('.', '..'));
 
         $secureURL = UrlBuilderFactory::create('/', $signkey );
-        foreach ($allFiles as $file) {
-          $cachedImg[] =  $secureURL->getUrl($file, ['w' => 200, 'h' => 200, 'fit' => 'contain' ]);
+
+        $cachedImage = [];
+
+        foreach ($allFiles as $key ) {
+            $parts = pathinfo($key);
+            $cachedImage += [
+                $secureURL->getUrl($key, ['w' => 200, 'h' => 133, 'fit' => 'crop' ]) => $parts['basename']
+            ];
         }
 
         $context = [
-            'path' => $allFiles,
+            'allFiles' => $allFiles,
+            'cachedImage' => $cachedImage,
         ];
 
 
