@@ -14,6 +14,7 @@ use League\Glide\ServerFactory;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
+use Bolt\Menu\MenuEntry;
 
 
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
@@ -72,7 +73,26 @@ class BetterThumbsExtension extends SimpleExtension
         $config = $this->getConfig();
 
         return [
-            '/betterthumbs' => new BetterThumbsBackendController($config),
+            '/extend/betterthumbs' => new BetterThumbsBackendController($config),
+        ];
+    }
+
+    protected function registerMenuEntries()
+    {
+        $menu = new MenuEntry('betterthumbs-menu', 'betterthumbs/files');
+        $menu->setLabel('BetterThumbs Files')
+            ->setIcon('fa:image')
+            ->setPermission('settings')
+        ;
+        $menu2 = new MenuEntry('betterthumbs-docs', 'betterthumbs/docs');
+
+        $menu2->setLabel('BetterThumbs Docs')
+            ->setIcon('fa:file-text-o')
+            ->setPermission('settings')
+        ;
+
+        return [
+            $menu, $menu2
         ];
     }
 
