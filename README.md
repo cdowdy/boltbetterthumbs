@@ -3,7 +3,7 @@
 A bolt extension that uses [Glide](http://glide.thephpleague.com/) for thumbnails. With this extension you get responsive images (using img and srcset) by default and the ability to load a polyfill to support older browsers that don't recognize responsive images. No extra work needed on your end with exception of setting your thumbnail widths.  
 
 ### Documentation  
-This extension also comes bundled with documentation. While Logged into your bolt installation visit [/bolt/betterthumbs/docs](/bolt/betterthumbs/docs) to view it.
+This extension also comes bundled with documentation. While Logged into your bolt installation visit [/bolt/extend/betterthumbs/docs](/bolt/betterthumbs/docs) to view it.
 
 
 -----------------------------------------  
@@ -394,11 +394,11 @@ More template overrides to modifications would follow the same pattern.
 ## Deleting Images From the Cache
 
 
-This extension also comes with a "nut" command to remove images.  
+This extension also comes with a "nut" command to remove images and a backend Bolt Admin page found at [/bolt/extend/betterthumbs/files](/bolt/extend/betterthumbs/files). The backend page will allow you to view a small thumbnail of the image you are removing. You can remove an individual image or all from the cache.
 
-You can remove all the images from the cache or a specific image. As it is currently if you remove a specific image it also removes all of its derivatives.  
+As it is currently stands, if you remove an image it will also remove all of its derivatives.  
 
-To remove all the images open up a terminal/command prompt and enter:  
+To remove all the images with the nut command open up a terminal/command prompt and enter:  
 
 ```bash  
 php app/nut betterthumbs:cacheClear all  
@@ -414,5 +414,5 @@ php app/nut betterthumbs:cacheClear filename.jpg
 
 # windows users with a broken symlink can use:  
 php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg  
-```
+```  
 
