@@ -8,18 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-//use Symfony\Component\Console\Style\SymfonyStyle;
 
-//use RecursiveDirectoryIterator;
-//use RecursiveIteratorIterator;
-//use SplFileInfo;
-
-//use League\Glide\ServerFactory;
-
-
-
-//use League\Flysystem\Adapter\Local;
-//use League\Flysystem\Filesystem;
 
 
 class BetterThumbsCommand extends Command
