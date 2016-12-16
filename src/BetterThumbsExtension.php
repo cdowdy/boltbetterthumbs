@@ -236,8 +236,9 @@ class BetterThumbsExtension extends SimpleExtension
         $optionWidths = $this->checkWidths($configName, $finalMods);
 
 
-        $thumb = $srcset->createSrcset($file, $optionWidths, $resolutions, $finalMods);
-
+        $srcsetThumbs = $srcset->createSrcset($file, $optionWidths, $resolutions, $finalMods);
+        $original = $this->useOriginal($configName, $file, $widthDensity);
+        $thumb = $this->mergeAndSort($srcsetThumbs, $original);
 
 
         $context = [
@@ -255,6 +256,26 @@ class BetterThumbsExtension extends SimpleExtension
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
+    /**
+     * merge two arrays then sort them by their values
+     * default sort is numerically
+     * ex:
+     *  $a = [ 'file.jpg' => '100w', 'file2.jpg' => '300w' ];
+     *  $b = ['file-to-add.jpg' => '200w' ];
+     *  result: array( 'file.jpg' => '100w', 'file-to-add.jpg' => '200w', 'file2.jpg' => '300w' );
+     *
+     * @param $firstArray
+     * @param $secondArray
+     * @param int $sortType
+     * @return array
+     */
+    protected function mergeAndSort( $firstArray, $secondArray, $sortType = SORT_NUMERIC)
+    {
+        $finalArray = array_merge($firstArray, $secondArray);
+        asort($finalArray, $sortType);
+        return $finalArray;
     }
 
 
@@ -361,6 +382,30 @@ class BetterThumbsExtension extends SimpleExtension
         }
 
         return $altText;
+    }
+
+    /**
+     * passthrough to use original image to prevent image modifications
+     * @param $configName
+     * @param $file
+     * @param $widthDensity
+     * @return array
+     */
+    protected function useOriginal( $configName, $file, $widthDensity )
+    {
+        $originalFile = [];
+        $extConfig = $this->getConfig();
+        $namedConfig = $this->getNamedConfig($configName);
+//        $useOriginal = $extConfig[$configName]['use_original'];
+
+        if (isset($extConfig[$configName]['use_original']) ) {
+
+            $originalFile = [
+                '/files/'. $file  => $extConfig[$namedConfig]['use_original'] . $widthDensity
+            ];
+        }
+
+        return array_filter($originalFile);
     }
 
     /**
