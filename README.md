@@ -247,6 +247,26 @@ yourImageSettings:
     alt="your-image">  
 ```  
 
+__Use Original Image:__  
+
+Uses the original image and passes it through without applying any modifications to the image.  
+
+
+If you're using the width descriptor use the width of the image:  
+
+```yaml
+use_original: 800
+```  
+
+If you're using screen density then use the density of the screens you want this image to be displayed.  
+
+```yaml
+use_original: 2
+```  
+
+see the [docs](/bolt/extend/betterthumbs/docs) for a deeper dive. 
+
+
 __Modifications:__  
 
 The settings for each thumbnail are declarative. Meaning for every modification you wish to make to that particular thumbnail you must have it in the config. Example:  
