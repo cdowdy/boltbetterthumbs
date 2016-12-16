@@ -264,7 +264,7 @@ If you're using screen density then use the density of the screens you want this
 use_original: 2
 ```  
 
-see the [docs](/bolt/extend/betterthumbs/docs) for a deeper dive. 
+see the [docs](/bolt/extend/betterthumbs/docs#original) for a deeper dive. 
 
 
 __Modifications:__  
