@@ -24,6 +24,7 @@
         <ul class="ext-docs-navigation-menu">
             <li class="ext-docs-navigation-menu--item "><a href="#setup">Initial Setup</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#delete">Remove IMG From Cache</a></li>
+            <li class="ext-docs-navigation-menu--item "><a href="#original">Use Original Image</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#orientation">Image Orientation</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#crop">Cropping</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#size">Size</a></li>
@@ -159,6 +160,108 @@ php app/nut betterthumbs:cacheClear filename.jpg
 php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
         </section>
         <!-- /#delete -->
+        <section id="original">
+            <h1 class="heading">Use the Original Image</h1>
+            <p>
+                This setting allows you to pass the original image through without making any modifications. This is useful in instances you already have a highly optimized file at the width you want but still want to either create smaller images from it or bigger ones.
+            </p>
+            <p>
+                In each named config block enter in the 'key' of <code class="language-yaml">use_original:</code> followed by either the width or density you want this image used at.
+            </p>
+            <h2 class="subheading">
+                Using original with a Width Descriptor
+            </h2>
+            <p>
+                Using an 800px wide image and the 'width' descriptor at 800w.
+            </p>
+                <pre class="language-yaml"><code>namedConfig:
+# other settings
+  widthDensity: 'w'
+  use_original: 800
+  modifications:
+    small:
+      w: 200
+    medium:
+      w: 350
+    large:
+      w: 700
+    xlarge:
+      w: 1400</code></pre>
+            <p>
+                Will produce the following
+            </p>
+            <pre class="language-markup"><code>&lt;img sizes="100vw"
+     srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 200w ,
+       /img/original-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 350w ,
+       /img/original-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 700w ,
+       /files/original-file.jpg 800w ,
+       /img/original-file.jpg?w=1400&amp;s=5f48fd674c5ad3214f63b1150c16c611 1400w "
+     src="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5"
+     alt="" &gt;</code></pre>
+
+            <p>
+                To use the original image in place of a modification in your config remove that modification from the config file. Using a 700px image with the original config above.
+            </p>
+
+            <pre class="language-yaml"><code>namedConfig:
+# other settings
+  widthDensity: 'w'
+  use_original: 700
+  modifications:
+    small:
+      w: 200
+    medium:
+      w: 350
+    xlarge:
+      w: 1400</code></pre>
+
+              <pre class="language-markup"><code>&lt;img sizes="100vw"
+     srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 200w ,
+       /img/original-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 350w ,
+       /files/original-file.jpg 700w ,
+       /img/original-file.jpg?w=1400&amp;s=5f48fd674c5ad3214f63b1150c16c611 1400w "
+     src="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5"
+     alt="" &gt;</code></pre>
+
+            <h2 class="subheading">Using the Original with a Density Descriptor</h2>
+            <p>
+                To use the original image with the density descriptor your'll need to enter in the density where the image should be used.
+            </p>
+            <p>
+                The key difference here is that the original image will replace one of the resolutions found in your <code class="language-yaml"> resolutions: </code> array.
+            </p>
+            <p>
+                The original resolutions settings looked as follows:
+            </p>
+            <pre class="language-yaml"><code>  resolutions: [ 1, 2, 2.5, 3 ]</code></pre>
+            <p>
+                To use the original image at 2x displays we will remove the '2' from the above resolutions and place it in the <code class="language-yaml"> use_original: </code> config settings.
+            </p>
+            <pre class="language-yaml"><code>namedConfig:
+# other settings
+  widthDensity: 'x'
+  resolutions: [ 1, 2.5, 3 ]
+  use_original: 2
+  modifications:
+    small:
+      w: 200
+    medium:
+      w: 350
+    large:
+      w: 700</code></pre>
+            <p>
+                Will produce the following
+            </p>
+            <pre class="language-markup"><code>&lt;img srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
+        /files/original-file.jpg 2x ,
+        /img/original-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 2.5x ,
+        /img/original-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"
+    src="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5"
+    alt="" &gt;</code></pre>
+
+
+        </section>
+        <!-- /#original -->
 
         <section id="orientation">
             <h1 class="heading">Image Orientation</h1>
