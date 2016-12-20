@@ -180,6 +180,11 @@ class BetterThumbsExtension extends SimpleExtension
 
         $configName = $this->getNamedConfig($name);
 
+        // if the image isn't found return bolt's 404 image
+        // set the width the the first width in the presets array
+        $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+        $notFoundSize = $this->imageNotFoundParams();
+
         // Modifications from config merged with presets set in the config
         $mods = $this->getModificationParams($configName);
         // if there is template modifications place those in the mods array
@@ -231,7 +236,6 @@ class BetterThumbsExtension extends SimpleExtension
         $srcImg = $thumbnail->buildSecureURL();
 
         // get the options passed in to the parameters and prepare it for our srcset array.
-//        $optionWidths = $this->flatten_array($finalMods, 'w');
         // Check widths method. Should give use the presets width if modifications is empty
         $optionWidths = $this->checkWidths($configName, $finalMods);
 
@@ -250,6 +254,8 @@ class BetterThumbsExtension extends SimpleExtension
             'dataAttributes' => $dataAttributes,
             'altText' => $altText,
             'sizes' => $sizesAttrib,
+            'sourceExists' => $sourceExists,
+            'notFoundSize' => $notFoundSize,
 
         ];
         // TODO: put the srcset.thumb.html template back in before commit
@@ -276,6 +282,15 @@ class BetterThumbsExtension extends SimpleExtension
         $finalArray = array_merge($firstArray, $secondArray);
         asort($finalArray, $sortType);
         return $finalArray;
+    }
+
+
+    protected function imageNotFoundParams()
+    {
+        $config = $this->getConfig();
+        $presets = $this->flatten_array($config['presets'], 'w');
+
+        return $presets[0] ;
     }
 
 
