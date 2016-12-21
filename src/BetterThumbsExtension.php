@@ -33,7 +33,6 @@ use League\Flysystem\Filesystem;
 
 
 
-
 /**
  * BetterThumbs extension class.
  *
@@ -183,6 +182,7 @@ class BetterThumbsExtension extends SimpleExtension
         // if the image isn't found return bolt's 404 image
         // set the width the the first width in the presets array
         $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+        $notFoundImg = $this->notFoundImage();
         $notFoundSize = $this->imageNotFoundParams();
 
         // Modifications from config merged with presets set in the config
@@ -256,6 +256,7 @@ class BetterThumbsExtension extends SimpleExtension
             'sizes' => $sizesAttrib,
             'sourceExists' => $sourceExists,
             'notFoundSize' => $notFoundSize,
+            'notFoundImg' => $notFoundImg,
 
         ];
         // TODO: put the srcset.thumb.html template back in before commit
@@ -293,6 +294,21 @@ class BetterThumbsExtension extends SimpleExtension
         return $presets[0] ;
     }
 
+    protected function notFoundImage()
+    {
+        $app = $this->getContainer();
+        $extConfig = $this->getConfig();
+        // returns the wrong route ?
+//        $notFoundImg = $app['config']->get('general/thumbnails/notfound_image');
+        $notFoundImg = 'bolt-public/view/img/default_notfound.png';
+
+
+        if (isset($extConfig['404_Image'])  ) {
+            $notFoundImg =  $extConfig['404_Image'];
+        }
+
+        return $notFoundImg;
+    }
 
 
 
