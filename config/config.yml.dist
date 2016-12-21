@@ -54,7 +54,6 @@ presets: &presets
     fit: stretch
   medium:
     w: 350
-    h: 350
     fit: stretch
   large:
     w: 700
@@ -92,11 +91,11 @@ ScreenDensity:
   class: []
   altText: '~'
   widthDensity: 'x'
+  resolutions: [ 1, 2, 3 ]
   modifications:
     small: { 'w': 175, 'fit': 'stretch' }
     medium:
       w: 350
-      h: 350
       fit: stretch
     large:
       w: 700
@@ -120,5 +119,6 @@ ScreenDensity:
 # widthDensity: 'w' or 'x'
 # sizes: []
 # resolutions: [ ]
+# use_original:
 # modifications:
 #  modifications here:::
