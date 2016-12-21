@@ -2,7 +2,7 @@
 {% if sourceExists %}
 <img {{ attribs.buildImg( sizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, altText ) }} >
 {% else %}
-<img src="/bolt-public/view/img/default_notfound.png"
+<img src="{{ notFoundImg }}"
      width="{{ notFoundSize }}"
      alt="image not found">
 {% endif %}
