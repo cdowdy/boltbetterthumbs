@@ -26,22 +26,6 @@ picturefill: false
 # --------------------------------------------------------------------------------- #
 404_Image: /path/to/your/image.png
 
-# --------------------------------------------------------------------------------- #
-# Not Found Image.
-# If the image doesn't exist this is the image that will be served in it's place.
-# You could also comment out this part and use the regular "broken image" look which will just display the
-# the images alt text
-#
-# If this is enabled and the image portion is left blank then Bolt's default
-# "view/img/default_notfound.png.png" will be used. You can supply your own not found image if you like just
-# put the path to your image you'd like to use for instance:
-# image: '/theme/yourTheme/img/notfound.png'
-# --------------------------------------------------------------------------------- #
-notFound:
-  enabled: true
-  image: /path/to/your/image.png
-
-notFound_img:
 
 # --------------------------------------------------------------------------------- #
 # SECURITY
