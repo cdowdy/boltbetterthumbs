@@ -137,6 +137,7 @@ class BetterThumbsExtension extends SimpleExtension
     {
         return [
             new Nut\BetterThumbsCommand($container),
+//            new Nut\BetterThumbsCachePrimeCommand($container),
         ];
     }
 
@@ -158,6 +159,7 @@ class BetterThumbsExtension extends SimpleExtension
         $this->getConfig();
         return [
             'img' => ['image',  $options ],
+            'bthumb' => ['single', $options ],
 //            'picture' => ['picture', $options ],
 
         ];
@@ -264,6 +266,55 @@ class BetterThumbsExtension extends SimpleExtension
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
+
+    public function single($file, $name = 'betterthumbs', array $options = [])
+    {
+        $app = $this->getContainer();
+        $config = $this->getConfig();
+
+        $configName = $this->getNamedConfig($name);
+
+        // if the image isn't found return bolt's 404 image
+        // set the width the the first width in the presets array
+        $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+        $notFoundImg = $this->notFoundImage();
+        $notFoundSize = $this->imageNotFoundParams();
+
+        // Modifications from config merged with presets set in the config
+//        $mods = $this->getModificationParams($configName);
+        $mods = $config[$configName];
+        // if there is template modifications place those in the mods array
+        if (isset($options)) {
+            $finalMods = array_replace_recursive($mods, $options);
+        } else {
+            $finalMods = $mods;
+        }
+
+
+        // This will create our fallback/src img, set alt text, classes, source image
+        $thumbnail = new Thumbnail($config, $configName);
+
+        // set our source image for the src image, set the modifications for this image and finally set the
+        // alt text for the entire image element
+        $thumbnail->setSourceImage($file)
+            ->setModifications($finalMods);
+
+        // create our src image secure URL
+        $srcImg = $thumbnail->buildSecureURL();
+
+        $context = [
+            'srcImg' => $srcImg,
+            'sourceExists' => $sourceExists,
+            'notFoundSize' => $notFoundSize,
+            'notFoundImg' => $notFoundImg,
+            'mods' => $mods,
+        ];
+
+        $renderTemplate = $this->renderTemplate('single.html.twig', $context);
+
+        return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
 
     /**
      * merge two arrays then sort them by their values
