@@ -300,6 +300,9 @@ php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
                 To render a single image you'll need to use the bthumb tag: <code class="language-twig">&lbrace;&lbrace; bthumb( record.image, 'namedConfig') &rbrace;&rbrace;</code>
             </p>
             <p>
+                This will give you: <code class="language-markup">/img/your-image.jpg?your-modifications&s=accf4b6f5584ecfc3c2cbf3f0fab98c8</code>
+            </p>
+            <p>
                 The config for a single image is different from a regular BetterThumbs config block. You don't need any of the image tag attributes ( id, classes, data-attributes, widthDesnity descriptors etc). You only need to supply a config name and the modifications you wish to apply to the image.
             </p>
             <pre class="language-yaml"><code>single:
@@ -311,6 +314,7 @@ php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
             <p>
                 Create a named config block similar to the one in the above paragraph. Then in your twig templates use the bthumb tag with the name of the config block you created.
             </p>
+
             <p>
                 Example using a single image  as inline background image.
             </p>
