@@ -117,6 +117,17 @@ ScreenDensity:
       fit: stretch
 
 
+# --------------------------------------------------------------------------------- #
+# Single Image Source Generation.
+#
+# Will give you just the string of the image. ie:
+# /img/your-image.jpg?your-modifications&s=signkeyhere
+#
+# This config setup can only be used with the tag of {{ bthumb( record.image, 'single' ) }}
+# NOT the tag of {{ img( record.image, 'config name here' ) }}
+# --------------------------------------------------------------------------------- #
+single:
+  w: 200
 
 # --------------------------------------------------------------------------------- #
 #
