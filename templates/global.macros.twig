@@ -24,6 +24,12 @@
 src="/img{{ srcImg }}"
 {% endmacro srcImg %}
 
+{# test out for not found and single image right now #}
+{%  macro setImg( srcImg, sourceExists, notFoundImg ) %}
+{% if sourceExists %}/img{{ srcImg }}{% else %}
+{{ notFoundImg }}{% endif %}
+{% endmacro setImg  %}
+
 
 {# build the alt text attrib #}
 {% macro altText( altText ) %}
