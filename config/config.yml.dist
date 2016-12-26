@@ -24,7 +24,7 @@ picturefill: false
 # put the path to your image you'd like to use for instance:
 # 404_Image: '/theme/yourTheme/img/notfound.png'
 # --------------------------------------------------------------------------------- #
-404_Image: /path/to/your/image.png
+#404_Image: /path/to/your/image.png
 
 
 # --------------------------------------------------------------------------------- #
