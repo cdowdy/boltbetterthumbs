@@ -88,6 +88,31 @@ location ~* /img/(.*)$ {
             </p>
             <pre class="language-markup"><code>&lt;script src="extensions/vendor/cdowdy/betterthumbs/picturefill/3.02/picturefill.min.js" async defer&gt;&lt;/script&gt;</code></pre>
 
+
+            <h3 class="subheading">404 Image</h3>
+            <p>
+                If an image is not found in your files directory Bolt's not found image will be served with the width of the first entry in your modifications array.
+            </p>
+            <p>
+                A config like this:
+            </p>
+            <pre class="language-yaml"><code>srcset:
+  sizes: [ '100vw'  ]
+  modifications:
+    small: { 'w': 340 }
+    medium: { 'w': 680 }
+    large: { 'w': 800 }
+    xlarge: { 'w': 1260 }</code></pre>
+
+            <p>
+                Will give you a width of 340 for your 404 Image.
+            </p>
+            <p>
+                To have your own 404 image instead of Bolt's default not found image enter the path to your image. Typically this will be the path to your theme folder.
+            </p>
+
+            <pre class="language-yaml"><code>404_Image: /theme/base-2016/images/not-found.png</code></pre>
+
             <h3 class="subheading">Security</h3>
             <p>
                 <strong>Sign Key:</strong> This prevents image flooding attacks (requesting a bunch of images, filling up storage) that could lock up your server or cause a denial of service. This is required. Without this key this extension will not generate any images. If a url is modified in the address bar or through curl and not initiated by your server then an Image will not be generated and a 403 HTTP response code will be sent.
