@@ -25,6 +25,7 @@
             <li class="ext-docs-navigation-menu--item "><a href="#setup">Initial Setup</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#delete">Remove IMG From Cache</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#original">Use Original Image</a></li>
+            <li class="ext-docs-navigation-menu--item "><a href="#single">Output A Single Image</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#orientation">Image Orientation</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#crop">Cropping</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#size">Size</a></li>
@@ -291,6 +292,38 @@ php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
 
         </section>
         <!-- /#original -->
+
+        <section id="single">
+            <h1 class="heading">Single Image</h1>
+            <!-- /.heading -->
+            <p>
+                To render a single image you'll need to use the bthumb tag: <code class="language-twig">&lbrace;&lbrace; bthumb( record.image, 'namedConfig') &rbrace;&rbrace;</code>
+            </p>
+            <p>
+                The config for a single image is different from a regular BetterThumbs config block. You don't need any of the image tag attributes ( id, classes, data-attributes, widthDesnity descriptors etc). You only need to supply a config name and the modifications you wish to apply to the image.
+            </p>
+            <pre class="language-yaml"><code>single:
+  w: 400
+  h: 225
+  fit: 'crop-bottom-right'</code></pre>
+
+            <h2 class="subheading">Single Image Usage</h2>
+            <p>
+                Create a named config block similar to the one in the above paragraph. Then in your twig templates use the bthumb tag with the name of the config block you created.
+            </p>
+            <p>
+                Example using a single image  as inline background image.
+            </p>
+
+            <pre class="language-twig"><code>&lt;style&gt;
+  .single { background-image: &lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;
+&lt;/style&gt;
+
+&lt;div class="single"&gt;&lt;/div&gt;
+&lt;!-- or --&gt;
+&lt;div style="background-image: &lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;"&gt;&lt;/div&gt;</code></pre>
+        </section>
+        <!-- /#single -->
 
         <section id="orientation">
             <h1 class="heading">Image Orientation</h1>
