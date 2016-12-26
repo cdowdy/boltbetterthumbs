@@ -20,7 +20,7 @@ picturefill: false
 # If the image doesn't exist this is the image that will be served in it's place.
 #
 # If this is enabled and the image portion is left blank then Bolt's default
-# "view/img/default_notfound.png.png" will be used. You can supply your own not found image if you like just
+# "bolt-public/view/img/default_notfound.png" will be used. You can supply your own not found image if you like just
 # put the path to your image you'd like to use for instance:
 # 404_Image: '/theme/yourTheme/img/notfound.png'
 # --------------------------------------------------------------------------------- #
