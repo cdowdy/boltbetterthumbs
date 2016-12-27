@@ -10,26 +10,19 @@ use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
-use League\Glide\ServerFactory;
+
 use Silex\Application;
-use Silex\ControllerCollection;
-use Symfony\Component\HttpFoundation\Request;
+
 use Bolt\Menu\MenuEntry;
 
 
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
-//use Bolt\Extension\cdowdy\betterthumbs\Handler\PictureHandler;
-use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
-use Bolt\Extension\cdowdy\betterthumbs\Nut\BetterThumbsCommand;
+use Bolt\Extension\cdowdy\betterthumbs\Providers\BetterThumbsProvider;
+
 
 use Pimple as Container;
-
-
-use League\Glide\Responses\SymfonyResponseFactory;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 
 
 
@@ -97,36 +90,20 @@ class BetterThumbsExtension extends SimpleExtension
 
 
     /**
-     * @param Application $app
+     * @return array
      */
-    protected function registerServices(Application $app)
+    public function getServiceProviders()
     {
-        $app['betterthumbs'] = $app->share(
-            function ($app) {
-                $adapter = new Local($app['resources']->getPath('filespath') );
-                $Filesystem = new Filesystem($adapter);
-
-                // pull in my currently messy helper file and use $configHelper as the accessor to our config file
-                $configHelper = new ConfigHelper($this->getConfig());
-
-                // Set the Image Driver
-                $ImageDriver = $configHelper->setImageDriver();
-
-                // set and get the max image size:
-                $configHelper->setMaxImageSize($this->getConfig()['security']['max_image_size']);
-                $maxImgSize = $configHelper->getMaxImageSize();
-                return ServerFactory::create([
-                    'response' => new SymfonyResponseFactory(),
-                    'source' => $Filesystem,
-                    'cache' => $Filesystem,
-                    'cache_path_prefix' => '.cache',
-                    'max_image_size' => $maxImgSize,
-                    'watermarks' => $Filesystem,
-                    'base_url' => '/img/',
-                    'driver' => $ImageDriver,
-                ]);
-            }
-        );
+//        $parentProviders = parent::getServiceProviders();
+//        $localProviders = [
+//            new BetterThumbsProvider($this->getConfig()),
+//        ];
+//
+//        return $parentProviders + $localProviders;
+        return [
+            $this,
+            new BetterThumbsProvider($this->getConfig()),
+        ];
     }
 
     /**
