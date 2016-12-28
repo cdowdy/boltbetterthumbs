@@ -1,3 +1,19 @@
+# Filesystem
+# Default is local files (from "files" in your bolt install)
+# You can also use an in memory filesystem if you're using Varnish so images aren't saved twice to your disk
+# Images will only be cached through varnish and not saved to disk in "files/.cache"
+# options to use here are:
+# Filesystem:
+#   adapter: local
+# Filesystem:
+#   adapter: memory
+#
+# If you wish to change this from the default of "local" uncomment the section below and enter in memory
+# --------------------------------------------------------------------------------- #
+#Filesystem:
+#  adapter: local
+
+# --------------------------------------------------------------------------------- #
 # The Image Drive You Want to use.
 # Default is 'gd' which is the same one Bolt uses for it's thumbnail handling.
 # Options are:
@@ -87,6 +103,8 @@ betterthumbs:
   sizes: [ '100vw' ]
   modifications:
     <<: *presets
+
+
 # --------------------------------------------------------------------------------- #
 # a named image configuration group.
 # --------------------------------------------------------------------------------- #
