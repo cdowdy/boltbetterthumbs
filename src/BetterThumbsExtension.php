@@ -8,6 +8,7 @@ use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
+//use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Filesystem as BoltFilesystem;
 
@@ -69,6 +70,9 @@ class BetterThumbsExtension extends SimpleExtension
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function registerMenuEntries()
     {
         $menu = new MenuEntry('betterthumbs-menu', 'betterthumbs/files');
@@ -94,12 +98,6 @@ class BetterThumbsExtension extends SimpleExtension
      */
     public function getServiceProviders()
     {
-//        $parentProviders = parent::getServiceProviders();
-//        $localProviders = [
-//            new BetterThumbsProvider($this->getConfig()),
-//        ];
-//
-//        return $parentProviders + $localProviders;
         return [
             $this,
             new BetterThumbsProvider($this->getConfig()),
@@ -666,6 +664,9 @@ PFILL;
     {
         return [
             'Image_Driver' => 'gd',
+            'Filesystem' => [
+                'adapter' => 'local',
+            ],
             'security' => [
                 'secure_thumbs' => true,
                 'secure_sign_key' => ''
