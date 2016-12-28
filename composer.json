@@ -30,7 +30,12 @@
       "League\\Glide\\Responses\\" : [
         "lib/league/glide-symfony/src/Responses"
       ],
-      "Intervention\\Image\\" : [ "lib/intervention/image/src/intervention/Image"]
+      "League\\Flysystem\\Memory\\" : [
+        "lib/league/flysystem-memory/src"
+      ],
+      "Intervention\\Image\\" : [
+        "lib/intervention/image/src/Intervention/Image"
+      ]
     }
   },
   "autoload-dev": {
