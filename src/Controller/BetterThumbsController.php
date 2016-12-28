@@ -3,7 +3,7 @@
 namespace Bolt\Extension\cdowdy\betterthumbs\Controller;
 
 
-use League\Flysystem\Memory\MemoryAdapter;
+
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
@@ -23,7 +23,7 @@ use League\Glide\Signatures\SignatureException;
 
 
 use League\Flysystem\Adapter\Local;
-use League\Flysystem\Memory;
+use League\Flysystem\Memory\MemoryAdapter;
 use League\Flysystem\Filesystem;
 
 
