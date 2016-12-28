@@ -57,6 +57,7 @@ location ~* /img/(.*)$ {
             </p>
             <div class="ext-docs-card">
                 <ol>
+                    <li>Filesystem</li>
                     <li>Image Driver</li>
                     <li>Security</li>
                     <li>Defaults</li>
@@ -66,6 +67,29 @@ location ~* /img/(.*)$ {
             <p>
                 The only one you'll need to supply yourself if the secure sign key under security. You can create this key with Openssl or you can use Composer and require
                 <a href="https://github.com/AndrewCarterUK/CryptoKey">CryptoKey</a> to generate a key.
+            </p>
+
+            <h3 class="subheading">Filesystem</h3>
+            <p>
+                By default this extension uses the local file system to save modified images. An image is requested, modified and saved to disk. On subsequent visits a 304 Not Modified response is sent with a Cache-Control and Expires directive of 1 Year from the time it was created.
+            </p>
+            <p>
+                In most instances this is pretty good for **most** sites. If you use Varnish you may not want to save these modified images to the cache and let Varnish deal with caching. To do this you need to modify the "Filesystem" portion of the config.
+            </p>
+            <p>
+                The default, commented out portion of the config looks as follows.
+            </p>
+            <pre class="language-yaml"><code>Filesystem:
+  adapter: local</code></pre>
+
+            <p>
+                To use the In Memory FlySystem Adapter uncomment the filesystem portion and enter in memory in place of local.
+            </p>
+            <pre class="language-yaml"><code>Filesystem:
+  adapter: memory</code></pre>
+
+            <p>
+                After doing this images will no longer be saved to your disk cache.
             </p>
 
             <h3 class="subheading">Image Driver Options</h3>
