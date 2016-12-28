@@ -24,6 +24,13 @@ class ConfigHelper
 
     protected $_max_image_size;
 
+    protected $_notFoundEnabled;
+
+    protected $_ErrorImagePath;
+
+    protected $_cacheAdapter;
+
+
     /**
      * ConfigHelper constructor.
      * @param array $_extensionConfig
@@ -100,6 +107,42 @@ class ConfigHelper
         }
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNotFoundEnabled()
+    {
+        return $this->_notFoundEnabled;
+    }
+
+    /**
+     * @param mixed $notFoundEnabled
+     * @return ConfigHelper
+     */
+    public function setNotFoundEnabled($notFoundEnabled)
+    {
+        $this->_notFoundEnabled = $notFoundEnabled;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorImagePath()
+    {
+        return $this->_ErrorImagePath;
+    }
+
+    /**
+     * @param mixed $ErrorImagePath
+     * @return ConfigHelper
+     */
+    public function setErrorImagePath($ErrorImagePath)
+    {
+        $this->_ErrorImagePath = $ErrorImagePath;
+        return $this;
+    }
+
 
 
 
@@ -117,6 +160,42 @@ class ConfigHelper
             return $defaultQuality;
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCacheAdapter()
+    {
+        return $this->_cacheAdapter;
+    }
+
+    /**
+     * @param mixed $cacheAdapter
+     * @return ConfigHelper
+     */
+    public function setCacheAdapter($cacheAdapter, $default = 'local')
+    {
+        $valid = ['local', 'memory'];
+
+        if (empty($this->_extensionConfig['Filesystem']['adapter'])) {
+            $cacheAdapter = $default;
+        } else {
+            $cacheAdapter = $this->_extensionConfig['Filesystem']['adapter'];
+        }
+
+        $this->_cacheAdapter = $cacheAdapter;
+
+        return $this;
+    }
+
+    public function setFilesystemAdapter()
+    {
+        $adapter = $this->_extensionConfig['Filesystem']['adapter'];
+
+        return $this->setCacheAdapter($adapter)->getCacheAdapter();
+    }
+
+
 
     /**
      * @return mixed
