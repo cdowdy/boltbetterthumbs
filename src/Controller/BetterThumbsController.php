@@ -3,6 +3,7 @@
 namespace Bolt\Extension\cdowdy\betterthumbs\Controller;
 
 
+use League\Flysystem\Memory\MemoryAdapter;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
@@ -22,6 +23,7 @@ use League\Glide\Signatures\SignatureException;
 
 
 use League\Flysystem\Adapter\Local;
+use League\Flysystem\Memory;
 use League\Flysystem\Filesystem;
 
 
@@ -67,8 +69,11 @@ class BetterThumbsController implements ControllerProviderInterface
         // set and merge any defaults
         $defaults = $configHelper->setDefaults();
 
+        $FSAdapter = $this->fsAdapter($app);
+
         $app['betterthumbs']->setDefaults($defaults);
         $app['betterthumbs']->setPresets($presets);
+        $app['betterthumbs']->setCache($FSAdapter);
         $app['betterthumbs']->setCacheWithFileExtensions(true);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
@@ -90,5 +95,21 @@ class BetterThumbsController implements ControllerProviderInterface
         // ob_clean / ob_end_clean is needed here ¯\_(ツ)_/¯
         ob_clean();
         return $app['betterthumbs']->getImageResponse($path, $request->query->all());
+    }
+
+
+    protected function fsAdapter(Application $app)
+    {
+        $configHelper = new ConfigHelper($this->config);
+        $adapter = strtolower($configHelper->setFilesystemAdapter());
+
+
+        if ( $adapter == 'local' ) {
+            return new Filesystem( new Local($app['resources']->getPath('filespath') ) );
+        }
+
+        if ( $adapter == 'memory' ) {
+            return new Filesystem( new MemoryAdapter() );
+        }
     }
 }
