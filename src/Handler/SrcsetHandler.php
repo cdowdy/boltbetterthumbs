@@ -10,7 +10,7 @@ use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 class SrcsetHandler
 {
-    private $app;
+    protected $app;
 
     /**
      * @var array
@@ -123,11 +123,10 @@ class SrcsetHandler
      * @param array $modifications
      * @return array
      */
-    public function createSrcset($fileName, $widths, $resolutions, array $modifications )
+    public function createSrcset(Application $app, $fileName, $widths, $resolutions, array $modifications )
     {
 
-        // make thumbs an empty array
-        $thumb = [];
+
         $srcset = [];
 
         $thumbHelper = new Thumbnail($this->_extensionConfig, $this->_configname);
@@ -147,21 +146,18 @@ class SrcsetHandler
 
         // if modifcations are preset use those
         // otherwise fallback to presets and use the 'p=preset-name' shorthand
-        if (isset($this->_extensionConfig[$this->_configname]['modifications']) ||
-            array_key_exists('modifications', $this->_extensionConfig[$this->_configname])) {
-            foreach ($modifications as $parameters  ) {
-                $thumb[] .= $thumbHelper->setModifications($parameters)->buildSecureURL();
-            }
-        } else {
-            foreach ($presets as $preset) {
-                $thumb[] .= $thumbHelper->setModifications(['p' => $preset ] )->buildSecureURL();
-            }
-        }
-
-        // prefix all images with '/img'
-        array_walk($thumb, function( &$key ) {
-           $key = '/img' . $key;
-        });
+//        if (isset($this->_extensionConfig[$this->_configname]['modifications']) ||
+//            array_key_exists('modifications', $this->_extensionConfig[$this->_configname])) {
+//            foreach ($modifications as $parameters  ) {
+//                $thumb[] .= $thumbHelper->setModifications($parameters)->buildSecureURL();
+//            }
+//        } else {
+//            foreach ($presets as $preset) {
+//                $thumb[] .= $thumbHelper->setModifications(['p' => $preset ] )->buildSecureURL();
+//            }
+//        }
+        // make thumbs an empty array
+        $thumb = $this->checkCachedImg($app, $fileName, $modifications);
 
        // if modifications are empty need to get the widths from presets
         if ($wd === 'w') {
@@ -172,6 +168,45 @@ class SrcsetHandler
             $srcset =  $this->resolutionErrors($thumb, $resolutions);
         }
         return $srcset;
+    }
+
+
+    protected function checkCachedImg(Application $app, $file, $params)
+    {
+
+        $thumbHelper = new Thumbnail($this->_extensionConfig, $this->_configname);
+        $thumbHelper->setSourceImage($file);
+        $thumbHelper->setModifications($params);
+
+        // Get our presets from the config
+        $configHelper = new ConfigHelper($this->_extensionConfig);
+        $presets = array_keys($configHelper->setPresets());
+
+        $thumbs = [];
+        if (isset($this->_extensionConfig[$this->_configname]['modifications']) ||
+            array_key_exists('modifications', $this->_extensionConfig[$this->_configname])) {
+
+            foreach( $params as $mods ) {
+                if ( $app['betterthumbs']->cacheFileExists($file, $mods ) ) {
+                    $thumbs[] .= '/files/' . $app['betterthumbs']->getCachePath( $file, $mods );
+
+                } else {
+                    $thumbs[] .= '/img' . $thumbHelper->setModifications($mods)->buildSecureURL();
+                }
+            }
+
+        } else {
+            foreach ($presets as $preset) {
+                if ($app['betterthumbs']->cacheFileExists($file, ['p' => $preset ] )){
+                    $thumbs[] .= $app['betterthumbs']->getCachePath( $file, ['p' => $preset ] );
+                } else {
+                    $thumbs[] .= $thumbHelper->setModifications(['p' => $preset ] )->buildSecureURL();
+                }
+            }
+        }
+
+
+        return $thumbs;
     }
 
 }
