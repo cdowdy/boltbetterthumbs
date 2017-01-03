@@ -193,7 +193,9 @@ class BetterThumbsExtension extends SimpleExtension
         // the 'src' image parameters. get the first modifications in the first array
         $srcImgParams = current($finalMods);
 
+        $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
 
+        $thumb = $this->buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalMods);
 
         $context = [
             'srcImg' => $srcImg,
