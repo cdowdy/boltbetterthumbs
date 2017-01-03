@@ -341,14 +341,8 @@ class BetterThumbsExtension extends SimpleExtension
             ->setModifications($params)
             ->setAltText($alt);
 
-        if ($app['betterthumbs']->cacheFileExists($file, $params))
-        {
-            $thumb = $this->getCachedImgURL($file, $params);
-        } else {
-            $thumb = '/img' . $thumbnail->buildSecureURL();
-        }
         // create our src image secure URL
-        return $thumb;
+        return $thumbnail->buildSecureURL();
     }
 
 
@@ -378,7 +372,7 @@ class BetterThumbsExtension extends SimpleExtension
         $optionWidths = $this->checkWidths($configName, $finalModifications);
 
         // build our srcset string with our srcset handler
-        $srcsetThumbs = $srcsetHandler->createSrcset($app, $file, $optionWidths, $resolutions, $finalModifications);
+        $srcsetThumbs = $srcsetHandler->createSrcset($file, $optionWidths, $resolutions, $finalModifications);
 
         // check the config see if 'use_original' and a widthdensity is set
         $useOriginal = $this->useOriginal($configName, $file,  $widthDensity);
