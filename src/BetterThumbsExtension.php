@@ -193,34 +193,9 @@ class BetterThumbsExtension extends SimpleExtension
         // the 'src' image parameters. get the first modifications in the first array
         $srcImgParams = current($finalMods);
 
-        // get our helpers and handlers setup
-        // This will create a srcset Array
-        $srcset = new SrcsetHandler($config, $configName);
+        $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
 
-        // set the width density passed from our config
-        $srcset->setWidthDensity($widthDensity);
-
-        // This will create our fallback/src img, set alt text, classes, source image
-        $thumbnail = new Thumbnail($config, $configName);
-
-        // set our source image for the src image, set the modifications for this image and finally set the
-        // alt text for the entire image element
-        $thumbnail->setSourceImage($file)
-            ->setModifications($srcImgParams)
-            ->setAltText($altText);
-
-        // create our src image secure URL
-        $srcImg = $thumbnail->buildSecureURL();
-
-        // get the options passed in to the parameters and prepare it for our srcset array.
-        // Check widths method. Should give use the presets width if modifications is empty
-        $optionWidths = $this->checkWidths($configName, $finalMods);
-
-
-        $srcsetThumbs = $srcset->createSrcset($file, $optionWidths, $resolutions, $finalMods);
-        $original = $this->useOriginal($configName, $file, $widthDensity);
-        $thumb = $this->mergeAndSort($srcsetThumbs, $original);
-
+        $thumb = $this->buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalMods);
 
         $context = [
             'srcImg' => $srcImg,
@@ -234,7 +209,6 @@ class BetterThumbsExtension extends SimpleExtension
             'sourceExists' => $sourceExists,
             'notFoundSize' => $notFoundSize,
             'notFoundImg' => $notFoundImg,
-
         ];
         // TODO: put the srcset.thumb.html template back in before commit
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
@@ -336,6 +310,66 @@ class BetterThumbsExtension extends SimpleExtension
         return $notFoundImg;
     }
 
+
+    /**
+     * @param $config
+     * @param $configName
+     * @param $file
+     * @param $params
+     * @param $alt
+     * @return string
+     *
+     * build a src image candidate thumbnail
+     */
+    public function buildThumb($config, $configName, $file, $params, $alt)
+    {
+        // This will create our fallback/src img, set alt text, classes, source image
+        $thumbnail = new Thumbnail($config, $configName);
+
+        // set our source image for the src image, set the modifications for this image and finally set the
+        // alt text for the entire image element
+        $thumbnail->setSourceImage($file)
+            ->setModifications($params)
+            ->setAltText($alt);
+
+        // create our src image secure URL
+        return $thumbnail->buildSecureURL();
+    }
+
+
+    /**
+     * @param $file
+     * @param $config
+     * @param $configName
+     * @param $widthDensity
+     * @param $resolutions
+     * @param $finalModifications
+     * @return array
+     *
+     * Build our srcset array check if the original file is used, if so place remove the appropriate
+     * srcset candidate and replace it with the original file in the correct spot in the srcset array
+     */
+
+    public function buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalModifications)
+    {
+        // get our srcset handler
+        $srcsetHandler = new SrcsetHandler($config, $configName);
+
+        // set the width density passed from our config
+        $srcsetHandler->setWidthDensity($widthDensity);
+
+        // check to make sure widths are set, if not fall back to our preset widths
+        $optionWidths = $this->checkWidths($configName, $finalModifications);
+
+        // build our srcset string with our srcset handler
+        $srcsetThumbs = $srcsetHandler->createSrcset($file, $optionWidths, $resolutions, $finalModifications);
+
+        // check the config see if 'use_original' and a widthdensity is set
+        $useOriginal = $this->useOriginal($configName, $file,  $widthDensity);
+
+
+        return $this->mergeAndSort($srcsetThumbs, $useOriginal);
+    }
 
 
     /**
