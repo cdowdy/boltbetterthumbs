@@ -209,6 +209,7 @@ class BetterThumbsExtension extends SimpleExtension
             'sourceExists' => $sourceExists,
             'notFoundSize' => $notFoundSize,
             'notFoundImg' => $notFoundImg,
+
         ];
         // TODO: put the srcset.thumb.html template back in before commit
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
@@ -262,6 +263,13 @@ class BetterThumbsExtension extends SimpleExtension
         $renderTemplate = $this->renderTemplate('single.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
+    public function getCachedImgURL($file, $finalModifications)
+    {
+        $app = $this->getContainer();
+
+        return '/files/' . $app['betterthumbs']->getCachePath($file, $finalModifications);
     }
 
 
@@ -323,6 +331,7 @@ class BetterThumbsExtension extends SimpleExtension
      */
     public function buildThumb($config, $configName, $file, $params, $alt)
     {
+        $app = $this->getContainer();
         // This will create our fallback/src img, set alt text, classes, source image
         $thumbnail = new Thumbnail($config, $configName);
 
@@ -332,8 +341,14 @@ class BetterThumbsExtension extends SimpleExtension
             ->setModifications($params)
             ->setAltText($alt);
 
+        if ($app['betterthumbs']->cacheFileExists($file, $params))
+        {
+            $thumb = $this->getCachedImgURL($file, $params);
+        } else {
+            $thumb = '/img' . $thumbnail->buildSecureURL();
+        }
         // create our src image secure URL
-        return $thumbnail->buildSecureURL();
+        return $thumb;
     }
 
 
@@ -352,6 +367,7 @@ class BetterThumbsExtension extends SimpleExtension
 
     public function buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalModifications)
     {
+        $app = $this->getContainer();
         // get our srcset handler
         $srcsetHandler = new SrcsetHandler($config, $configName);
 
@@ -362,7 +378,7 @@ class BetterThumbsExtension extends SimpleExtension
         $optionWidths = $this->checkWidths($configName, $finalModifications);
 
         // build our srcset string with our srcset handler
-        $srcsetThumbs = $srcsetHandler->createSrcset($file, $optionWidths, $resolutions, $finalModifications);
+        $srcsetThumbs = $srcsetHandler->createSrcset($app, $file, $optionWidths, $resolutions, $finalModifications);
 
         // check the config see if 'use_original' and a widthdensity is set
         $useOriginal = $this->useOriginal($configName, $file,  $widthDensity);
