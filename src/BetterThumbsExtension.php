@@ -193,33 +193,6 @@ class BetterThumbsExtension extends SimpleExtension
         // the 'src' image parameters. get the first modifications in the first array
         $srcImgParams = current($finalMods);
 
-        // get our helpers and handlers setup
-        // This will create a srcset Array
-        $srcset = new SrcsetHandler($config, $configName);
-
-        // set the width density passed from our config
-        $srcset->setWidthDensity($widthDensity);
-
-        // This will create our fallback/src img, set alt text, classes, source image
-        $thumbnail = new Thumbnail($config, $configName);
-
-        // set our source image for the src image, set the modifications for this image and finally set the
-        // alt text for the entire image element
-        $thumbnail->setSourceImage($file)
-            ->setModifications($srcImgParams)
-            ->setAltText($altText);
-
-        // create our src image secure URL
-        $srcImg = $thumbnail->buildSecureURL();
-
-        // get the options passed in to the parameters and prepare it for our srcset array.
-        // Check widths method. Should give use the presets width if modifications is empty
-        $optionWidths = $this->checkWidths($configName, $finalMods);
-
-
-        $srcsetThumbs = $srcset->createSrcset($file, $optionWidths, $resolutions, $finalMods);
-        $original = $this->useOriginal($configName, $file, $widthDensity);
-        $thumb = $this->mergeAndSort($srcsetThumbs, $original);
 
 
         $context = [
@@ -234,7 +207,6 @@ class BetterThumbsExtension extends SimpleExtension
             'sourceExists' => $sourceExists,
             'notFoundSize' => $notFoundSize,
             'notFoundImg' => $notFoundImg,
-
         ];
         // TODO: put the srcset.thumb.html template back in before commit
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
