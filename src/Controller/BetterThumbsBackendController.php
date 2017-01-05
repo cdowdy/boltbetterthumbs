@@ -69,7 +69,12 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         $ctr->post('/files/delete/all', [$this, 'deleteAll'])
             ->bind('betterthumbs_delete_all');
 
-        // make sure the user is logged in and allowed to view the backend pages before rendering
+        $ctr->get('/files/prime', [$this, 'primeCache'])
+            ->bind('betterthumbs_prime');
+
+        $ctr->post('/files/prime/do', [$this, 'doPrime'])
+            ->bind('betterthumbs_doPrime');
+
         $ctr->before([$this, 'before']);
 
 
@@ -184,6 +189,42 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         }
 
         return $removed;
+    }
+
+    public function primeCache(Application $app)
+    {
+        $adapter = new Local($app['resources']->getPath('filespath') );
+        $filesystem = new Filesystem($adapter);
+
+        $fileList = $filesystem->listContents(null, true);
+
+        $excludeDir = '/^.cache\//i';
+
+        $files = [];
+
+        foreach ( $fileList as $object  ) {
+
+            if ($object['type'] == 'file'
+                && in_array(strtolower($object['extension']), $this->_expected )
+                && !preg_match_all('/^.cache\//i', $object['dirname'])) {
+
+                $files[] = [
+                    'filename' => $object['basename'],
+                    'located' => $object['dirname']
+                ];
+            }
+        }
+
+
+        $config = $this->config;
+        $context = [
+
+            'allFiles' => $files,
+            'filePaths' => $fileList,
+            'config' => $config,
+        ];
+
+        return $app['twig']->render('betterthumbs.prime.html.twig', $context);
     }
 
 }
