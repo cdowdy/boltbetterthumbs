@@ -16,11 +16,13 @@ use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use League\Glide\Urls\UrlBuilderFactory;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Plugin\ListPaths;
+use League\Flysystem\Memory\MemoryAdapter;
 
 
 
@@ -31,6 +33,8 @@ class BetterThumbsBackendController implements ControllerProviderInterface
     protected $configHelper;
 
     private $config;
+
+    protected $_expected = [ 'jpg', 'jpeg', 'png', 'tiff', 'gif', 'bmp' ];
 
 
     /**
@@ -105,28 +109,47 @@ class BetterThumbsBackendController implements ControllerProviderInterface
      */
     public function bthumbsFiles(Application $app)
     {
-        $configHelper = $configHelper = new ConfigHelper($this->config);
-        $signkey = $configHelper->setSignKey();
 
         $filespath = $app['resources']->getPath('filespath') . '/.cache';
-        $allFiles = array_diff(scandir($filespath), array('.', '..'));
 
-        $secureURL = UrlBuilderFactory::create('/', $signkey );
+        $adapter = new Local($filespath);
+        $filesystem = new Filesystem($adapter);
+
+        $fsListContents = $filesystem->listContents(null, true);
 
         $cachedImage = [];
+        $allFiles = [];
 
-        foreach ($allFiles as $key ) {
-            $parts = pathinfo($key);
-            $cachedImage += [
-                $secureURL->getUrl($key, ['w' => 200, 'h' => 133, 'fit' => 'crop' ]) => $parts['basename']
-            ];
+        foreach ($fsListContents as $item) {
+            // get the directory name from filesystem
+            // prepare this to just get the "basename" for display in our templates
+            $parts = pathinfo( $item['dirname']);
+
+            if ($item['type'] == 'file' && in_array(strtolower($item['extension']), $this->_expected) ) {
+
+                // get the directory name recursively
+                // make the value the "basename" to display in our templates
+                $cachedImage += [
+                    $app['betterthumbs']->makeImage( $item['dirname'], ['w' => 200, 'h' => 133, 'fit' => 'crop' ] ) => [
+                        'name' => $parts['basename'],
+                        'path' => $item['dirname']
+                    ]
+                ];
+                // get all the files and prepare them for deletion
+                $allFiles[] = $item['dirname'];
+            }
+
         }
 
-        $context = [
-            'allFiles' => $allFiles,
-            'cachedImage' => $cachedImage,
-        ];
+        // make sure the cachedImage array has no duplicates or empty members
+        $cachedUnique = array_unique($cachedImage, SORT_REGULAR);
+        // make sure the allFiles array has no duplicates and json_encode it
+        $allFilesUnique = json_encode(array_unique($allFiles, SORT_REGULAR));
 
+        $context = [
+            'allFiles' => $allFilesUnique,
+            'cachedImage' => $cachedUnique,
+        ];
 
         return $app['twig']->render('betterthumbs.files.html.twig', $context);
     }
@@ -139,9 +162,8 @@ class BetterThumbsBackendController implements ControllerProviderInterface
      */
     public function deleteSingle(Application $app, Request $request)
     {
-        $betterthumbs = $app['betterthumbs'];
 
-        return $betterthumbs->deleteCache($request->request->get('img'));
+        return $app['betterthumbs']->deleteCache($request->request->get('img'));
 
     }
 
@@ -163,4 +185,5 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
         return $removed;
     }
+
 }
