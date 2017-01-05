@@ -209,6 +209,7 @@ class BetterThumbsExtension extends SimpleExtension
             'sourceExists' => $sourceExists,
             'notFoundSize' => $notFoundSize,
             'notFoundImg' => $notFoundImg,
+
         ];
         // TODO: put the srcset.thumb.html template back in before commit
         $renderTemplate = $this->renderTemplate('srcset.thumb.html.twig', $context);
@@ -262,6 +263,13 @@ class BetterThumbsExtension extends SimpleExtension
         $renderTemplate = $this->renderTemplate('single.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
+    public function getCachedImgURL($file, $finalModifications)
+    {
+        $app = $this->getContainer();
+
+        return '/files/' . $app['betterthumbs']->getCachePath($file, $finalModifications);
     }
 
 
@@ -323,6 +331,7 @@ class BetterThumbsExtension extends SimpleExtension
      */
     public function buildThumb($config, $configName, $file, $params, $alt)
     {
+        $app = $this->getContainer();
         // This will create our fallback/src img, set alt text, classes, source image
         $thumbnail = new Thumbnail($config, $configName);
 
@@ -352,6 +361,7 @@ class BetterThumbsExtension extends SimpleExtension
 
     public function buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalModifications)
     {
+        $app = $this->getContainer();
         // get our srcset handler
         $srcsetHandler = new SrcsetHandler($config, $configName);
 

@@ -24,45 +24,47 @@
 
 <main>
     <div class="ext-docs-grid-container">
-    {% if cachedImage %}
-    <div class="small-12 columns">
-        <h1 class="heading">Delete All Images From The BetterThumbs Cache</h1>
-        <button type="button" data-all="{{ allFiles|json_encode }}"
-                class="button delete-all">Delete All Images </button>
-    </div>
+        {% if cachedImage %}
+        <div class="small-12 columns">
+            <h1 class="heading">Delete All Images From The BetterThumbs Cache</h1>
+            <button type="button" data-all="{{ allFiles }}"
+                    class="button delete-all">Delete All Images </button>
+        </div>
     </div>
 
     <div class="ext-docs-grid-container">
-    <div class="small-12 columns">
-        <h1 class="heading">Delete An Image From Cache</h1>
-    </div>
-
-    <div id="image-grid" class="small-up-1 medium-up-2 large-up-3">
-
-        {% for key, value in cachedImage %}
-        <div id="cachedImage-{{ loop.index }}" class="column image-container">
-
-            <img id="{{ value }}-{{ loop.index }}"
-                 class="image-to-delete"
-                 src="/img{{ key }}"
-                 alt="{{ value }}">
-
-            <ul class="cached-image-data">
-                <li class="cached-image-name"><strong>Name: </strong> {{ value }}</li>
-            </ul>
-
-            <button class="button deletebutton" type="button" id="{{ value }}">
-                Delete Image
-            </button>
+        <div class="small-12 columns">
+            <h1 class="heading">Delete An Image From Cache</h1>
         </div>
-        {% endfor %}
-    </div>
+
+        <div id="image-grid" class="small-up-1 medium-up-2 large-up-3">
+            {% for key, value in cachedImage %}
+            <div id="cachedImage-{{ loop.index }}" class="column image-container">
+                <img id="{{ key }}-{{ loop.index }}"
+                     class="image-to-delete"
+                     src="/files/{{ key }}"
+                     alt="{{ value.name }}">
+
+                <ul class="cached-image-data">
+                    <li class="cached-image-name">
+                        <strong>Name: </strong> {{ value.name }}
+                    </li>
+                </ul>
+
+                <button class="button deletebutton"
+                        type="button"
+                        id="{{ value.path }}">
+                        Delete Image
+                </button>
+            </div>
+            {% endfor %}
+        </div> <!-- /#image-grid .small-up-1 -->
         {% else %}
         <div class="small-12 columns">
             <h1 class="heading">No Images Found In The Better Thumbs Cache...</h1>
         </div>
     {% endif %}
-    </div>
+    </div><!-- /.ext-docs-grid-container -->
 </main>
 
 </body>
