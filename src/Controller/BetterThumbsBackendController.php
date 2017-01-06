@@ -210,18 +210,35 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
                 $files[] = [
                     'filename' => $object['basename'],
-                    'located' => $object['dirname']
+                    'located' => $object['dirname'],
+                    'imagePath' => $object['path'],
+//                    'isCached' => $app['betterthumbs']->cache
                 ];
             }
         }
 
 
         $config = $this->config;
+        $selectOptions = [];
+        $presetSettings = [];
+
+        foreach ($config as $key => $values) {
+
+            if (is_array($values) && array_key_exists('modifications', $values) ) {
+                $selectOptions[] = $key ;
+            }
+
+            if (is_array($values) && $key == strtolower('presets') ) {
+                $presetSettings[] = $key ;
+            }
+        }
+
+
         $context = [
 
             'allFiles' => $files,
-            'filePaths' => $fileList,
-            'config' => $config,
+            'extConfig' => $selectOptions,
+            'presets' => $presetSettings,
         ];
 
         return $app['twig']->render('betterthumbs.prime.html.twig', $context);
