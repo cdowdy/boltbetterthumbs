@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="{{ htmllang() }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>BetterThumbs Files</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbsv3.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/magnific-popup.css', 'bolt') }}">
+    <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
+    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.file.delete.js"></script>
+    {#<script src="/app/view/js/jquery.magnific-popup.min.js"></script>#}
+    <script src="{{ asset('js/jquery.magnific-popup.min.js', 'bolt') }}"></script>
+
+</head>
+<body class="">
+<header class="ext-docs-masthead ext-docs-header-container ">
+    <div class="ext-docs-header-title">
+        <h1><a href="{{ paths.bolt }}">Bolt Admin</a></h1>
+    </div>
+    <div class="ext-docs-header-title">
+        <h2>BetterThumbs Prime Cache</h2>
+    </div>
+</header>
+
+<main>
+    <div class="ext-docs-grid-container">
+        <div class="small-12 columns">
+            <h1 class="heading">Prime The Image Cache</h1>
+        </div>
+    </div>
+    {#{{ dump(extConfig) }}#}
+    <div id="prime-grid" class="row ">
+        {% for obj, key in allFiles %}
+
+            <div class="medium-4 columns">
+                <div class="betterthumbs-card">
+                    <div class="betterthumbs-card-divider">
+                        <p>{{ key.filename }}</p>
+                    </div>
+                    <!-- /.betterthumbs-card-divider -->
+                    <div class="img-container">
+                        <a href="/files/{{ key.imagePath }}"
+                           class="image-popup-fit-width"
+                           title="Preview: {{ key.filename }}">
+                            <img src="/files/{{ key.imagePath }}"
+                                 alt=""
+                                 id="{{ key.filename }}"
+                                 class="prime-cache-img">
+                        </a>
+                    </div>
+                    <!-- /.img-container -->
+                    <div class="betterthumbs-card-section">
+                        <ul class="betterthumbs-card-list">
+                            <li>
+                                <strong>Name:</strong> {{ key.filename }}
+                            </li>
+                            <li>
+                                <strong>Location:</strong> {% if key.located %}{{ key.located }}{% else %}Files{% endif %}
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- /.betterthumbs-card -->
+            </div>
+            <!-- /.medium-4 columns -->
+
+            <div class="medium-8 columns">
+                <div class="betterthumbs-card">
+                    <div class="betterthumbs-card-divider">
+                        <p>Prime Cache Settings For: {{ key.filename }}</p>
+                    </div>
+
+                    <form method="POST">
+                        <fieldset class="row fieldset">
+                            <div class="medium-8 columns">
+                                <label>Choose a Config
+                                    <select id="{{ key.filename }}-{{ loop.index }}"
+                                            name="{{ key.filename }}-{{ loop.index }} "
+                                            aria-describedby="helptext-{{ key.filename }}-{{ loop.index }}">
+                                        {% for value in extConfig %}
+                                            <option value="{{ value }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </label>
+                                <p id="helptext-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                    choose a betterthumbs config to generate your images
+                                </p>
+                            </div>
+                            <div class="medium-4 columns">
+                                <input type="submit" class="button prime-cache" value="create config images">
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="row fieldset">
+                            <div class="medium-8 columns">
+                                <label for="preset-{{ key.filename }}-{{ loop.index }}" class="text-right middle">Preset
+                                    Settings</label>
+                                <p id=helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                    use the betterthumbs presets to generate images
+                                </p>
+                            </div>
+                            <div class="medium-4 columns">
+                                <input type="button"
+                                       class="button prime-cache"
+                                       data-presets="{{ presets|json_encode }}"
+                                       id="preset-{{ key.filename }}-{{ loop.index }}"
+                                       aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
+                                       value="Preset Settings">
+                            </div>
+                        </fieldset>
+                        <fieldset class="row fieldset">
+                            <div class="small-12 columns">
+                                <label>
+                                    Single Image
+                                    <input type="text" placeholder="Single Image Config Name">
+                                </label>
+                                <p id=helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                    Enter the single config name you wish to use
+                                </p>
+                            </div>
+                            <div class="small-12 columns">
+                                <input type="button"
+                                       class="button prime-cache" value="Single Settings"
+                                       aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <!-- /.mediium-8 .columns -->
+            <hr>
+        {% endfor %}
+    </div><!-- /#prime-grid -->
+
+        <script>
+
+        </script>
+
+</main>
+
+
+</body>
+</html>
