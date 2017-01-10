@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>BetterThumbs Files</title>
+    <title>BetterThumbs :: Cache Files</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbsv3.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/magnific-popup.css', 'bolt') }}">
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.css">
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/magnific-popup.css">
+
     <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
-    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.file.delete.js"></script>
-    {#<script src="/app/view/js/jquery.magnific-popup.min.js"></script>#}
-    <script src="{{ asset('js/jquery.magnific-popup.min.js', 'bolt') }}"></script>
+    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.prime.js"></script>
+    <script src="/extensions/vendor/cdowdy/betterthumbs/js/jquery.magnific-popup.min.js"></script>
 
 </head>
 <body class="">
@@ -68,17 +68,19 @@
             </div>
             <!-- /.medium-4 columns -->
 
-            <div class="medium-8 columns">
+            <div class="medium-8 columns prime-cache-container">
                 <div class="betterthumbs-card">
                     <div class="betterthumbs-card-divider">
                         <p>Prime Cache Settings For: {{ key.filename }}</p>
                     </div>
 
                     <form method="POST">
+                        <!-- extension config settings dropdown -->
                         <fieldset class="row fieldset">
-                            <div class="medium-8 columns">
+                            <div class="medium-8 columns select-container">
                                 <label>Choose a Config
-                                    <select id="{{ key.filename }}-{{ loop.index }}"
+                                    <select class="prime-cache-dropdown"
+                                            id="{{ key.filename }}-{{ loop.index }}"
                                             name="{{ key.filename }}-{{ loop.index }} "
                                             aria-describedby="helptext-{{ key.filename }}-{{ loop.index }}">
                                         {% for value in extConfig %}
@@ -91,43 +93,55 @@
                                 </p>
                             </div>
                             <div class="medium-4 columns">
-                                <input type="submit" class="button prime-cache" value="create config images">
+                                <input type="button"
+                                       class="button prime-cache prime-config"
+                                       value="create config images"
+                                       data-bthumb-name="{{ key.filename }}" >
                             </div>
                         </fieldset>
-
+                        <!-- extension config settings dropdown -->
+                        <!-- preset config settings button -->
                         <fieldset class="row fieldset">
                             <div class="medium-8 columns">
                                 <label for="preset-{{ key.filename }}-{{ loop.index }}" class="text-right middle">Preset
                                     Settings</label>
-                                <p id=helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                <p id="helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
                                     use the betterthumbs presets to generate images
                                 </p>
                             </div>
                             <div class="medium-4 columns">
                                 <input type="button"
-                                       class="button prime-cache"
+                                       class="button prime-cache prime-presets"
                                        data-presets="{{ presets|json_encode }}"
                                        id="preset-{{ key.filename }}-{{ loop.index }}"
                                        aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
-                                       value="Preset Settings">
+                                       value="Preset Settings"
+                                       data-bthumb-name="{{ key.filename }}" >
                             </div>
                         </fieldset>
+                        <!-- preset config settings button -->
+                        <!-- Single Image config input and button -->
                         <fieldset class="row fieldset">
                             <div class="small-12 columns">
                                 <label>
                                     Single Image
-                                    <input type="text" placeholder="Single Image Config Name">
+                                    <input type="text"
+                                           class="prime-cache-single-input"
+                                           placeholder="Single Image Config Name">
                                 </label>
-                                <p id=helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                <p id="helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-text">
                                     Enter the single config name you wish to use
                                 </p>
                             </div>
                             <div class="small-12 columns">
                                 <input type="button"
-                                       class="button prime-cache" value="Single Settings"
-                                       aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}">
+                                       class="button prime-cache prime-single" value="Single Settings"
+                                       aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}"
+                                       data-bthumb-type="single"
+                                       data-bthumb-name="{{ key.filename }}" >
                             </div>
                         </fieldset>
+                        <!-- Single Image config input and button -->
                     </form>
                 </div>
             </div>
