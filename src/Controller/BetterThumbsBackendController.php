@@ -290,9 +290,12 @@ class BetterThumbsBackendController implements ControllerProviderInterface
                 }
                 break;
             case 'single':
-                $singleParams = $this->config[$configName];
 
-                $primed[] = $this->primeImage($app, $image, $singleParams);
+                if (isset($this->config[$configName]) ) {
+                    $singleParams = $this->config[$configName];
+                    $primed[] = $this->primeImage($app, $image, $singleParams);
+                }
+
                 break;
         }
 
