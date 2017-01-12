@@ -1,3 +1,4 @@
+{% set jsUpdate = '6838d939'  %}
 <!doctype html>
 <html lang="{{ htmllang() }}">
 <head>
@@ -7,12 +8,13 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.css">
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.652abef1.min.css">
     <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/magnific-popup.css">
 
     <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
-    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.prime.js"></script>
+
     <script src="/extensions/vendor/cdowdy/betterthumbs/js/jquery.magnific-popup.min.js"></script>
+    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.{{ jsUpdate }}.min.js"></script>
 
 </head>
 <body class="">
@@ -74,7 +76,7 @@
                         <p>Prime Cache Settings For: {{ key.filename }}</p>
                     </div>
 
-                    <form method="POST">
+                    <form method="POST" id="{{ key.filename }}-{{ loop.index }}">
                         <!-- extension config settings dropdown -->
                         <fieldset class="row fieldset">
                             <div class="medium-8 columns select-container">
@@ -93,30 +95,29 @@
                                 </p>
                             </div>
                             <div class="medium-4 columns">
-                                <input type="button"
-                                       class="button prime-cache prime-config"
-                                       value="create config images"
-                                       data-bthumb-name="{{ key.filename }}" >
+                                <button class="button prime-cache prime-config" type="button"
+                                        data-bthumb-name="{{ key.filename }}" >
+                                    Create Config images
+                                </button>
                             </div>
                         </fieldset>
                         <!-- extension config settings dropdown -->
                         <!-- preset config settings button -->
                         <fieldset class="row fieldset">
                             <div class="medium-8 columns">
-                                <label for="preset-{{ key.filename }}-{{ loop.index }}" class="text-right middle">Preset
-                                    Settings</label>
+                                <p for="preset-{{ key.filename }}-{{ loop.index }}" class="text-right middle">Preset
+                                    Settings</p>
                                 <p id="helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
                                     use the betterthumbs presets to generate images
                                 </p>
                             </div>
                             <div class="medium-4 columns">
-                                <input type="button"
-                                       class="button prime-cache prime-presets"
-                                       data-presets="{{ presets|json_encode }}"
-                                       id="preset-{{ key.filename }}-{{ loop.index }}"
-                                       aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
-                                       value="Preset Settings"
-                                       data-bthumb-name="{{ key.filename }}" >
+                                <button type="button"
+                                        class="button prime-cache prime-presets"
+                                        data-presets="presets"
+                                        id="preset-{{ key.filename }}-{{ loop.index }}"
+                                        aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
+                                        data-bthumb-name="{{ key.filename }}" >Use Presets</button>
                             </div>
                         </fieldset>
                         <!-- preset config settings button -->
@@ -134,11 +135,11 @@
                                 </p>
                             </div>
                             <div class="small-12 columns">
-                                <input type="button"
-                                       class="button prime-cache prime-single" value="Single Settings"
-                                       aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}"
-                                       data-bthumb-type="single"
-                                       data-bthumb-name="{{ key.filename }}" >
+                                <button type="button"
+                                        class="button prime-cache prime-single"
+                                        aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}"
+                                        data-bthumb-type="single"
+                                        data-bthumb-name="{{ key.filename }}" >Create Single Image</button>
                             </div>
                         </fieldset>
                         <!-- Single Image config input and button -->
@@ -155,7 +156,6 @@
         </script>
 
 </main>
-
 
 </body>
 </html>
