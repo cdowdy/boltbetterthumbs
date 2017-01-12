@@ -41,11 +41,13 @@ class BetterThumbsProvider implements ServiceProviderInterface
                 // set and get the max image size:
                 $configHelper->setMaxImageSize( $this->config['security']['max_image_size']);
                 $maxImgSize = $configHelper->getMaxImageSize();
+
                 return ServerFactory::create([
                     'response' => new SymfonyResponseFactory($app['request']),
                     'source' => $Filesystem,
                     'cache' => $Filesystem,
                     'cache_path_prefix' => '.cache',
+                    'cache_with_file_extensions' => true,
                     'max_image_size' => $maxImgSize,
                     'watermarks' => $Filesystem,
                     'base_url' => '/img/',

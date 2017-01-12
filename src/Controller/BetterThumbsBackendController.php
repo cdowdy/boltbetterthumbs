@@ -10,7 +10,7 @@ use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-use Bolt\Extension\cdowdy\betterthumbs\Helpers;
+
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 
@@ -18,12 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use League\Glide\Urls\UrlBuilderFactory;
+
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Plugin\ListPaths;
-use League\Flysystem\Memory\MemoryAdapter;
-
 
 
 class BetterThumbsBackendController implements ControllerProviderInterface
@@ -69,7 +66,12 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         $ctr->post('/files/delete/all', [$this, 'deleteAll'])
             ->bind('betterthumbs_delete_all');
 
-        // make sure the user is logged in and allowed to view the backend pages before rendering
+        $ctr->get('/files/prime', [$this, 'primeCache'])
+            ->bind('betterthumbs_prime');
+
+        $ctr->post('/files/prime/do', [$this, 'doPrime'])
+            ->bind('betterthumbs_doPrime');
+
         $ctr->before([$this, 'before']);
 
 
@@ -185,5 +187,120 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
         return $removed;
     }
+
+    /**
+     * @param Application $app
+     * @return mixed
+     */
+    public function primeCache(Application $app)
+    {
+        $adapter = new Local($app['resources']->getPath('filespath') );
+        $filesystem = new Filesystem($adapter);
+
+        $fileList = $filesystem->listContents(null, true);
+
+        $excludeDir = '/^.cache\//i';
+
+        $files = [];
+
+        foreach ( $fileList as $object  ) {
+
+            if ($object['type'] == 'file'
+                && in_array(strtolower($object['extension']), $this->_expected )
+                && !preg_match_all('/^.cache\//i', $object['dirname'])) {
+
+                $files[] = [
+                    'filename' => $object['basename'],
+                    'located' => $object['dirname'],
+                    'imagePath' => $object['path'],
+//                    'isCached' => $app['betterthumbs']->cache
+                ];
+            }
+        }
+
+
+        $config = $this->config;
+        $selectOptions = [];
+        $presetSettings = [];
+
+        foreach ($config as $key => $values) {
+
+            if (is_array($values) && array_key_exists('modifications', $values) ) {
+                $selectOptions[] = $key ;
+            }
+
+            if (is_array($values) && $key == strtolower('presets') ) {
+                $presetSettings[] = $key ;
+            }
+        }
+
+
+        $context = [
+
+            'allFiles' => $files,
+            'extConfig' => $selectOptions,
+            'presets' => $presetSettings,
+        ];
+
+        return $app['twig']->render('betterthumbs.prime.html.twig', $context);
+    }
+
+    /**
+     * @param Application $app
+     * @param $image
+     * @param $modifications
+     * @return mixed
+     */
+    public function primeImage(Application $app, $image, $modifications)
+    {
+        $betterthumbs = $app['betterthumbs'];
+        $betterthumbs->setCacheWithFileExtensions(true);
+
+        return $betterthumbs->makeImage( $image, $modifications);
+    }
+
+    /**
+     * @param Application $app
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function doPrime(Application $app, Request $request)
+    {
+        $modType = $request->get('modType');
+        $configName = $request->get('configName');
+        $image = $request->get('image');
+
+        $configHelper = new ConfigHelper($this->config);
+        $presetMods = $configHelper->setPresets();
+
+
+        $primed = [];
+
+        switch ($modType) {
+
+            case 'presets':
+                foreach ($presetMods as $preset) {
+                    $primed[] .= $this->primeImage($app, $image, $preset);
+                }
+                break;
+            case 'config':
+                $configMods = $this->config[$configName]['modifications'];
+                foreach ($configMods as $parameters) {
+                    $primed[] .= $this->primeImage($app, $image, $parameters);
+                }
+                break;
+            case 'single':
+
+                if (isset($this->config[$configName]) ) {
+                    $singleParams = $this->config[$configName];
+                    $primed[] = $this->primeImage($app, $image, $singleParams);
+                }
+
+                break;
+        }
+
+        return new JsonResponse($primed);
+    }
+
 
 }
