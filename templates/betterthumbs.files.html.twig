@@ -1,3 +1,4 @@
+{% set jsUpdate = '6838d939'  %}
 <!doctype html>
 <html lang="{{ htmllang() }}">
 <head>
@@ -7,10 +8,9 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.6c36cebd.min.css">
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.css">
     <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
-    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.file.delete.81879fc8.min.js"></script>
-
+    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.{{ jsUpdate }}.min.js"></script>
 </head>
 <body class="">
 <header class="ext-docs-masthead ext-docs-header-container ">
@@ -39,23 +39,27 @@
 
         <div id="image-grid" class="small-up-1 medium-up-2 large-up-3">
             {% for key, value in cachedImage %}
-            <div id="cachedImage-{{ loop.index }}" class="column image-container">
-                <img id="{{ key }}-{{ loop.index }}"
-                     class="image-to-delete"
-                     src="/files/{{ key }}"
-                     alt="{{ value.name }}">
-
-                <ul class="cached-image-data">
-                    <li class="cached-image-name">
-                        <strong>Name: </strong> {{ value.name }}
-                    </li>
-                </ul>
-
-                <button class="button deletebutton"
-                        type="button"
-                        id="{{ value.path }}">
-                        Delete Image
-                </button>
+            <div id="cachedImage-{{ loop.index }}" class="column column-block image-container">
+                <div class="betterthumbs-card">
+                    <div id="container" class="img-container">
+                        <img id="{{ key }}-{{ loop.index }}"
+                             class="image-to-delete"
+                             src="/files/{{ key }}"
+                             alt="{{ value.name }}">
+                    </div>
+                    <div class="betterthumbs-card-section">
+                        <ul class="betterthumbs-card-list">
+                            <li class="cached-image-name">
+                                <strong>Name: </strong> {{ value.name }}
+                            </li>
+                        </ul>
+                        <button class="button deletebutton"
+                                type="button"
+                                id="{{ value.path }}">
+                            Delete Image
+                        </button>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div> <!-- /#image-grid .small-up-1 -->
