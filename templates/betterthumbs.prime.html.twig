@@ -1,4 +1,4 @@
-{% set jsUpdate = '6838d939'  %}
+{% set jsUpdate = 'c8048421'  %}
 <!doctype html>
 <html lang="{{ htmllang() }}">
 <head>
@@ -15,7 +15,6 @@
 
     <script src="/extensions/vendor/cdowdy/betterthumbs/js/jquery.magnific-popup.min.js"></script>
     <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.{{ jsUpdate }}.min.js"></script>
-
 </head>
 <body class="">
 <header class="ext-docs-masthead ext-docs-header-container ">
@@ -130,6 +129,9 @@
                                            class="prime-cache-single-input"
                                            placeholder="Single Image Config Name">
                                 </label>
+                                <p class="prime-single-error" hidden>
+                                    <strong>Enter A Config Name Before Submitting</strong>
+                                </p>
                                 <p id="helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-text">
                                     Enter the single config name you wish to use
                                 </p>
