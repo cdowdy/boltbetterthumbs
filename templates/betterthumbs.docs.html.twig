@@ -6,7 +6,7 @@
     <title>BetterThumbs Documentation</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.6c36cebd.min.css">
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.b89931ab.min.css">
 </head>
 <body>
 <header class="ext-docs-masthead ext-docs-header-container ">
@@ -24,6 +24,7 @@
         <ul class="ext-docs-navigation-menu">
             <li class="ext-docs-navigation-menu--item "><a href="#setup">Initial Setup</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#delete">Remove IMG From Cache</a></li>
+            <li class="ext-docs-navigation-menu--item "><a href="#prime">Prime The Cache</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#original">Use Original Image</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#single">Output A Single Image</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#orientation">Image Orientation</a></li>
@@ -214,6 +215,82 @@ php app/nut betterthumbs:cacheClear filename.jpg
 php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
         </section>
         <!-- /#delete -->
+
+        <section id="prime">
+            <h1 class="heading">Prime The Image Cache</h1>
+            <!-- /.heading -->
+            <p>
+                You can "Prime" the image cache from a back end page located at
+                <a href="/bolt/extend/betterthumbs/files/prime">/bolt/extend/betterthumbs/files/prime</a>.
+            </p>
+            <p>
+                Priming the cache means you will create the images before hand and place them in the cache. That way requests for images can serve the file from the BetterThumbs cache instead of creating those on demand and checking for the signature. You will be presented with the image and a form with three (3) areas to choose from.
+            </p>
+            <h2 class="subheading">Using A Named Config</h2>
+            <p>
+                The first one is all of the named config blocks found in the BetterThumbs extension config that contain a modifications array. Here is an example of what the first dropdown in the form is looking for.
+            </p>
+            <pre class="language-yaml"><code># The "defaults" using a repeated node and using the settings found in "presets"
+betterthumbs:
+  save_data: true
+  altText: ~
+  widthDensity: 'w'
+  sizes: [ '100vw' ]
+  modifications:
+     &lt;&lt;: *presets
+
+myNamedConfig:
+  widthDensity: 'x'
+  resolutions: [ 1, 2, 3 ]
+  modifications:
+    first:
+      w: 200
+      fit: 'crop'
+    second:
+      w: 350
+      fit: 'crop'
+    third:
+      w: 800
+      fit: 'stretch'</code></pre>
+            <p>
+                Any named config block with a <code class="language-yaml">modifications: </code> array in it will be able to be chosen from. Then click the button titled "Create Config Image" to create these images. You may also hit "ENTER" key while the config you wish to use is highlighted/chosen in the dropdown.
+            </p>
+
+            <h2 class="subheading">Using Preset Settings</h2>
+            <p>
+                To use the presets found in the "presets" config click the "Use Presets" button. Any moodifications found in the presets will be applied and the images created. As a refresher here is the "default" presets that ship with this extension.
+            </p>
+            <pre class="language-yaml"><code>presets: &presets
+  small:
+    w: 200
+    fit: stretch
+  medium:
+    w: 350
+    fit: stretch
+  large:
+    w: 700
+    fm: 'png'
+    fit: stretch
+  xlarge:
+    w: 1400
+    fit: stretch</code></pre>
+
+            <h2 class="subheading">Creating a Single Image</h2>
+            <p>
+                To create and place a single image in the cache you will need to enter in the name of the single image config block. You can see
+                <a href="/bolt/extend/betterthumbs/docs#single">the single image docs section</a> on the setup required for this.
+            </p>
+            <p>The "named" single config is similar too</p>
+            <pre class="language-yaml"><code>single:
+  w: 400
+  h: 225
+  filt: 'sepia'</code></pre>
+            <p>
+                Enter in the name (single in the example above) and hit enter or click the "Create Single Image" button.
+            </p>
+        </section>
+        <!-- /#prime -->
+
         <section id="original">
             <h1 class="heading">Use the Original Image</h1>
             <p>
