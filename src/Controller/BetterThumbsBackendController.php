@@ -127,7 +127,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface
             // prepare this to just get the "basename" for display in our templates
             $parts = pathinfo( $item['dirname']);
 
-            if ($item['type'] == 'file' && in_array(strtolower($item['extension']), $this->_expected) ) {
+            if ($item['type'] == 'file' ) {
 
                 // get the directory name recursively
                 // make the value the "basename" to display in our templates
@@ -206,8 +206,8 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         foreach ( $fileList as $object  ) {
 
             if ($object['type'] == 'file'
-                && in_array(strtolower($object['extension']), $this->_expected )
-                && !preg_match_all('/^.cache\//i', $object['dirname'])) {
+                && !preg_match_all('/^.cache\//i', $object['dirname'])
+                && in_array(strtolower($object['extension']), $this->_expected ) ) {
 
                 $files[] = [
                     'filename' => $object['basename'],
