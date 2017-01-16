@@ -9,6 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.b89931ab.min.css">
+    <style>
+        /* todo remove this on next update to css */
+        .heading {border-bottom: 1px solid #cacaca;}
+    </style>
     <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
     <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.{{ jsUpdate }}.min.js"></script>
 </head>
@@ -25,11 +29,24 @@
 <main>
     <div class="ext-docs-grid-container">
         {% if cachedImage %}
-        <div class="small-12 columns">
-            <h1 class="heading">Delete All Images From The BetterThumbs Cache</h1>
+        <div class="medium-6 column column-blocks">
+            <h1 class="heading">Delete All Images</h1>
+            <p>
+                This will remove all images from the BetterThumbs Cache
+            </p>
             <button type="button" data-all="{{ allFiles }}"
                     class="button delete-all">Delete All Images </button>
         </div>
+        {% endif %}
+        <div class="small-12 medium-6 column column-blocks">
+            <h1 class="heading">Prime The Image Cache</h1>
+            <p>
+                This will "prime" (create images) and place them in the cache.
+            </p>
+
+            <a href="/bolt/extend/betterthumbs/files/prime">Go To The Prime Cache Page</a>
+        </div>
+        {% if cachedImage %}
     </div>
 
     <div class="ext-docs-grid-container">
