@@ -8,7 +8,7 @@ use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
 
-use Bolt\Extension\cdowdy\betterthumbs\Helpers;
+
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 
 
@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-use League\Glide\ServerFactory;
-use League\Glide\Responses\SymfonyResponseFactory;
 use League\Glide\Signatures\SignatureFactory;
 use League\Glide\Signatures\SignatureException;
 
@@ -74,7 +72,7 @@ class BetterThumbsController implements ControllerProviderInterface
         $app['betterthumbs']->setDefaults($defaults);
         $app['betterthumbs']->setPresets($presets);
         $app['betterthumbs']->setCache($FSAdapter);
-        $app['betterthumbs']->setCacheWithFileExtensions(true);
+//        $app['betterthumbs']->setCacheWithFileExtensions(true);
 
         // make sure the URL is signed with our key before allowing manipulations done to the thumbnail
         try {
