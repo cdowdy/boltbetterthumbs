@@ -1,4 +1,5 @@
-{% set jsUpdate = 'c8048421'  %}
+{% set jsUpdate = 'daca6200'  %}
+{%  set cssUpdate = "115502ea" %}
 <!doctype html>
 <html lang="{{ htmllang() }}">
 <head>
@@ -8,12 +9,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.b89931ab.min.css">
+    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.{{ cssUpdate }}.min.css">
     <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/magnific-popup.css">
-    <style>
-        /* todo remove this on next update to css */
-        .heading {border-bottom: 1px solid #cacaca;}
-    </style>
 
     <script src="{{ asset('js/jquery-2.2.4.min.js', 'bolt') }}"></script>
 
@@ -157,11 +154,15 @@
         {% endfor %}
     </div><!-- /#prime-grid -->
 
-        <script>
-
-        </script>
-
 </main>
-
+<script>
+    $('.image-popup-fit-width').magnificPopup({
+        type: 'image',
+        closeOnContentClick: true,
+        image: {
+            verticalFit: false
+        }
+    });
+</script>
 </body>
 </html>
