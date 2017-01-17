@@ -197,7 +197,7 @@ presets:
             <h1 class="heading">Deleting Images From The Cache</h1>
             <p>
                 To remove images with a gui a backend Bolt Admin page found can be found at
-                <a href="/bolt/extend/betterthumbs/files">/bolt/extend/betterthumbs/files</a>. The backend page will allow you to view a small thumbnail of the image you are removing. You can remove an individual image or all from the cache.
+                <a href="{{ path("betterthumbs_files") }}">{{ path("betterthumbs_files") }}</a>. The backend page will allow you to view a small thumbnail of the image you are removing. You can remove an individual image or all from the cache.
             </p>
             <p>
                 A "nut" command is provided with this extension to delete all or a single image from the BetterThumbs cache. This command will remove all the associated images from the cache. If a single image is removed from the cache all of its related modifications are removed as well.
@@ -223,7 +223,7 @@ php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
             <!-- /.heading -->
             <p>
                 You can "Prime" the image cache from a back end page located at
-                <a href="/bolt/extend/betterthumbs/files/prime">/bolt/extend/betterthumbs/files/prime</a>.
+                <a href="{{ path("betterthumbs_prime") }}">{{ path("betterthumbs_prime") }}</a>.
             </p>
             <p>
                 Priming the cache means you will create the images before hand and place them in the cache. That way requests for images can serve the file from the BetterThumbs cache instead of creating those on demand and checking for the signature. You will be presented with the image and a form with three (3) areas to choose from.
@@ -280,7 +280,7 @@ myNamedConfig:
             <h2 class="subheading">Creating a Single Image</h2>
             <p>
                 To create and place a single image in the cache you will need to enter in the name of the single image config block. You can see
-                <a href="/bolt/extend/betterthumbs/docs#single">the single image docs section</a> on the setup required for this.
+                <a href="{{ path("betterthumbs_docs") }}#single">the single image docs section</a> on the setup required for this.
             </p>
             <p>The "named" single config is similar too</p>
             <pre class="language-yaml"><code>single:
