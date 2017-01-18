@@ -18,7 +18,7 @@
 # Default is 'gd' which is the same one Bolt uses for it's thumbnail handling.
 # Options are:
 # * GD
-# * ImageMagick -> you'll need the imagick php extension for this to work
+# * ImageMagick  or Imagick -> you'll need the imagick php extension for this to work
 # http://php.net/manual/en/book.imagick.php
 Image_Driver: 'gd'
 
