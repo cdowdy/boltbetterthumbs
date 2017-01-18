@@ -47,7 +47,7 @@ class ConfigHelper
     public function setImageDriver( )
     {
         $ConfigDriver = $this->_extensionConfig['Image_Driver'];
-        $expectedDrivers = [ 'gd', 'imagick' ];
+        $expectedDrivers = [ 'gd', 'imagick', 'imagemagick' ];
 
         // if the driver passed from the config is empty make it 'gd'
         if (empty($ConfigDriver)) {
