@@ -39,7 +39,7 @@
             <li class="ext-docs-navigation-menu--item "><a href="#bg">Background</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#border">Borders</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#encode">Change IMG Format</a></li>
-            {#<li class="ext-docs-navigation-menu--item "><a href="#faq">FAQ's</a></li>#}
+            <li class="ext-docs-navigation-menu--item "><a href="#faq">FAQ's</a></li>
             {#<li class="ext-docs-navigation-menu--item "><a href="#trouble">Troubleshooting</a></li>#}
         </ul>
     </nav>
@@ -1270,10 +1270,15 @@ convertFormat:
         </section>
         <!-- /#encode -->
 
-        {#<section id="faq">#}
-            {#<h1 class="heading">Frequently Asked Questions</h1>#}
-            {#<h2 class="subheading">Resolution Switching: (widthDensity: x option)</h2>#}
-        {#</section>#}
+        <section id="faq">
+            <h1 class="heading">Frequently Asked Questions</h1>
+            <h2 class="subheading">Animated Gif's no longer Animating</h2>
+            <p>
+                Unfortunately the image processing library used by this extension, <a
+                        href="http://image.intervention.io/ ">Intervention</a>, doesn't support animated gifs. Yeah this is a pain point but there is nothing we can currently do about this until Intervention supports them. See the
+                <a href="https://github.com/Intervention/image/issues/578">Github issue on Intervention's Github page</a>.
+            </p>
+        </section>
         <!-- /#faq -->
 
         {#<section id="trouble">#}
