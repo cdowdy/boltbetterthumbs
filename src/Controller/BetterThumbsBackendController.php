@@ -132,7 +132,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface
                 // get the directory name recursively
                 // make the value the "basename" to display in our templates
                 $cachedImage += [
-                    $app['betterthumbs']->makeImage( $item['dirname'], ['w' => 200, 'h' => 133, 'fit' => 'crop' ] ) => [
+                    $item['dirname'] => [
                         'name' => $parts['basename'],
                         'path' => $item['dirname']
                     ]
