@@ -35,10 +35,9 @@
             <h1 class="heading">Prime The Image Cache</h1>
         </div>
     </div>
-    {#{{ dump(extConfig) }}#}
+
     <div id="prime-grid" class="row ">
         {% for obj, key in allFiles %}
-
             <div class="medium-4 columns">
                 <div class="betterthumbs-card">
                     <div class="betterthumbs-card-divider">
@@ -46,6 +45,7 @@
                     </div>
                     <!-- /.betterthumbs-card-divider -->
                     <div class="img-container">
+                        {% if key.mimeType != 'image/tiff' %}
                         <a href="/files/{{ key.imagePath }}"
                            class="image-popup-fit-width"
                            title="Preview: {{ key.filename }}">
@@ -54,7 +54,11 @@
                                  id="{{ key.filename }}"
                                  class="prime-cache-img">
                         </a>
+                        {% else %}
+                            <p style="color: #fff">Tif Images Cannot Be Displayed In a Browser</p>
+                        {% endif %}
                     </div>
+
                     <!-- /.img-container -->
                     <div class="betterthumbs-card-section">
                         <ul class="betterthumbs-card-list">
