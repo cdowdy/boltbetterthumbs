@@ -131,6 +131,13 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
                 // get the directory name recursively
                 // make the value the "basename" to display in our templates
+                // Original we made an image with glide doing
+                // $app['betterthumbs']->makeImage( $item['dirname'], ['w' => 200, 'h' => 133, 'fit' => 'crop' ] )
+                // This caused apache & lightspeed to choke in the backend and not display the cached image
+                // because an htaccess rule rewrites the cache route of /cache
+                // since we save to /files/.cache/ this caused issues since it was captured by the rewrite rule.
+                // Now just serve a file from disk and not worry about the cached image even though they may
+                // differ
                 $cachedImage += [
                     $item['dirname'] => [
                         'name' => $parts['basename'],
