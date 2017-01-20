@@ -63,7 +63,9 @@ class ConfigHelper
         // check to make sure the image driver is in the expectedDrivers array
         // then return that value
         if (in_array($imageDriver, $expectedDrivers ) ) {
-
+            if ($imageDriver === 'imagemagick') {
+                $imageDriver = 'imagick';
+            }
             return $imageDriver;
             // if it isn't and it's some unsupported driver just make it 'gd'
         } else {
