@@ -31,7 +31,9 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
     private $config;
 
-    protected $_expected = [ 'jpg', 'jpeg', 'png', 'tiff', 'gif', 'bmp' ];
+    protected $_expected = [ 'jpg', 'jpeg', 'png', 'tiff', 'tif', 'gif', 'bmp' ];
+
+    protected $_mimeTypes = [ 'image/jpeg', 'image/png', 'image/x-ms-bmp', 'image/gif', 'image/tiff' ];
 
 
     /**
@@ -206,20 +208,30 @@ class BetterThumbsBackendController implements ControllerProviderInterface
 
         $fileList = $filesystem->listContents(null, true);
 
-        $excludeDir = '/^.cache\//i';
+        // load in the config helper and get the driver set in the config
+        $configHelper = new ConfigHelper($this->config);
+        $imageDriver = $configHelper->setImageDriver();
+        // get the accepted mime types array
+        $expectedMimes = $this->checkAccpetedTypes($imageDriver);
+
 
         $files = [];
 
+        // only loop over objects in the filespath that are of the type 'file'
+        // don't get any images or files from the cache directory
+        // finally use flysystem, get each objects mimetype and compare it to the accepted ones
+        // found from $expectedMimes
         foreach ( $fileList as $object  ) {
 
             if ($object['type'] == 'file'
                 && !preg_match_all('/^.cache\//i', $object['dirname'])
-                && in_array(strtolower($object['extension']), $this->_expected ) ) {
+                && in_array(strtolower($filesystem->getMimetype($object['path'])), $expectedMimes ) ) {
 
                 $files[] = [
                     'filename' => $object['basename'],
                     'located' => $object['dirname'],
                     'imagePath' => $object['path'],
+                    'mimeType' => $filesystem->getMimetype($object['path']),
 //                    'isCached' => $app['betterthumbs']->cache
                 ];
             }
@@ -230,6 +242,8 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         $selectOptions = [];
         $presetSettings = [];
 
+        // for each config array check to make sure a key of modifications exists.
+        // also get the presets in the presets array that don't have a modifications key
         foreach ($config as $key => $values) {
 
             if (is_array($values) && array_key_exists('modifications', $values) ) {
@@ -307,6 +321,25 @@ class BetterThumbsBackendController implements ControllerProviderInterface
         }
 
         return new JsonResponse($primed);
+    }
+
+    protected function checkAccpetedTypes($driver)
+    {
+        $acceptedTypes = '';
+
+        $gdAccepted = [ 'image/jpeg', 'image/png', 'image/gif' ];
+        $imAccepted = [ 'image/jpeg', 'image/png', 'image/gif', 'image/x-ms-bmp', 'image/tiff' ];
+
+        if ($driver === 'gd' ) {
+            $acceptedTypes = $gdAccepted;
+        }
+
+        if ($driver === 'imagick') {
+            $acceptedTypes = $imAccepted;
+        }
+
+        return $acceptedTypes;
+
     }
 
 
