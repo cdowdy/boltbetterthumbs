@@ -308,7 +308,7 @@ class BetterThumbsExtension extends SimpleExtension
         $extConfig = $this->getConfig();
         // returns the wrong route ?
 //        $notFoundImg = $app['config']->get('general/thumbnails/notfound_image');
-        $notFoundImg = 'bolt-public/view/img/default_notfound.png';
+        $notFoundImg = '/bolt-public/view/img/default_notfound.png';
 
 
         if (isset($extConfig['404_Image'])  ) {
