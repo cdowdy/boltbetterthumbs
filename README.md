@@ -1,6 +1,8 @@
 # Bolt BetterThumbs Extension  
 
 A bolt extension that uses [Glide](http://glide.thephpleague.com/) for thumbnails. With this extension you get responsive images (using img and srcset) by default and the ability to load a polyfill to support older browsers that don't recognize responsive images. No extra work needed on your end with exception of setting your thumbnail widths.  
+  
+You can see usage examples at my site located here: https://corydowdy.com/demo/bolt-betterthumbs
 
 ### Documentation  
 This extension also comes bundled with documentation. While Logged into your bolt installation visit [/bolt/extend/betterthumbs/docs](/bolt/betterthumbs/docs) to view it.
