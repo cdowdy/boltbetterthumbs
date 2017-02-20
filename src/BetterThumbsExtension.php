@@ -10,7 +10,7 @@ use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 //use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 use Bolt\Extension\SimpleExtension;
-use Bolt\Filesystem as BoltFilesystem;
+
 
 use Silex\Application;
 
@@ -39,10 +39,13 @@ class BetterThumbsExtension extends SimpleExtension
      * @var string
      */
     private $_currentPictureFill = '3.0.2';
+
+    private $_currentLazySizes = '19ef6fd4'; // version 2.0.7
     /**
      * @var bool
      */
     private $_scriptAdded = FALSE;
+    private $_lazyAdded = FALSE;
 
     /**
      * @return array
@@ -154,6 +157,7 @@ class BetterThumbsExtension extends SimpleExtension
 
         $this->addAssets();
 
+
         $configName = $this->getNamedConfig($name);
 
         // if the image isn't found return bolt's 404 image
@@ -191,7 +195,7 @@ class BetterThumbsExtension extends SimpleExtension
 
 
         // the 'src' image parameters. get the first modifications in the first array
-        $srcImgParams = current($finalMods);
+	    $srcImgParams = $this->middleSrc($finalMods);
 
         $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
 
@@ -270,6 +274,18 @@ class BetterThumbsExtension extends SimpleExtension
         $app = $this->getContainer();
 
         return '/files/' . $app['betterthumbs']->getCachePath($file, $finalModifications);
+    }
+
+    /**
+     * Get the "middle" element of the associative array to produce a src image
+     * This is to help with the page jumping and get a semi close image in size to
+     * use before the full srcset candidate is used
+     */
+    protected  function middleSrc( $finalModsArray )
+    {
+    	$middle = ceil(count( $finalModsArray ) / 2 );
+
+    	return array_slice( $finalModsArray, -$middle, 1);
     }
 
 
