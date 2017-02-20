@@ -1,6 +1,6 @@
 {% import 'srcset.macros.twig' as attribs %}
 {% if sourceExists %}
-<img {{ attribs.buildImg( sizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, altText ) }} >
+<img {{ attribs.buildImg( sizes, autosizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, lazyload, lazyPattern, altText ) }} >
 {% else %}
 <img src="{{ notFoundImg }}"
      width="{{ notFoundSize }}"
