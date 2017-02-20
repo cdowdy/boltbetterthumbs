@@ -1,20 +1,21 @@
 {# the sizes attribute passed from the config merged with the one from the template #}
-{% macro sizes( sizes ) %}
-sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"
+{% macro sizes( sizes, autosizes ) %}
+{% if autosizes %}data-sizes="auto"{% else %}
+sizes="{% for s in sizes %}{{ s }}{% if not loop.last  %},{% endif %}{% endfor %}"{% endif %}
 {% endmacro sizes %}
 
 
 {# Create the srcset attribute #}
-{% macro srcset( srcset ) %}
-srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not loop.last  %}, {% endif %}{% endfor %}"
+{% macro srcset( srcset, lazyload ) %}
+{% if lazyload %}data-{% endif %}srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not loop.last  %}, {% endif %}{% endfor %}"
 {% endmacro srcset %}
 
 
 {# Build the Image Attriubtes. Combine classes, id's, data-attribs, alt text, src image and srcset #}
-{% macro buildImg( sizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, altText ) %}{% spaceless %}
+{% macro buildImg( sizes, autosizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, lazyload, altText ) %}{% spaceless %}
     {# pulls in macros used by both srcset and picture element #}
 {% import 'global.macros.twig' as global %}
  {{ global.setID(id) }} {{ global.htmlClasses(classes) }} {{ global.setDataAttrib( dataAttributes ) }}
- {% if widthDensity == 'w' %}{{ _self.sizes(sizes) }}{% endif %} {{ _self.srcset( srcset ) }} {{ global.srcImg( srcImg ) }} {{ global.altText( altText ) }}
+ {% if widthDensity == 'w' %}{{ _self.sizes(sizes, autosizes) }}{% endif %} {{ _self.srcset( srcset,lazyload ) }} {{ global.srcImg( srcImg, lazyload ) }} {{ global.altText( altText ) }}
 {% endspaceless %}
 {% endmacro buildImg %}
