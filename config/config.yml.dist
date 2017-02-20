@@ -92,6 +92,29 @@ presets: &presets
 
 
 # --------------------------------------------------------------------------------- #
+# LazyLoad settings.
+#
+# These are settings you can use yaml's repeated nodes to insert into your named config block.
+# By Default this extension uses lazysizes ( https://github.com/aFarkas/lazysizes ) and the markup patterns
+# shown in its readme. those being: simple pattern, combined pattern, low quality image placeholder and
+# modern transparent srcset pattern.
+# this has two options. lazysizes which is a boolean (true or false) and the pattern you wish to use.
+# for a low quality placeholder an image that is 60 quality will be served.
+# if lazysizes is false then the lazysizes script will not be included. You'll have to include this yourself in your
+# page/template
+# see the lazyload config block further down for an example of how this can be used.
+#
+# auto_sizes will automatically create your sizes attribute but you may need to add some styles.
+# see https://github.com/aFarkas/lazysizes#markup-api for more info
+#
+# --------------------------------------------------------------------------------- #
+lazyload_settings: &lazySettings
+  lazysizes: true # or false
+  pattern: lqip # valid options here: lqip, simple, combined, modern
+  auto_sizes: true # this is true or false. see https://github.com/aFarkas/lazysizes#markup-api
+
+
+# --------------------------------------------------------------------------------- #
 # The extensions fall back defaults.
 # This uses yaml's "repeated nodes". This will take the settings set in Presets above and use them as
 # "defaults". You can use them as well in any named config you wish to use/create
@@ -146,6 +169,40 @@ ScreenDensity:
 # --------------------------------------------------------------------------------- #
 single:
   w: 200
+
+
+
+# --------------------------------------------------------------------------------- #
+# lazyload example named config block
+# --------------------------------------------------------------------------------- #
+lazyloaded:
+  class: ['this-is', 'a_lazyloaded', 'img-tag' ]
+  id: 'js-lazysizes'
+  data_attrib: { 'lazy': 'sizes'}
+  altText: '~'
+  widthDensity: 'w'
+  sizes: [ '100vw'  ]
+  lazyload:
+    <<: *lazySettings
+  use_original: 800
+  modifications:
+    small:
+      w: 200
+      fit: 'crop'
+    medium:
+      w: 350
+      fit: 'crop'
+    large:
+      w: 500
+      fit: 'stretch'
+    1_large:
+      w: 650
+      fit: 'stretch'
+    2_large:
+      w: 900
+    xlarge:
+      w: 1400
+      fit: 'stretch'
 
 # --------------------------------------------------------------------------------- #
 #
