@@ -22,17 +22,8 @@
 
 
 {# the src image #}
-{% macro srcImg( srcImg, lazyload, lazyPattern ) %}
-{% spaceless %}{% if lazyload %}
-{% if lazyPattern == 'lqip' %}
-data-src="/img{{ srcImg }}"
-{% elseif lazyPattern == 'combined' %}
-data-src="/img{{ srcImg }}"
-{% elseif lazyPattern == 'simple'%}
-src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-{% else %}src="/img{{ srcImg }}"{% endif %}{% else %}
-src="/img{{ srcImg }}"{% endif %}
-{% endspaceless %}
+{% macro srcImg( srcImg ) %}
+src="/img{{ srcImg }}"
 {% endmacro srcImg %}
 
 {# test out for not found and single image right now #}
