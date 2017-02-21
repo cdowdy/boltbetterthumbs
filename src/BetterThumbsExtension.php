@@ -8,9 +8,9 @@ use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
-//use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
 use Bolt\Extension\SimpleExtension;
-use Bolt\Filesystem as BoltFilesystem;
+
 
 use Silex\Application;
 
@@ -39,10 +39,13 @@ class BetterThumbsExtension extends SimpleExtension
      * @var string
      */
     private $_currentPictureFill = '3.0.2';
+
+    private $_currentLazySizes = '19ef6fd4'; // version 2.0.7
     /**
      * @var bool
      */
     private $_scriptAdded = FALSE;
+    private $_lazyAdded = FALSE;
 
     /**
      * @return array
@@ -135,6 +138,8 @@ class BetterThumbsExtension extends SimpleExtension
         return [
             'img' => ['image',  $options ],
             'bthumb' => ['single', $options ],
+			'srcset' => ['btSrcset', $options ],
+			'btsrc' => ['btSrc', $options ],
 //            'picture' => ['picture', $options ],
 
         ];
@@ -153,6 +158,7 @@ class BetterThumbsExtension extends SimpleExtension
         $config = $this->getConfig();
 
         $this->addAssets();
+
 
         $configName = $this->getNamedConfig($name);
 
@@ -189,9 +195,8 @@ class BetterThumbsExtension extends SimpleExtension
         // get the resolutions passed in from our config file
         $resolutions = $defaultsMerged['resolutions'];
 
-
         // the 'src' image parameters. get the first modifications in the first array
-        $srcImgParams = current($finalMods);
+	    $srcImgParams = current($this->middleSrc($finalMods));
 
         $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
 
@@ -217,6 +222,15 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
+	/**
+	 * @param $file
+	 * @param string $name
+	 * @param array $options
+	 *
+	 * @return \Twig_Markup
+	 *
+	 * Create a single image ... to be used as a background image for example
+	 */
     public function single($file, $name = 'betterthumbs', array $options = [])
     {
         $app = $this->getContainer();
@@ -265,11 +279,137 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
+	/**
+	 * @param $file
+	 * @param string $name
+	 * @param array $options
+	 *
+	 * @return \Twig_Markup
+	 *
+	 * Create a srcset string - srcset="images here"
+	 * This is to be used for things like lazyloading where I can't reliably determine how their
+	 * lazyloading script wants things marked up
+	 */
+    public function btSrcset($file, $name = 'betterthumbs', array $options = [])
+    {
+	    $app = $this->getContainer();
+	    $config = $this->getConfig();
+
+	    $configName = $this->getNamedConfig($name);
+
+	    // if the image isn't found return bolt's 404 image
+	    // set the width the the first width in the presets array
+	    $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+	    $notFoundImg = $this->notFoundImage();
+	    $notFoundSize = $this->imageNotFoundParams();
+
+	    // Modifications from config merged with presets set in the config
+	    $mods = $this->getModificationParams($configName);
+	    // if there is template modifications place those in the mods array
+	    if (isset($options['modifications'])) {
+		    $finalMods = array_replace_recursive($mods, $options['modifications']);
+	    } else {
+		    $finalMods = $mods;
+	    }
+
+	    // get our options and merge them with ones passed from the template
+	    $defaultsMerged = $this->getOptions($file, $configName, $options);
+	    // classes merged from template
+
+	    // width denisty merged from the twig template
+	    $widthDensity = $defaultsMerged['widthDensity'];
+	    // get the resolutions passed in from our config file
+	    $resolutions = $defaultsMerged['resolutions'];
+
+
+	    $srcset = $this->buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalMods);
+
+	    $context = [
+		    'srcset' => $srcset,
+		    'sourceExists' => $sourceExists,
+		    'notFoundSize' => $notFoundSize,
+		    'notFoundImg' => $notFoundImg,
+	    ];
+
+	    $renderTemplate = $this->renderTemplate('betterthumbs.srcset.twig', $context);
+
+	    return new \Twig_Markup($renderTemplate, 'UTF-8');
+
+    }
+
+	/**
+	 * @param $file
+	 * @param string $name
+	 * @param array $options
+	 *
+	 * @return \Twig_Markup
+	 * create a single src to be used in conjunction with lazyloading and the srcset from above
+	 */
+    public function btSrc($file, $name = 'betterthumbs', array $options = [])
+    {
+	    $app = $this->getContainer();
+	    $config = $this->getConfig();
+
+	    $this->addAssets();
+
+
+	    $configName = $this->getNamedConfig($name);
+
+	    // if the image isn't found return bolt's 404 image
+	    // set the width the the first width in the presets array
+	    $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+	    $notFoundImg = $this->notFoundImage();
+	    $notFoundSize = $this->imageNotFoundParams();
+
+	    // Modifications from config merged with presets set in the config
+	    $mods = $this->getModificationParams($configName);
+	    // if there is template modifications place those in the mods array
+	    if (isset($options['modifications'])) {
+		    $finalMods = array_replace_recursive($mods, $options['modifications']);
+	    } else {
+		    $finalMods = $mods;
+	    }
+
+	    // get our options and merge them with ones passed from the template
+	    $defaultsMerged = $this->getOptions($file, $configName, $options);
+	    // alt text mergd from the twig template
+	    $altText = $defaultsMerged['altText'];
+
+	    // the 'src' image parameters. get the first modifications in the first array
+	    $srcImgParams = current($this->middleSrc($finalMods));
+
+	    $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
+
+	    $context = [
+		    'srcImg' => $srcImg,
+		    'srcImgParams' => $srcImgParams,
+		    'sourceExists' => $sourceExists,
+		    'notFoundSize' => $notFoundSize,
+		    'notFoundImg' => $notFoundImg,
+	    ];
+
+	    $renderTemplate = $this->renderTemplate('betterthumbs.src.twig', $context);
+
+	    return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
     public function getCachedImgURL($file, $finalModifications)
     {
         $app = $this->getContainer();
 
         return '/files/' . $app['betterthumbs']->getCachePath($file, $finalModifications);
+    }
+
+    /**
+     * Get the "middle" element of the associative array to produce a src image
+     * This is to help with the page jumping and get a semi close image in size to
+     * use before the full srcset candidate is used
+     */
+    protected  function middleSrc( $finalModsArray )
+    {
+    	$middle = ceil(count( $finalModsArray ) / 2 );
+
+    	return array_slice( $finalModsArray, -$middle, 1);
     }
 
 
@@ -329,21 +469,19 @@ class BetterThumbsExtension extends SimpleExtension
      *
      * build a src image candidate thumbnail
      */
-    public function buildThumb($config, $configName, $file, $params, $alt)
-    {
-        $app = $this->getContainer();
-        // This will create our fallback/src img, set alt text, classes, source image
-        $thumbnail = new Thumbnail($config, $configName);
-
-        // set our source image for the src image, set the modifications for this image and finally set the
-        // alt text for the entire image element
-        $thumbnail->setSourceImage($file)
-            ->setModifications($params)
-            ->setAltText($alt);
-
-        // create our src image secure URL
-        return $thumbnail->buildSecureURL();
-    }
+	public function buildThumb($config, $configName, $file, $params, $alt)
+	{
+		$app = $this->getContainer();
+		// This will create our fallback/src img, set alt text, classes, source image
+		$thumbnail = new Thumbnail($config, $configName);
+		// set our source image for the src image, set the modifications for this image and finally set the
+		// alt text for the entire image element
+		$thumbnail->setSourceImage($file)
+		          ->setModifications($params)
+		          ->setAltText($alt);
+		// create our src image secure URL
+		return $thumbnail->buildSecureURL();
+	}
 
 
     /**
@@ -569,6 +707,7 @@ class BetterThumbsExtension extends SimpleExtension
         $sizes = $srcsetHandler->getSizesAttrib($configName);
         $defaultRes = $srcsetHandler->getResolutions();
         $widthDensity = $this->checkWidthDensity($configName);
+
 
         $defaults = [
             'widthDensity' => $widthDensity,

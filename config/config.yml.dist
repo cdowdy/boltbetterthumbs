@@ -91,6 +91,8 @@ presets: &presets
     fit: stretch
 
 
+
+
 # --------------------------------------------------------------------------------- #
 # The extensions fall back defaults.
 # This uses yaml's "repeated nodes". This will take the settings set in Presets above and use them as
@@ -146,6 +148,7 @@ ScreenDensity:
 # --------------------------------------------------------------------------------- #
 single:
   w: 200
+
 
 # --------------------------------------------------------------------------------- #
 #
