@@ -138,6 +138,8 @@ class BetterThumbsExtension extends SimpleExtension
         return [
             'img' => ['image',  $options ],
             'bthumb' => ['single', $options ],
+			'srcset' => ['btSrcset', $options ],
+			'btsrc' => ['btSrc', $options ],
 //            'picture' => ['picture', $options ],
 
         ];
@@ -179,11 +181,6 @@ class BetterThumbsExtension extends SimpleExtension
         $defaultsMerged = $this->getOptions($file, $configName, $options);
         // classes merged from template
         $mergedClasses = $defaultsMerged['class'];
-        $lazyLoad = $this->checkForLazySizes($configName);
-        if ($lazyLoad) {
-            $this->loadLazySizes($lazyLoad);
-            $mergedClasses[] = 'lazyload';
-        }
         $htmlClass = $this->optionToArray($mergedClasses);
         // ID passed from config merged with the template
         $id = $defaultsMerged['id'];
@@ -193,20 +190,15 @@ class BetterThumbsExtension extends SimpleExtension
         $altText = $defaultsMerged['altText'];
         // width denisty merged from the twig template
         $widthDensity = $defaultsMerged['widthDensity'];
-        // if its lazyloaded and auto sized
-		$autosizes = $this->autoSizes($configName);
         // sizes attribute merged from the twig template and made sure it's an array
         $sizesAttrib = $this->optionToArray($defaultsMerged['sizes']);
         // get the resolutions passed in from our config file
         $resolutions = $defaultsMerged['resolutions'];
 
-	    $lazyPattern = $this->setLazySizesPattern($configName);
-
-
         // the 'src' image parameters. get the first modifications in the first array
-	    $srcImgParams = $this->middleSrc($finalMods);
+	    $srcImgParams = current($this->middleSrc($finalMods));
 
-        $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText, $lazyPattern);
+        $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
 
         $thumb = $this->buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalMods);
 
@@ -222,9 +214,6 @@ class BetterThumbsExtension extends SimpleExtension
             'sourceExists' => $sourceExists,
             'notFoundSize' => $notFoundSize,
             'notFoundImg' => $notFoundImg,
-            'lazyload' => $lazyLoad,
-            'lazyPattern' => $lazyPattern,
-	        'autosizes' => $autosizes,
 
         ];
         // TODO: put the srcset.thumb.html template back in before commit
@@ -233,6 +222,15 @@ class BetterThumbsExtension extends SimpleExtension
         return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
+	/**
+	 * @param $file
+	 * @param string $name
+	 * @param array $options
+	 *
+	 * @return \Twig_Markup
+	 *
+	 * Create a single image ... to be used as a background image for example
+	 */
     public function single($file, $name = 'betterthumbs', array $options = [])
     {
         $app = $this->getContainer();
@@ -279,6 +277,120 @@ class BetterThumbsExtension extends SimpleExtension
         $renderTemplate = $this->renderTemplate('single.html.twig', $context);
 
         return new \Twig_Markup($renderTemplate, 'UTF-8');
+    }
+
+	/**
+	 * @param $file
+	 * @param string $name
+	 * @param array $options
+	 *
+	 * @return \Twig_Markup
+	 *
+	 * Create a srcset string - srcset="images here"
+	 * This is to be used for things like lazyloading where I can't reliably determine how their
+	 * lazyloading script wants things marked up
+	 */
+    public function btSrcset($file, $name = 'betterthumbs', array $options = [])
+    {
+	    $app = $this->getContainer();
+	    $config = $this->getConfig();
+
+	    $configName = $this->getNamedConfig($name);
+
+	    // if the image isn't found return bolt's 404 image
+	    // set the width the the first width in the presets array
+	    $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+	    $notFoundImg = $this->notFoundImage();
+	    $notFoundSize = $this->imageNotFoundParams();
+
+	    // Modifications from config merged with presets set in the config
+	    $mods = $this->getModificationParams($configName);
+	    // if there is template modifications place those in the mods array
+	    if (isset($options['modifications'])) {
+		    $finalMods = array_replace_recursive($mods, $options['modifications']);
+	    } else {
+		    $finalMods = $mods;
+	    }
+
+	    // get our options and merge them with ones passed from the template
+	    $defaultsMerged = $this->getOptions($file, $configName, $options);
+	    // classes merged from template
+
+	    // width denisty merged from the twig template
+	    $widthDensity = $defaultsMerged['widthDensity'];
+	    // get the resolutions passed in from our config file
+	    $resolutions = $defaultsMerged['resolutions'];
+
+
+	    $srcset = $this->buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalMods);
+
+	    $context = [
+		    'srcset' => $srcset,
+		    'sourceExists' => $sourceExists,
+		    'notFoundSize' => $notFoundSize,
+		    'notFoundImg' => $notFoundImg,
+	    ];
+
+	    $renderTemplate = $this->renderTemplate('betterthumbs.srcset.twig', $context);
+
+	    return new \Twig_Markup($renderTemplate, 'UTF-8');
+
+    }
+
+	/**
+	 * @param $file
+	 * @param string $name
+	 * @param array $options
+	 *
+	 * @return \Twig_Markup
+	 * create a single src to be used in conjunction with lazyloading and the srcset from above
+	 */
+    public function btSrc($file, $name = 'betterthumbs', array $options = [])
+    {
+	    $app = $this->getContainer();
+	    $config = $this->getConfig();
+
+	    $this->addAssets();
+
+
+	    $configName = $this->getNamedConfig($name);
+
+	    // if the image isn't found return bolt's 404 image
+	    // set the width the the first width in the presets array
+	    $sourceExists = $app['betterthumbs']->sourceFileExists($file);
+	    $notFoundImg = $this->notFoundImage();
+	    $notFoundSize = $this->imageNotFoundParams();
+
+	    // Modifications from config merged with presets set in the config
+	    $mods = $this->getModificationParams($configName);
+	    // if there is template modifications place those in the mods array
+	    if (isset($options['modifications'])) {
+		    $finalMods = array_replace_recursive($mods, $options['modifications']);
+	    } else {
+		    $finalMods = $mods;
+	    }
+
+	    // get our options and merge them with ones passed from the template
+	    $defaultsMerged = $this->getOptions($file, $configName, $options);
+	    // alt text mergd from the twig template
+	    $altText = $defaultsMerged['altText'];
+
+	    // the 'src' image parameters. get the first modifications in the first array
+	    $srcImgParams = current($this->middleSrc($finalMods));
+
+	    $srcImg = $this->buildThumb($config, $configName, $file, $srcImgParams, $altText);
+
+	    $context = [
+		    'srcImg' => $srcImg,
+		    'srcImgParams' => $srcImgParams,
+		    'sourceExists' => $sourceExists,
+		    'notFoundSize' => $notFoundSize,
+		    'notFoundImg' => $notFoundImg,
+	    ];
+
+	    $renderTemplate = $this->renderTemplate('betterthumbs.src.twig', $context);
+
+	    return new \Twig_Markup($renderTemplate, 'UTF-8');
     }
 
     public function getCachedImgURL($file, $finalModifications)
@@ -357,34 +469,19 @@ class BetterThumbsExtension extends SimpleExtension
      *
      * build a src image candidate thumbnail
      */
-    public function buildThumb($config, $configName, $file, $params, $alt, $lazyPattern )
-    {
-        $app = $this->getContainer();
-        // This will create our fallback/src img, set alt text, classes, source image
-        $thumbnail = new Thumbnail($config, $configName);
-	    $isLazy = $this->checkForLazySizes($configName);
-
-
-//	    $defQuality = $defaults['q'];
-
-	    if ($isLazy && $lazyPattern == 'lqip' ) {
-		    $configHelper = new ConfigHelper($config);
-		    $defQuality = $configHelper->setDefaults()['q'];
-		    $finalQuality = $defQuality - 20;
-		    $newQuality = array_merge( $params, ['q' => $finalQuality ] );
-		    $thumbnail->setModifications($newQuality);
-	    } else {
-		    $thumbnail->setModifications($params);
-	    }
-
-        // set our source image for the src image, set the modifications for this image and finally set the
-        // alt text for the entire image element
-        $thumbnail->setSourceImage($file)
-            ->setAltText($alt);
-
-        // create our src image secure URL
-        return $thumbnail->buildSecureURL();
-    }
+	public function buildThumb($config, $configName, $file, $params, $alt)
+	{
+		$app = $this->getContainer();
+		// This will create our fallback/src img, set alt text, classes, source image
+		$thumbnail = new Thumbnail($config, $configName);
+		// set our source image for the src image, set the modifications for this image and finally set the
+		// alt text for the entire image element
+		$thumbnail->setSourceImage($file)
+		          ->setModifications($params)
+		          ->setAltText($alt);
+		// create our src image secure URL
+		return $thumbnail->buildSecureURL();
+	}
 
 
     /**
@@ -589,20 +686,6 @@ class BetterThumbsExtension extends SimpleExtension
         return $sizesAttrib;
     }
 
-    protected function autoSizes($namedConfig)
-    {
-	    $config = $this->getConfig();
-	    $configName = $this->getNamedConfig($namedConfig);
-
-	    return isset($config[ $configName ]['lazyload']['auto_sizes']) ? TRUE : FALSE;
-
-//	    if (isset($config[ $configName ]['lazyload']['auto_sizes'])) {
-//		    return true;
-//	    } else {
-//		    return false;
-//	    }
-    }
-
 
     /**
      * @param $filename
@@ -624,9 +707,7 @@ class BetterThumbsExtension extends SimpleExtension
         $sizes = $srcsetHandler->getSizesAttrib($configName);
         $defaultRes = $srcsetHandler->getResolutions();
         $widthDensity = $this->checkWidthDensity($configName);
-        $autoSizes = $this->autoSizes($configName);
-        $lazyPattern = $this->setLazySizesPattern($configName);
-        $isLazy = $this->checkForLazySizes($configName);
+
 
         $defaults = [
             'widthDensity' => $widthDensity,
@@ -709,99 +790,6 @@ class BetterThumbsExtension extends SimpleExtension
             }
 
         return $fallback;
-    }
-
-	/**
-	 * @param $namedConfig
-	 *
-	 * @return mixed|string
-	 *
-	 * Get the lazyload pattern to use with lazysizes
-	 */
-    protected function setLazySizesPattern($namedConfig)
-    {
-        $config = $this->getConfig();
-        $configName = $this->getNamedConfig($namedConfig);
-        $validPatterns = ['simple', 'lqip', 'combined', 'modern'];
-
-        $lazyPattern = isset($config[$configName]['lazyload']['pattern'])
-            ? $config[$configName]['lazyload']['pattern']
-            : 'simple';
-        $lazyEnabled = $this->checkForLazySizes($namedConfig);
-
-        if ($lazyEnabled && empty($lazyPattern) ) {
-            $pattern = 'simple';
-        } else {
-            $pattern = strtolower($lazyPattern);
-        }
-
-        if (in_array($pattern, $validPatterns ) ) {
-            return $pattern;
-        } else {
-            $pattern = $validPatterns[0];
-        }
-        return $pattern;
-    }
-
-
-    protected function checkForLazySizes($namedConfig)
-    {
-        $config = $this->getConfig();
-        $configName = $this->getNamedConfig($namedConfig);
-	    $lazyload = $this->checkIndex($config[$configName]['lazyload'], 'lazysizes', NULL);
-
-        if ($lazyload && !empty($lazyload)) {
-           return TRUE;
-        } else {
-            return FALSE;
-        }
-
-    }
-
-
-    /**
-     * @param $isLazy
-     * $isLazy comes from a config check in a named config block that has lasyLoad set to true.
-     * if its true we'll go ahead and load this script.
-     *
-     *
-     * load lazysizes lazy load script
-     * this has the same reasons as the picturefill script below
-     * bolt's script "injector" injects scripts for each and every instance of the twig filter/function
-     * used in a page. in instances of CSS and JS this is unwanted behavior so we have to hack around it
-     *
-     */
-    protected function loadLazySizes($isLazy)
-    {
-        $app = $this->getContainer();
-
-        $extPath = $app['resources']->getUrl('extensions');
-
-        $vendor = 'vendor/cdowdy/';
-        $extName = 'betterthumbs/';
-
-        $lazyPath = $extPath . $vendor . $extName . 'js/lazysizes.min.' . $this->_currentLazySizes . '.js';
-
-        $lazySizes = <<<LAZYSIZES
-<script src="{$lazyPath}" async></script>
-LAZYSIZES;
-
-        $asset = new Snippet();
-        $asset->setCallback($lazySizes)
-            ->setZone(ZONE::FRONTEND)
-            ->setLocation(Target::AFTER_HEAD_CSS);
-
-        // add lazysizes script only once for each time the extension is used
-        if ($isLazy){
-            if ($this->_lazyAdded == FALSE ) {
-                $app['asset.queue.snippet']->add($asset);
-                $this->_lazyAdded = TRUE;
-            } else {
-
-                $this->_lazyAdded = TRUE;
-            }
-        }
-
     }
 
 
