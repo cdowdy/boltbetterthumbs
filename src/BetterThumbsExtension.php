@@ -748,12 +748,12 @@ class BetterThumbsExtension extends SimpleExtension
     {
         $config = $this->getConfig();
         $configName = $this->getNamedConfig($namedConfig);
-//        $lazyload = $config[ $configName ]['lazyload']['lazysizes'];
+	    $lazyload = $this->checkIndex($config[$configName]['lazyload'], 'lazysizes', NULL);
 
-        if (isset($config[ $configName ]['lazyload']['lazysizes'])) {
-           return true;
+        if ($lazyload && !empty($lazyload)) {
+           return TRUE;
         } else {
-            return false;
+            return FALSE;
         }
 
     }
