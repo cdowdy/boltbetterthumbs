@@ -1,0 +1,8 @@
+{% import 'global.macros.twig' as attribs %}
+{% if sourceExists %}
+{{ attribs.srcImg( srcImg ) }}
+{% else %}
+    <img src="{{ notFoundImg }}"
+         width="{{ notFoundSize }}"
+         alt="image not found">
+{% endif %}
