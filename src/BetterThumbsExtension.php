@@ -2,27 +2,17 @@
 
 namespace Bolt\Extension\cdowdy\betterthumbs;
 
-//use Bolt\Application;
-
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
-
-use Bolt\Extension\SimpleExtension;
-
-
-use Bolt\Menu\MenuEntry;
-
-
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
-use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Providers\BetterThumbsProvider;
-
-
+use Bolt\Extension\SimpleExtension;
+use Bolt\Menu\MenuEntry;
 use Pimple as Container;
-
 
 
 /**
