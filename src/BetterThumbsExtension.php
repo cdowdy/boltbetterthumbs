@@ -437,7 +437,10 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
-    protected function imageNotFoundParams()
+	/**
+	 * @return mixed
+	 */
+	protected function imageNotFoundParams()
     {
         $config = $this->getConfig();
         $presets = $this->flatten_array($config['presets'], 'w');
@@ -445,7 +448,10 @@ class BetterThumbsExtension extends SimpleExtension
         return $presets[0] ;
     }
 
-    protected function notFoundImage()
+	/**
+	 * @return string
+	 */
+	protected function notFoundImage()
     {
         $extConfig = $this->getConfig();
         // returns the wrong route ?
