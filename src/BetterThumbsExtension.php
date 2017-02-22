@@ -2,29 +2,17 @@
 
 namespace Bolt\Extension\cdowdy\betterthumbs;
 
-//use Bolt\Application;
-
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
-use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
-use Bolt\Extension\SimpleExtension;
-
-
-use Silex\Application;
-
-use Bolt\Menu\MenuEntry;
-
-
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
-use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Providers\BetterThumbsProvider;
-
-
+use Bolt\Extension\SimpleExtension;
+use Bolt\Menu\MenuEntry;
 use Pimple as Container;
-
 
 
 /**
@@ -52,7 +40,7 @@ class BetterThumbsExtension extends SimpleExtension
      */
     protected function registerFrontendControllers()
     {
-        $app = $this->getContainer();
+
         $config = $this->getConfig();
         return [
             '/img' => new BetterThumbsController($config),
@@ -400,11 +388,16 @@ class BetterThumbsExtension extends SimpleExtension
         return '/files/' . $app['betterthumbs']->getCachePath($file, $finalModifications);
     }
 
-    /**
-     * Get the "middle" element of the associative array to produce a src image
-     * This is to help with the page jumping and get a semi close image in size to
-     * use before the full srcset candidate is used
-     */
+	/**
+	 * @param $finalModsArray
+	 *
+	 * @return array
+	 *
+	 * Get the "middle" element of the associative array to produce a src image
+	 * This is to help with the page jumping and get a semi close image in size to
+	 * use before the full srcset candidate is used
+	 *
+	 */
     protected  function middleSrc( $finalModsArray )
     {
     	$middle = ceil(count( $finalModsArray ) / 2 );
@@ -434,7 +427,10 @@ class BetterThumbsExtension extends SimpleExtension
     }
 
 
-    protected function imageNotFoundParams()
+	/**
+	 * @return mixed
+	 */
+	protected function imageNotFoundParams()
     {
         $config = $this->getConfig();
         $presets = $this->flatten_array($config['presets'], 'w');
@@ -442,9 +438,11 @@ class BetterThumbsExtension extends SimpleExtension
         return $presets[0] ;
     }
 
-    protected function notFoundImage()
+	/**
+	 * @return string
+	 */
+	protected function notFoundImage()
     {
-        $app = $this->getContainer();
         $extConfig = $this->getConfig();
         // returns the wrong route ?
 //        $notFoundImg = $app['config']->get('general/thumbnails/notfound_image');
@@ -471,7 +469,7 @@ class BetterThumbsExtension extends SimpleExtension
      */
 	public function buildThumb($config, $configName, $file, $params, $alt)
 	{
-		$app = $this->getContainer();
+
 		// This will create our fallback/src img, set alt text, classes, source image
 		$thumbnail = new Thumbnail($config, $configName);
 		// set our source image for the src image, set the modifications for this image and finally set the
@@ -499,7 +497,7 @@ class BetterThumbsExtension extends SimpleExtension
 
     public function buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalModifications)
     {
-        $app = $this->getContainer();
+
         // get our srcset handler
         $srcsetHandler = new SrcsetHandler($config, $configName);
 

@@ -146,12 +146,15 @@ class ConfigHelper
     }
 
 
-
-
-    public function setDefaults()
+	/**
+	 * @param array $defaultQuality
+	 *
+	 * @return array
+	 */
+    public function setDefaults( $defaultQuality = ['q' => 80 ] )
     {
         $configDefaults = $this->_extensionConfig['defaults'];
-        $defaultQuality = ['q' => 80 ];
+//        $defaultQuality = ['q' => 80 ];
 
         if (!empty($configDefaults)) {
 
@@ -171,10 +174,12 @@ class ConfigHelper
         return $this->_cacheAdapter;
     }
 
-    /**
-     * @param mixed $cacheAdapter
-     * @return ConfigHelper
-     */
+	/**
+	 * @param $cacheAdapter
+	 * @param string $default
+	 *
+	 * @return $this
+	 */
     public function setCacheAdapter($cacheAdapter, $default = 'local')
     {
         $valid = ['local', 'memory'];
@@ -190,6 +195,9 @@ class ConfigHelper
         return $this;
     }
 
+	/**
+	 * @return mixed
+	 */
     public function setFilesystemAdapter()
     {
         $adapter = $this->_extensionConfig['Filesystem']['adapter'];
