@@ -8,11 +8,9 @@ use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
-use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+
 use Bolt\Extension\SimpleExtension;
 
-
-use Silex\Application;
 
 use Bolt\Menu\MenuEntry;
 
@@ -400,11 +398,16 @@ class BetterThumbsExtension extends SimpleExtension
         return '/files/' . $app['betterthumbs']->getCachePath($file, $finalModifications);
     }
 
-    /**
-     * Get the "middle" element of the associative array to produce a src image
-     * This is to help with the page jumping and get a semi close image in size to
-     * use before the full srcset candidate is used
-     */
+	/**
+	 * @param $finalModsArray
+	 *
+	 * @return array
+	 *
+	 * Get the "middle" element of the associative array to produce a src image
+	 * This is to help with the page jumping and get a semi close image in size to
+	 * use before the full srcset candidate is used
+	 *
+	 */
     protected  function middleSrc( $finalModsArray )
     {
     	$middle = ceil(count( $finalModsArray ) / 2 );
