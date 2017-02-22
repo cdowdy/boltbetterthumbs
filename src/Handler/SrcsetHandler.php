@@ -3,10 +3,9 @@
 
 namespace Bolt\Extension\cdowdy\betterthumbs\Handler;
 
-use Silex\Application;
-use League\Glide\Urls\UrlBuilderFactory;
-use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
+use Silex\Application;
 
 class SrcsetHandler
 {
