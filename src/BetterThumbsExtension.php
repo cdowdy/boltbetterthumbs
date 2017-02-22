@@ -50,7 +50,7 @@ class BetterThumbsExtension extends SimpleExtension
      */
     protected function registerFrontendControllers()
     {
-        $app = $this->getContainer();
+
         $config = $this->getConfig();
         return [
             '/img' => new BetterThumbsController($config),
@@ -447,7 +447,6 @@ class BetterThumbsExtension extends SimpleExtension
 
     protected function notFoundImage()
     {
-        $app = $this->getContainer();
         $extConfig = $this->getConfig();
         // returns the wrong route ?
 //        $notFoundImg = $app['config']->get('general/thumbnails/notfound_image');
@@ -474,7 +473,7 @@ class BetterThumbsExtension extends SimpleExtension
      */
 	public function buildThumb($config, $configName, $file, $params, $alt)
 	{
-		$app = $this->getContainer();
+
 		// This will create our fallback/src img, set alt text, classes, source image
 		$thumbnail = new Thumbnail($config, $configName);
 		// set our source image for the src image, set the modifications for this image and finally set the
@@ -502,7 +501,7 @@ class BetterThumbsExtension extends SimpleExtension
 
     public function buildSrcset($file, $config, $configName, $widthDensity, $resolutions, $finalModifications)
     {
-        $app = $this->getContainer();
+
         // get our srcset handler
         $srcsetHandler = new SrcsetHandler($config, $configName);
 
