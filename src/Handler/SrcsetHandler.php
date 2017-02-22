@@ -25,10 +25,12 @@ class SrcsetHandler
     protected $_widthDensity;
 
 
-    /**
-     * SrcsetHandler constructor.
-     * @param array $_extensionConfig
-     */
+	/**
+	 * SrcsetHandler constructor.
+	 *
+	 * @param array $_extensionConfig
+	 * @param $configname
+	 */
     public function __construct(array $_extensionConfig, $configname)
     {
         $this->_extensionConfig = $_extensionConfig;
