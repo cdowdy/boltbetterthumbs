@@ -28,7 +28,7 @@ src="/img{{ srcImg }}"
 
 {# test out for not found and single image right now #}
 {%  macro setImg( srcImg, sourceExists, notFoundImg ) %}
-{% if sourceExists %}/img{{ srcImg }}{% else %}
+{% if sourceExists %}/img{{ srcImg|raw }}{% else %}
 {{ notFoundImg }}{% endif %}
 {% endmacro setImg  %}
 
