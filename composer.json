@@ -5,6 +5,7 @@
   "keywords": [ "responsive images", "srcset", "HTML5 srcset", "Secure Thumbnails", "thumbnail", "thumbnail security", "ImageMagick", "imagick", "change Image format"],
   "require": {
     "bolt/bolt": "^3.0"
+
   },
   "require-dev": {
     "phpunit/phpunit": "^4.7"
