@@ -1,0 +1,13 @@
+{% import 'global.macros.twig' as global %}
+{% if sourceExists %}
+    <img src="/files/{{ gifImage }}"
+          {{ global.setID( id ) }}
+          {{ global.htmlClasses( classes ) }}
+          {{ global.setDataAttrib( dataAttributes )  }}
+          {{ global.altText( altText )  }}>
+    {% endif %}
+{% else %}
+    <img src="{{ notFoundImg }}"
+         width="{{ notFoundSize }}"
+         alt="image not found">
+{% endif %}
