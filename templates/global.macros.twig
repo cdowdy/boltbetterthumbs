@@ -37,3 +37,8 @@ src="/img{{ srcImg }}"
 {% macro altText( altText ) %}
 alt="{{ altText }}"
 {% endmacro altText %}
+
+{%  macro buildGIF( gifImage, sourceExists, notFoundImg ) %}
+{% if sourceExists %}/files/{{ gifImage|raw }}{% else %}
+{{ notFoundImg }}{% endif %}
+{% endmacro buildGIF  %}
