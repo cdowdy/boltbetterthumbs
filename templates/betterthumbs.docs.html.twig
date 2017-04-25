@@ -424,12 +424,16 @@ myNamedConfig:
             </p>
 
             <pre class="language-twig"><code>&lt;style&gt;
-  .single { background-image: &lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;
+  .single {
+    background-image: url('&lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;');
+    width: 200px;
+    height: 200px;
+  }
 &lt;/style&gt;
 
 &lt;div class="single"&gt;&lt;/div&gt;
 &lt;!-- or --&gt;
-&lt;div style="background-image: &lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;"&gt;&lt;/div&gt;</code></pre>
+&lt;div style="background-image: url('&lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;' ); width: 200px; height: 200px; "&gt;&lt;/div&gt;</code></pre>
         </section>
         <!-- /#single -->
         <section id="lazyloading">
