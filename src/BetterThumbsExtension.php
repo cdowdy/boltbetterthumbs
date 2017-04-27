@@ -50,13 +50,14 @@ class BetterThumbsExtension extends SimpleExtension {
 	 *
 	 * @return \Twig_Markup
 	 */
-	public function image( $file, $name = 'betterthumbs', array $options = [] )
+	public function image( $sourceImage, $name = 'betterthumbs', array $options = [] )
 	{
 		$app    = $this->getContainer();
 		$config = $this->getConfig();
 
 		$this->addAssets();
 
+		$file = $this->filterEmptyImageArray( $sourceImage );
 
 		$configName = $this->getNamedConfig( $name );
 
@@ -231,6 +232,18 @@ PFILL;
 		$presets = $this->flatten_array( $config['presets'], 'w' );
 
 		return $presets[0];
+	}
+
+	protected function filterEmptyImageArray( $sourceImage )
+	{
+		if ( is_array( $sourceImage ) ) {
+			$filtered = array_filter( $sourceImage );
+
+			return isset( $filtered );
+		} else {
+			return $sourceImage;
+		}
+
 	}
 
 	/**
@@ -631,13 +644,14 @@ PFILL;
 	 *
 	 * Create a single image ... to be used as a background image for example
 	 */
-	public function single( $file, $name = 'betterthumbs', array $options = [] )
+	public function single( $sourceImage, $name = 'betterthumbs', array $options = [] )
 	{
 		$app    = $this->getContainer();
 		$config = $this->getConfig();
 
 		$configName = $this->getNamedConfig( $name );
 
+		$file = $this->filterEmptyImageArray( $sourceImage );
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
 		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
@@ -704,13 +718,14 @@ PFILL;
 	 * This is to be used for things like lazyloading where I can't reliably determine how their
 	 * lazyloading script wants things marked up
 	 */
-	public function btSrcset( $file, $name = 'betterthumbs', array $options = [] )
+	public function btSrcset( $sourceImage, $name = 'betterthumbs', array $options = [] )
 	{
 		$app    = $this->getContainer();
 		$config = $this->getConfig();
 
 		$configName = $this->getNamedConfig( $name );
 
+		$file = $this->filterEmptyImageArray( $sourceImage );
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
 		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
@@ -759,7 +774,7 @@ PFILL;
 	 * @return \Twig_Markup
 	 * create a single src to be used in conjunction with lazyloading and the srcset from above
 	 */
-	public function btSrc( $file, $name = 'betterthumbs', array $options = [] )
+	public function btSrc( $sourceImage, $name = 'betterthumbs', array $options = [] )
 	{
 		$app    = $this->getContainer();
 		$config = $this->getConfig();
@@ -769,6 +784,7 @@ PFILL;
 
 		$configName = $this->getNamedConfig( $name );
 
+		$file = $this->filterEmptyImageArray( $sourceImage );
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
 		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
