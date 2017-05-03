@@ -12,6 +12,9 @@ use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Providers\BetterThumbsProvider;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Menu\MenuEntry;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+
 use Pimple as Container;
 
 
@@ -44,7 +47,7 @@ class BetterThumbsExtension extends SimpleExtension {
 	}
 
 	/**
-	 * @param        $file
+	 * @param        $sourceImage
 	 * @param string $name
 	 * @param array  $options
 	 *
@@ -63,7 +66,7 @@ class BetterThumbsExtension extends SimpleExtension {
 
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
-		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
+		$sourceExists = $this->doesSourceImgExist( $file );
 		$notFoundImg  = $this->notFoundImage();
 		$notFoundSize = $this->imageNotFoundParams();
 
@@ -205,6 +208,16 @@ PFILL;
 		return $configName;
 	}
 
+	protected function doesSourceImgExist( $sourceImage )
+	{
+		$app = $this->getContainer();
+
+		$adapter    = new Local( $app['resources']->getPath( 'filespath' ) );
+		$Filesystem = new Filesystem( $adapter );
+
+		return $Filesystem->has( $sourceImage );
+	}
+
 	/**
 	 * @return string
 	 */
@@ -234,6 +247,11 @@ PFILL;
 		return $presets[0];
 	}
 
+	/**
+	 * @param $sourceImage
+	 *
+	 * @return bool
+	 */
 	protected function filterEmptyImageArray( $sourceImage )
 	{
 		if ( is_array( $sourceImage ) ) {
@@ -636,7 +654,7 @@ PFILL;
 	}
 
 	/**
-	 * @param        $file
+	 * @param        $sourceImage
 	 * @param string $name
 	 * @param array  $options
 	 *
@@ -654,7 +672,7 @@ PFILL;
 		$file = $this->filterEmptyImageArray( $sourceImage );
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
-		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
+		$sourceExists = $this->doesSourceImgExist( $file );
 		$notFoundImg  = $this->notFoundImage();
 		$notFoundSize = $this->imageNotFoundParams();
 
@@ -708,7 +726,7 @@ PFILL;
 	}
 
 	/**
-	 * @param        $file
+	 * @param        $sourceImage
 	 * @param string $name
 	 * @param array  $options
 	 *
@@ -728,7 +746,7 @@ PFILL;
 		$file = $this->filterEmptyImageArray( $sourceImage );
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
-		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
+		$sourceExists = $this->doesSourceImgExist( $file );
 		$notFoundImg  = $this->notFoundImage();
 		$notFoundSize = $this->imageNotFoundParams();
 
@@ -767,7 +785,7 @@ PFILL;
 	}
 
 	/**
-	 * @param        $file
+	 * @param        $sourceImage
 	 * @param string $name
 	 * @param array  $options
 	 *
@@ -787,7 +805,7 @@ PFILL;
 		$file = $this->filterEmptyImageArray( $sourceImage );
 		// if the image isn't found return bolt's 404 image
 		// set the width the the first width in the presets array
-		$sourceExists = $app['betterthumbs']->sourceFileExists( $file );
+		$sourceExists = $this->doesSourceImgExist( $file );
 		$notFoundImg  = $this->notFoundImage();
 		$notFoundSize = $this->imageNotFoundParams();
 
