@@ -93,7 +93,7 @@ class BetterThumbsController implements ControllerProviderInterface
         // ob_clean / ob_end_clean is needed here ¯\_(ツ)_/¯
         ob_clean();
         if ($app['config']->get('general/caching/request')) {
-            return $app['betterthumbs']->outPutImage($path, $request->query->all());
+	        return new Response($app['betterthumbs']->outPutImage($path, $request->query->all()));
         } else {
             return $app['betterthumbs']->getImageResponse($path, $request->query->all());
         }
