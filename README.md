@@ -6,7 +6,20 @@ You can see usage examples at my site located here: https://corydowdy.com/demo/b
 
 ### Documentation  
 This extension also comes bundled with documentation. While Logged into your bolt installation visit [/bolt/extend/betterthumbs/docs](/bolt/betterthumbs/docs) to view it.
+  
+  
+## NOTICE:  
+a recent change to Bolt may strip certain tags from the rendered output. You'll need to add these to your Bolt Config. [Here is the relevant section in the config](https://github.com/bolt/bolt/blob/868e36f2961a98745131c1f0b2b13f711deb6345/app/config/config.yml.dist#L221-L223)  
 
+```html  
+allowed_attributes: [ sizes, srcset, ... other attributes ]
+```   
+
+If you're using a lazyload pattern, or data-attributes you'll also need to add those to the allowed attributes section the data-attributes if those are used. IE:  
+
+```html  
+allowed_attributes: [ sizes, srcset,data-src, data-srcset, data-your-attribute, ... other attributes ]
+```
 
 -----------------------------------------  
 # Quick Usage with Defaults:  
