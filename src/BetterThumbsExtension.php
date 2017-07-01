@@ -913,7 +913,6 @@ PFILL;
 	{
 		return [
 			new Nut\BetterThumbsCommand( $container ),
-//            new Nut\BetterThumbsCachePrimeCommand($container),
 		];
 	}
 
