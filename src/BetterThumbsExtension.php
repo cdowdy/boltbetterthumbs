@@ -335,7 +335,7 @@ PFILL;
 		$class          = $this->addClassId( $configName, 'class' );
 		$id             = $this->addClassId( $configName, 'id' );
 		$dataAttributes = $this->addClassId( $configName, 'data_attrib' );
-		$sizes          = $srcsetHandler->getSizesAttrib( $configName );
+		$sizes          = $srcsetHandler->getSizesAttrib();
 		$defaultRes     = $srcsetHandler->getResolutions();
 		$widthDensity   = $this->checkWidthDensity( $configName );
 
