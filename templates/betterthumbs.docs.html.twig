@@ -20,7 +20,7 @@
     </div>
 </header>
 
-<main class="ext-docs-grid-container">
+<main class="ext-docs-grid-container" id="main">
 
     <nav class="ext-docs-navigation-container">
         <ul class="ext-docs-navigation-menu">
@@ -40,6 +40,7 @@
             <li class="ext-docs-navigation-menu--item "><a href="#bg">Background</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#border">Borders</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#encode">Change IMG Format</a></li>
+            <li class="ext-docs-navigation-menu--item "><a href="#examples">Usage Examples</a></li>
             <li class="ext-docs-navigation-menu--item "><a href="#faq">FAQ's</a></li>
             {#<li class="ext-docs-navigation-menu--item "><a href="#trouble">Troubleshooting</a></li>#}
         </ul>
@@ -1317,6 +1318,89 @@ convertFormat:
         </section>
         <!-- /#encode -->
 
+        <section id="examples">
+            <h1 class="heading">Usage Examples</h1>
+            <h2 class="subheading">Controlling the SRC image</h2>
+            <p>
+                The <code class="language-html">src</code> image produced from your config settings is the "middle". This means in the 'betterthumbs' config that ships with this extension using the 'defaults' will give you a src image of 700px.
+            </p>
+            <pre class="language-yaml"><code>betterthumbs:
+  altText: ~
+  widthDensity: 'w'
+  sizes: [ '100vw' ]
+  modifications:
+    # modifications here for example typically &lt;&lt;: *presets is here
+    small:
+      w: 175
+      fit: stretch
+    medium:
+      w: 350
+      fit: stretch
+    large:
+      w: 700
+      fit: stretch
+    xlarge:
+      w: 1400
+      fit: stretch</code></pre>
+            <p>
+                If you're not using a polyfill for responsive images (ie: picturefill) and the "middle" source isn't good enough for you, then you can control which image gets used in the src attribute the following ways.
+            </p>
+            <p>
+                Each one of this will <strong>need</strong> to use the <code class="language-twig">srcset()</code> BetterThumbs tag to create the srcset attribute.
+            </p>
+            <h3 class="subheading">Using A Single Config</h3>
+            <p>
+                You can create a single config block ( <a href="#single">docs single config</a> ) and then use the <code class="language-twig">&lbrace;&lbrace; bthumb() &rbrace;&rbrace;</code> BetterThumbs tag.
+            </p>
+            <p>
+                This allows you to control what modifications get made to the image and it's size. The downside is you will need to duplicate your config and there could be a lot of them. Which is never nice to work with.
+            </p>
+
+            <pre class="language-yaml"><code># The single config we'll use
+singleSRC:
+  w: 900
+  fit: 'stretch'</code></pre>
+            <pre class="language-twig"><code>&lbrace;# our twig template #&rbrace;
+&lt;img sizes="100vw"
+    &lbrace;&lbrace; srcset(record.image, 'betterthumbs' ) &rbrace;&rbrace;
+    src="&lbrace;&lbrace; bthumb( record.image, 'singleSRC' ) &rbrace;&rbrace;"
+    alt=" your alt text" /&gt;</code></pre>
+            <p>
+                Result:
+            </p>
+            <pre class="language-html"><code>&lt;img sizes="100vw"
+  srcset="/img/filename-here.jpg?p=small&s=signatureHashHere 175w,
+    /img/filename-here.jpg?p=medium&s=signatureHashHere 350w,
+    /img/filename-here.jpg?p=large&s=signatureHashHere 700w,
+    /img/filename-here.jpg?p=xlarge&s=signatureHashHere 1400w"
+  src="/img/filename-here.jpg?w=900&fit=stretch&s=signatureHashHere"
+  alt="your alt text"&gt; </code></pre>
+
+            <h3 class="subheading">Using The Original File</h3>
+            <p>
+                Here we are passing in the original file from '/files/'. You could also use <a href="https://docs.bolt.cm/3.2/templating/templatetags#thumbnail">Bolt's thumbnail handler</a> here to generate a cropped or resized image.
+            </p>
+
+            <pre class="language-html"><code>&lt;img sizes="your sizes if using w descriptor"
+  &lbrace;&lbrace; srcset(record.image, 'betterthumbs' &rbrace;&rbrace;
+  src="/files/path/to/your/image.jpg"
+  alt=" your alt text" /&gt;
+
+&lt;!-- or using record.image --&gt;
+&lt;img sizes="your sizes if using w descriptor"
+  &lbrace;&lbrace; srcset(record.image, 'betterthumbs' &rbrace;&rbrace;
+  src="&lbrace;&lbrace; record.image &rbrace;&rbrace;"
+  alt=" your alt text" /&gt;
+
+&lt;!-- or using record.image with Bolt's thumbnail hander --&gt;
+&lt;img sizes="your sizes if using w descriptor"
+  &lbrace;&lbrace; srcset(record.image, 'betterthumbs' &rbrace;&rbrace;
+  src="&lbrace;&lbrace; record.image|thumbnail(320, 240) &rbrace;&rbrace;"
+  alt=" your alt text" /&gt;
+                </code></pre>
+        </section>
+        <!-- /#examples -->
+
         <section id="faq">
             <h1 class="heading">Frequently Asked Questions</h1>
             <h2 class="subheading">Animated Gif's no longer Animating</h2>
@@ -1344,7 +1428,7 @@ htmlcleaner:
             {#</div>#}
         {#</section>#}
         <!-- /#trouble -->
-
+        <a href="#main">back to top</a>
     </div>
 
 </main>
