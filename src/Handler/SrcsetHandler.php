@@ -175,6 +175,8 @@ class SrcsetHandler {
 		$thumbHelper->setSourceImage( $file );
 		$thumbHelper->setModifications( $params );
 
+        $boltFilesPath = $this->app['resources']->getUrl('files');
+
 		// Get our presets from the config
 		$configHelper = new ConfigHelper( $this->_extensionConfig );
 		$presets      = array_keys( $configHelper->setPresets() );
@@ -186,7 +188,7 @@ class SrcsetHandler {
 
 			foreach ( $params as $mods ) {
 				if ( $app['betterthumbs']->cacheFileExists( $file, $mods ) ) {
-					$thumbs[] .= '/files/' . $app['betterthumbs']->getCachePath( $file, $mods );
+					$thumbs[] .= $boltFilesPath . $app['betterthumbs']->getCachePath( $file, $mods );
 
 				} else {
 					$thumbs[] .= '/img' . $thumbHelper->setModifications( $mods )->buildSecureURL();
