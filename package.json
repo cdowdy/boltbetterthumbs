@@ -1,0 +1,38 @@
+{
+  "name": "betterthumbs",
+  "version": "0.0.3",
+  "description": "NPM stuff for bolt betterthumbs docs page",
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-cachebust": "0.0.6",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.1.0",
+    "gulp-uglify": "^2.0.0",
+    "intersection-observer": "^0.4.0",
+    "iolazyload": "github:cdowdy/io-lazyload",
+    "lazysizes": "^3.0.0-rc3"
+  },
+  "dependencies": {
+    "browser-sync": "^2.18.2",
+    "gulp-autoprefixer": "^3.1.0"
+  },
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp sass"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdowdy/boltbetterthumbs.git"
+  },
+  "author": "Cory Dowdy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cdowdy/boltbetterthumbs/issues"
+  },
+  "homepage": "https://github.com/cdowdy/boltbetterthumbs#readme"
+}
