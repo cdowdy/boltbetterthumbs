@@ -1,36 +1,19 @@
-{% set jsUpdate = 'f7c712e7'  %}
-{%  set cssUpdate = "115502ea" %}
-<!doctype html>
-<html lang="{{ htmllang() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>BetterThumbs :: Cache Files</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends './base.betterthumbs.html.twig' %}
+{% set betterthumbsTitle = 'BetterThumbs :: Cache Files' %}
 
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.{{ cssUpdate }}.min.css">
+{% block css %}
+    {{ parent() }}
     <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/magnific-popup.css">
-    <!-- need to use a CDN since bolt uses a fragile version strategy -->
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
-            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-            crossorigin="anonymous"></script>
 
+
+{% endblock css %}
+
+{% block js %}
+    {{ parent() }}
     <script src="/extensions/vendor/cdowdy/betterthumbs/js/jquery.magnific-popup.min.js"></script>
-    <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.{{ jsUpdate }}.min.js"></script>
-</head>
-{#use bolt twig function to get the proper dashboard path #}
-<body class="" data-bolt-path="{{ path('dashboard') }}">
-<header class="ext-docs-masthead ext-docs-header-container ">
-    <div class="ext-docs-header-title">
-        <h1><a href="{{ path('dashboard') }}">Bolt Admin</a></h1>
-    </div>
-    <div class="ext-docs-header-title">
-        <h2>BetterThumbs Prime Cache</h2>
-    </div>
-</header>
+{% endblock js %}
 
-<main>
+{% block bodyContent %}
     <div class="ext-docs-grid-container">
         <div class="small-12 columns">
             <h1 class="heading">Prime The Image Cache</h1>
@@ -47,14 +30,14 @@
                     <!-- /.betterthumbs-card-divider -->
                     <div class="img-container">
                         {% if key.mimeType != 'image/tiff' %}
-                        <a href="/files/{{ key.imagePath }}"
-                           class="image-popup-fit-width"
-                           title="Preview: {{ key.filename }}">
-                            <img src="/files/{{ key.imagePath }}"
-                                 alt=""
-                                 id="{{ key.filename }}"
-                                 class="prime-cache-img">
-                        </a>
+                            <a href="/files/{{ key.imagePath }}"
+                               class="image-popup-fit-width"
+                               title="Preview: {{ key.filename }}">
+                                <img src="/files/{{ key.imagePath }}"
+                                     alt=""
+                                     id="{{ key.filename }}"
+                                     class="prime-cache-img">
+                            </a>
                         {% else %}
                             <p style="color: #fff">Tif Images Cannot Be Displayed In a Browser</p>
                         {% endif %}
@@ -161,15 +144,16 @@
         {% endfor %}
     </div><!-- /#prime-grid -->
 
-</main>
-<script>
-    $('.image-popup-fit-width').magnificPopup({
-        type: 'image',
-        closeOnContentClick: true,
-        image: {
-            verticalFit: false
-        }
-    });
-</script>
-</body>
-</html>
+{% endblock bodyContent %}
+
+{% block footerJavascript %}
+    <script>
+        $('.image-popup-fit-width').magnificPopup({
+            type: 'image',
+            closeOnContentClick: true,
+            image: {
+                verticalFit: false
+            }
+        });
+    </script>
+{% endblock footerJavascript %}
