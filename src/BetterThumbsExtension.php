@@ -12,6 +12,7 @@ use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Providers\BetterThumbsProvider;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Menu\MenuEntry;
+use Bolt\Version as Version;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
@@ -878,9 +879,16 @@ PFILL;
 	{
 		$config = $this->getConfig();
 
-		return [
-			'/extend/betterthumbs' => new BetterThumbsBackendController( $config ),
-		];
+		if ( Version::compare('3.3.0', '>=')) {
+            return [
+                '/extensions/betterthumbs' => new BetterThumbsBackendController( $config ),
+            ];
+        } else {
+            return [
+                '/extend/betterthumbs' => new BetterThumbsBackendController( $config ),
+            ];
+        }
+
 	}
 
 	/**
