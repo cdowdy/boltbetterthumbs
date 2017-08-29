@@ -170,7 +170,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
             'bthumbsRoute' => $this->buildProperExtensionPath($app)
 		];
 
-		return $app['twig']->render( 'betterthumbs.files.html.twig', $context );
+		return $app['twig']->render( 'files/betterthumbs.files.html.twig', $context );
 	}
 
 
@@ -276,7 +276,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
             'bthumbsRoute' => $this->buildProperExtensionPath($app)
 		];
 
-		return $app['twig']->render( 'betterthumbs.prime.html.twig', $context );
+		return $app['twig']->render( 'prime/betterthumbs.prime.html.twig', $context );
 	}
 
 	/**
