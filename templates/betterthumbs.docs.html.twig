@@ -440,7 +440,7 @@ myNamedConfig:
         <section id="lazyloading">
             <h1 class="heading">Lazy Loading Images</h1>
             <p>
-                If you want to lazy load images you'll have to build the image tag yourself using the tags of: <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName &rbrace;&rbrace;</code> for the srcset string and <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName &rbrace;&rbrace;</code> for the src string. 
+                If you want to lazy load images you'll have to build the image tag yourself using the tags of: <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName' ) &rbrace;&rbrace;</code> for the srcset string and <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;</code> for the src string.
             </p>
             <p>
                 This works the same as the regular BetterThumbs function tag but it outputs the string instead of the full image tag. We build the tag manually since there is no way for the extension to know what pattern your lazy loading library uses. 
