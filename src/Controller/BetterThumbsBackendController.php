@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
+use Bolt\Version as Version;
+
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
@@ -334,6 +336,10 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 		return new JsonResponse( $primed );
 	}
 
+    /**
+     * @param $driver
+     * @return array|string
+     */
 	protected function checkAccpetedTypes( $driver )
 	{
 		$acceptedTypes = '';
@@ -352,6 +358,30 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 		return $acceptedTypes;
 
 	}
+
+    /**
+     * @param Application $app
+     * @return string
+     *
+     * a method to check to make sure bolt is greater than or equal too 3.3.0 since they changed backend page routes
+     */
+	public function buildProperExtensionPath(Application $app )
+    {
+        // bolt devs like to break things in a non backwards manner in minor releases. So we have to
+        // hackishly build a url here.. check for the version number and then move on cause you know... who likes
+        // to do things in a normal sane backwards compatible manner? not bolt devs for extension authors
+
+        $urlGenerator = $app['url_generator'];
+        $dashboardRoute = $urlGenerator->generate( 'dashboard' );
+
+        if (Version::compare('3.3.0', '>=')) {
+            $extensionsRoute = 'extensions';
+        } else {
+            $extensionsRoute = 'extend';
+        }
+
+        return $dashboardRoute . '/' . $extensionsRoute ;
+    }
 
 
 }
