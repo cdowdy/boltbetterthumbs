@@ -450,7 +450,7 @@ myNamedConfig:
                         href="https://github.com/aFarkas/lazysizes">LazySizes</a>
             </p>
             <p>
-                The <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName &rbrace;&rbrace;</code> tag will ouptut:
+                The <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName' ) &rbrace;&rbrace;</code> tag will ouptut:
             </p>
             <pre class="language-markup"><code>srcset="/img/your-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
         /files/your-file.jpg 2x ,
@@ -458,7 +458,7 @@ myNamedConfig:
         /img/your-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"</code></pre>
 
             <p>
-                The <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName &rbrace;&rbrace;</code> tag will ouptut:
+                The <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;</code> tag will ouptut:
             </p>
             <pre class="language-markup"><code>src="img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950"</code></pre>
             <h2 class="subheading">Example Using Lazy Sizes</h2>
@@ -467,8 +467,8 @@ myNamedConfig:
             </p>
             <pre class="language-twig"><code>&lt;img class="lazyload"
   data-sizes="auto"
-  data-&lbrace;&lbrace; btsrc(record.image, 'configName &rbrace;&rbrace;
-  data-&lbrace;&lbrace; srcset(record.image, 'configName &rbrace;&rbrace; /&gt;</code></pre>
+  data-&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;
+  data-&lbrace;&lbrace; srcset(record.image, 'configName') &rbrace;&rbrace; /&gt;</code></pre>
             <p>
                 Which will give you:
             </p>
