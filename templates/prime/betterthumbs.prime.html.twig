@@ -15,8 +15,11 @@
 
 {% block bodyContent %}
     <div class="ext-docs-grid-container">
-        <div class="small-12 columns">
+        <div class="small-12 medium-6 column column-blocks">
             <h1 class="heading">Prime The Image Cache</h1>
+        </div>
+        <div class="small-12 medium-6 column column-blocks">
+            <h1 class="heading"><a href="{{ path( "betterthumbs_files" ) }}">View Cached Files</a></h1>
         </div>
     </div>
 
@@ -33,8 +36,8 @@
                             <a href="/files/{{ key.imagePath }}"
                                class="image-popup-fit-width"
                                title="Preview: {{ key.filename }}">
-                                <img src="/files/{{ key.imagePath }}"
-                                     alt=""
+                                <img data-src="/files/{{ key.imagePath }}"
+                                     alt="{{ key.filename }}"
                                      id="{{ key.filename }}"
                                      class="prime-cache-img lazy">
                             </a>
