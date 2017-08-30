@@ -22,6 +22,8 @@
             crossorigin="anonymous"></script>
 
     <script src="/extensions/vendor/cdowdy/betterthumbs/js/betterthumbs.{{ jsUpdate }}.min.js"></script>
+        <script src="/extensions/vendor/cdowdy/betterthumbs/web/js/intersection-observer.51a7683a.js"></script>
+        <script src="extensions/vendor/cdowdy/betterthumbs/web/js/iolazy.min.7665ef3e.js" defer></script>
     {% endblock js %}
 </head>
 
@@ -38,5 +40,12 @@
 <main>
     {% block bodyContent %}{% endblock bodyContent %}
 </main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new IOlazy({
+            image: '.lazy'
+        });
+    });
+</script>
 {% block footerJavascript %}{% endblock footerJavascript %}
 </body>
