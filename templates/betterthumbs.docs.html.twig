@@ -480,20 +480,26 @@ myNamedConfig:
         /img/your-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"
     data-src="img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950" /&gt;</code></pre>
 
+
+
             <h2 class="subheading">Example Using IOLazy</h2>
+
             <pre class="language-twig"><code>&lt;img class="lazyload"
   data-sizes="auto"
   data-&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;
   data-&lbrace;&lbrace; srcset(record.image, 'configName') &rbrace;&rbrace; /&gt;</code></pre>
+
+
             <p>
                 Which will give you:
             </p>
-            <pre class="language-markup"><code>&lt;img class="lazyload"
-    data-sizes="auto"
+
+            <pre class="language-markup"><code>&lt;img class="lazyload" sizes="100vw"
     data-srcset="/img/your-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
         /img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 2.5x ,
         /img/your-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"
     data-src="img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950" /&gt;</code></pre>
+
         </section>
 
         <section id="orientation">
