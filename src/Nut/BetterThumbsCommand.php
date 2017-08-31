@@ -8,6 +8,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+Use Bolt\Extension\cdowdy\betterthumbs\Helpers\FilePathHelper;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 
 
 
@@ -15,12 +19,20 @@ class BetterThumbsCommand extends Command
 {
     protected $app;
 
+    /**
+     * BetterThumbsCommand constructor.
+     * @param Application $app
+     */
     public function __construct(Application $app)
     {
         parent::__construct();
         $this->app = $app;
     }
 
+
+    /**
+     *
+     */
     protected function configure()
     {
         $this
@@ -30,44 +42,75 @@ class BetterThumbsCommand extends Command
             ->addArgument('type', InputArgument::REQUIRED, 'Clear The Entire Cache Or Just One (1) Image');
     }
 
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
+
         $type = $input->getArgument('type');
-//
-        if ($type == 'all') {
-//            $this->doDeleteAll();
-            $this->doDelete();
-            $output->writeln([
-                '<info>Removing all Images From The BetterThumbs Cache</info>',
-                '<info>======================================</info>'
-            ]);
-//            $io->success('all Images Have Been Removed From BetterThumbs Cache');
-        } else {
-//            $this->doDeleteAll($input->getArgument('type'));
-            $this->doDelete($input->getArgument('type'));
-            $output->writeln([
-                '<info>removing ' . $input->getArgument('type') . ' from the BetterThumbs cache</info>'
-            ]);
-//            $io->success($input->getArgument('type') . 'Has Been Removed From BetterThumbs Cache');
-        }
 
-//        $output->writeln($text);
-    }
+        // get the path to bolt's files and append '.cache' for betterthumbs to it
+        $filespath = (new FilePathHelper( $this->app ) )->boltFilesPath() . '/.cache' ;
 
-    protected function doDelete($default = NULL)
-    {
-        $filespath = $this->app['resources']->getPath('filespath') . '/.cache';
+        // pass that path to the Flysytem Adapter
+        $adapter    = new Local( $filespath );
+
+        // Initialize flysystem with our cache path
+        $Filesystem = new Filesystem( $adapter );
+
+        // get all the files located in our cache directory
         $allFiles = array_diff(scandir($filespath), array('.', '..'));
 
 
-        $server = $this->app['betterthumbs'];
-        if( $default ) {
-            $server->deleteCache($default);
-        } else {
+
+        if ($type === 'all') {
+
+            $io->newLine();
+
+            $output->writeln([
+                '<info>Removing all Images From The BetterThumbs Cache</info>',
+                '<info>===============================================</info>'
+            ]);
             foreach ($allFiles as $file ) {
-                $server->deleteCache($file );
+
+                if ($Filesystem->has( $file ) ) {
+                    $Filesystem->deleteDir( $file );
+                }
+
             }
+
+            $io->success('all files removed from cache');
+
+        } else {
+
+            if ( $Filesystem->has($type) ) {
+
+                $io->newLine();
+
+                $output->writeln([
+                    '<info>removing ' . $input->getArgument('type') . ' from the BetterThumbs cache</info>'
+                ]);
+
+                $Filesystem->deleteDir( $type );
+
+                $io->success(
+                     $input->getArgument('type') . ' Removed from the BetterThumbs cache'
+                );
+
+            } else {
+
+                $io->error(
+                     $input->getArgument('type') . ' Isn\'t in the BetterThumbs cache'
+                );
+
+            }
+
         }
+
     }
+
 }
