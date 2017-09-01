@@ -1,4 +1,4 @@
-{% import 'srcset.macros.twig' as attribs %}
+{% import 'macros/srcset.macros.twig' as attribs %}
 {% if sourceExists %}
 <img {{ attribs.buildImg( sizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, altText) }} >
 {% else %}
