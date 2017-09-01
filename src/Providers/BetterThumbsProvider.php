@@ -5,6 +5,7 @@ namespace Bolt\Extension\cdowdy\betterthumbs\Providers;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+use Bolt\Extension\cdowdy\betterthumbs\Helpers\FilePathHelper;
 use League\Glide\ServerFactory;
 use League\Glide\Responses\SymfonyResponseFactory;
 use League\Flysystem\Adapter\Local;
@@ -29,7 +30,10 @@ class BetterThumbsProvider implements ServiceProviderInterface
     {
         $app['betterthumbs'] = $app->share(
             function ($app) {
-                $adapter = new Local($app['resources']->getPath('filespath') );
+
+                $filePathHelper = new FilePathHelper($app);
+
+                $adapter = new Local( $filePathHelper->boltFilesPath() );
                 $Filesystem = new Filesystem($adapter);
 
                 // pull in my currently messy helper file and use $configHelper as the accessor to our config file
