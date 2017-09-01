@@ -2,8 +2,7 @@
 
 namespace Bolt\Extension\cdowdy\betterthumbs;
 
-use Bolt\Asset\Snippet\Snippet;
-use Bolt\Asset\Target;
+use Bolt\Asset\File\JavaScript;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
@@ -16,7 +15,6 @@ use Bolt\Menu\MenuEntry;
 use Bolt\Version as Version;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-
 use Pimple as Container;
 
 
@@ -60,7 +58,7 @@ class BetterThumbsExtension extends SimpleExtension {
 		$app    = $this->getContainer();
 		$config = $this->getConfig();
 
-		$this->addAssets();
+//		$this->addAssets();
 
 		$file = $this->filterEmptyImageArray( $sourceImage );
 
@@ -147,49 +145,44 @@ class BetterThumbsExtension extends SimpleExtension {
 		return new \Twig_Markup( $renderTemplate, 'UTF-8' );
 	}
 
-	/**
-	 * You can't rely on bolts methods to insert javascript/css in the location you want.
-	 * So we have to hack around it. Use the Snippet Class with their location methods and insert
-	 * Picturefill into the head. Add a check to make sure the script isn't loaded more than once ($_scriptAdded)
-	 * and stop the insertion of the files multiple times because bolt's registerAssets method will blindly insert
-	 * the files on every page
-	 *
-	 */
-
-	protected function addAssets()
-	{
-		$app = $this->getContainer();
-
-		$config = $this->getConfig();
-
-		$pfill = $config['picturefill'];
-
-		$extPath = $app['resources']->getUrl( 'extensions' );
-
-		$vendor  = 'vendor/cdowdy/';
-		$extName = 'betterthumbs/';
-
-		$pictureFillJS = $extPath . $vendor . $extName . 'picturefill/' . $this->_currentPictureFill . '/picturefill.min.js';
-		$pictureFill   = <<<PFILL
-<script src="{$pictureFillJS}" async defer></script>
-PFILL;
-		$asset         = new Snippet();
-		$asset->setCallback( $pictureFill )
-		      ->setZone( ZONE::FRONTEND )
-		      ->setLocation( Target::AFTER_HEAD_CSS );
 
 
-		// add picturefill script only once for each time the extension is used
-		if ( $pfill ) {
-			if ( $this->_scriptAdded == false ) {
-				$app['asset.queue.snippet']->add( $asset );
-				$this->_scriptAdded = true;
-			} else {
+    /**
+     * @return array
+     */
+    protected function registerAssets()
+    {
 
-				$this->_scriptAdded = true;
-			}
-		}
-	}
+        $config = $this->getConfig();
+
+        $pfill = $config['picturefill'];
+
+
+        $vendor  = 'vendor/cdowdy/';
+        $extName = 'betterthumbs/';
+
+        $pictureFillJS = '/extensions/' . $vendor . $extName . 'picturefill/' . $this->_currentPictureFill . '/picturefill.min.js';
+
+        $asset = JavaScript::create()
+            ->setFileName($pictureFillJS)
+                ->setPriority(5)
+                ->setAttributes(['defer', 'async'])
+                ->setZone(Zone::FRONTEND);
+
+        if ($pfill && $this->_scriptAdded == false) {
+
+            $this->_scriptAdded = true;
+            return [
+                $asset,
+            ];
+        } else {
+
+            $this->_scriptAdded = true;
+
+            return null;
+        }
+
+    }
 
 	/**
 	 * @param $name
@@ -800,7 +793,7 @@ PFILL;
 		$app    = $this->getContainer();
 		$config = $this->getConfig();
 
-		$this->addAssets();
+//		$this->addAssets();
 
 
 		$configName = $this->getNamedConfig( $name );
