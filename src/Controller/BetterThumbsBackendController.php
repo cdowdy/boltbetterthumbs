@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
+Use Bolt\Extension\cdowdy\betterthumbs\Helpers\FilePathHelper;
 
 
 use Symfony\Component\HttpFoundation\Request;
@@ -121,8 +122,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 	public function bthumbsFiles( Application $app )
 	{
 
-		$filespath = $app['resources']->getPath( 'filespath' ) . '/.cache';
-
+		$filespath =  (new FilePathHelper( $app ) )->boltFilesPath() . '/.cache';
 		$adapter    = new Local( $filespath );
 		$filesystem = new Filesystem( $adapter );
 
@@ -214,7 +214,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 	 */
 	public function primeCache( Application $app )
 	{
-		$adapter    = new Local( $app['resources']->getPath( 'filespath' ) );
+		$adapter    = new Local( (new FilePathHelper( $app ) )->boltFilesPath() );
 		$filesystem = new Filesystem( $adapter );
 
 		$fileList = $filesystem->listContents( null, true );
@@ -384,6 +384,4 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 
         return $dashboardRoute . '/' . $extensionsRoute ;
     }
-
-
 }

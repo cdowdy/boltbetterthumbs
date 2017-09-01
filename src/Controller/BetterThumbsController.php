@@ -10,7 +10,7 @@ use Silex\ControllerProviderInterface;
 
 
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\ConfigHelper;
-
+Use Bolt\Extension\cdowdy\betterthumbs\Helpers\FilePathHelper;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +46,10 @@ class BetterThumbsController implements ControllerProviderInterface
     }
 
 
-
+    /**
+     * @param Application $app
+     * @return ControllerCollection
+     */
     public function connect(Application $app)
     {
         /** @var ControllerCollection $ctr */
@@ -59,6 +62,13 @@ class BetterThumbsController implements ControllerProviderInterface
         return $ctr;
     }
 
+
+    /**
+     * @param Application $app
+     * @param $path
+     * @param Request $request
+     * @return Response
+     */
     public function makeImage(Application $app, $path, Request $request )
     {
         // pull in my currently messy helper file and use $configHelper as the accessor to our config file
@@ -101,6 +111,10 @@ class BetterThumbsController implements ControllerProviderInterface
     }
 
 
+    /**
+     * @param Application $app
+     * @return Filesystem
+     */
     protected function fsAdapter(Application $app)
     {
         $configHelper = new ConfigHelper($this->config);
@@ -108,7 +122,7 @@ class BetterThumbsController implements ControllerProviderInterface
 
 
         if ( $adapter == 'local' ) {
-            return new Filesystem( new Local($app['resources']->getPath('filespath') ) );
+            return new Filesystem( new Local( (new FilePathHelper( $app ) )->boltFilesPath() ) );
         }
 
         if ( $adapter == 'memory' ) {
