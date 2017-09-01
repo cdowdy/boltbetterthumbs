@@ -12,9 +12,11 @@ srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not 
 
 {# Build the Image Attriubtes. Combine classes, id's, data-attribs, alt text, src image and srcset #}
 {% macro buildImg( sizes, widthDensity, classes, id, dataAttributes, srcset, srcImg, altText ) %}{% spaceless %}
+    {% import _self as respAttribs %}
+
     {# pulls in macros used by both srcset and picture element #}
-{% import 'global.macros.twig' as global %}
+{% import 'macros/global.macros.twig' as global %}
  {{ global.setID(id) }} {{ global.htmlClasses(classes) }} {{ global.setDataAttrib( dataAttributes ) }}
- {% if widthDensity == 'w' %}{{ _self.sizes(sizes) }}{% endif %} {{ _self.srcset( srcset ) }} {{ global.srcImg( srcImg ) }} {{ global.altText( altText) }}
+ {% if widthDensity == 'w' %}{{ respAttribs.sizes(sizes) }}{% endif %} {{ respAttribs.srcset( srcset ) }} {{ global.srcImg( srcImg ) }} {{ global.altText( altText) }}
 {% endspaceless %}
 {% endmacro buildImg %}
