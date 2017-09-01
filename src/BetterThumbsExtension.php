@@ -10,6 +10,7 @@ use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
 use Bolt\Extension\cdowdy\betterthumbs\Handler\SrcsetHandler;
 use Bolt\Extension\cdowdy\betterthumbs\Helpers\Thumbnail;
 use Bolt\Extension\cdowdy\betterthumbs\Providers\BetterThumbsProvider;
+Use Bolt\Extension\cdowdy\betterthumbs\Helpers\FilePathHelper;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Menu\MenuEntry;
 use Bolt\Version as Version;
@@ -213,7 +214,7 @@ PFILL;
 	{
 		$app = $this->getContainer();
 
-		$adapter    = new Local( $app['resources']->getPath( 'filespath' ) );
+		$adapter    = new Local( ((new FilePathHelper( $app ) )->boltFilesPath() ) );
 		$Filesystem = new Filesystem( $adapter );
 
 		return $Filesystem->has( $sourceImage );
@@ -475,7 +476,8 @@ PFILL;
 	protected function is_animated_gif( $file )
 	{
 		$app       = $this->getContainer();
-		$boltFiles = $app['resources']->getPath( 'filespath' );
+//		$boltFiles = $app['resources']->getPath( 'filespath' );
+        $boltFiles = ((new FilePathHelper($app ) )->boltFilesPath() );
 		$filePath  = $boltFiles . '/' . $file;
 
 
