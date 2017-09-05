@@ -15,7 +15,7 @@ srcset="{% for img, descriptor in srcset %}{{ img }} {{ descriptor }} {% if not 
     {% import _self as respAttribs %}
 
     {# pulls in macros used by both srcset and picture element #}
-{% import 'macros/global.macros.twig' as global %}
+{% import '@betterthumbs/macros/global.macros.twig' as global %}
  {{ global.setID(id) }} {{ global.htmlClasses(classes) }} {{ global.setDataAttrib( dataAttributes ) }}
  {% if widthDensity == 'w' %}{{ respAttribs.sizes(sizes) }}{% endif %} {{ respAttribs.srcset( srcset ) }} {{ global.srcImg( srcImg ) }} {{ global.altText( altText) }}
 {% endspaceless %}

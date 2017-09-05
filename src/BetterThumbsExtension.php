@@ -924,7 +924,7 @@ class BetterThumbsExtension extends SimpleExtension {
 	 */
 	protected function registerTwigPaths()
 	{
-		return [ 'templates' ];
+		return [ 'templates'=> ['position' => 'prepend', 'namespace'=>'betterthumbs'] ];
 	}
 
 	/**
