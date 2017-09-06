@@ -170,7 +170,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
             'bthumbsRoute' => $this->buildProperExtensionPath($app)
 		];
 
-		return $app['twig']->render('@betterthumbs/bolts.base.html.twig', $context );
+		return $app['twig']->render( '@betterthumbs/bolts.base.html.twig', $context );
 	}
 
 
