@@ -1,0 +1,27 @@
+{#
+ Use Bolt's _page-nav.twig and extend it to build our backend page:
+#}
+
+{##
+ # HTML page template for pages with navigation
+ #
+ # Blocks: page_nav:      Navigation path, like: "Dashboard", "Settings/Configuration", "Content/*", ...
+ #         page_main:     content
+ #         page_title:    used as html title
+ #         page_subtitle: used as html title (optional)
+ #         page_script:   script added after the body tag (script tags needed!)
+ #}
+{% extends '@bolt/_base/_page.twig' %}
+
+{% set page_bodyclass = '' %}
+
+
+{% block page_main %}
+    <p>
+        Main content for Bolts backend templates
+    </p>
+{% endblock page_main %}
+
+
+{% block page_main_extra_content %}
+{% endblock %}
