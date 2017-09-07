@@ -150,6 +150,9 @@ class BetterThumbsExtension extends SimpleExtension {
     /**
      * @return array
      */
+    /**
+     * @return array
+     */
     protected function registerAssets()
     {
 
@@ -165,21 +168,47 @@ class BetterThumbsExtension extends SimpleExtension {
 
         $asset = JavaScript::create()
             ->setFileName($pictureFillJS)
-                ->setPriority(5)
-                ->setAttributes(['defer', 'async'])
-                ->setZone(Zone::FRONTEND);
+            ->setPriority(5)
+            ->setAttributes(['defer', 'async'])
+            ->setZone(Zone::FRONTEND);
+
+
+        $betterthumbsJS = JavaScript::create()
+            ->setFileName('js/betterthumbs.80ad8c34.min.js')
+            ->setPriority(99)
+            ->setZone(Zone::BACKEND);
+
+        $ioObserverPoly = JavaScript::create()
+            ->setFileName('js/intersection-observer.51a7683a.js')
+            ->setPriority(99)
+            ->setZone(Zone::BACKEND);
+
+        $ioLazy = JavaScript::create()
+            ->setFilename('js/iolazy.min.7665ef3e.js')
+            ->setAttributes(['defer'])
+            ->setPriority(99)
+            ->setZone(Zone::BACKEND);
+
+        $betterthumbsCSS = Stylesheet::create('css/betterthumbs-rewrite.css')
+            ->setPriority(10)
+            ->setZone(Zone::BACKEND);
+
+//        $this->backendAssets();
+
 
         if ($pfill && $this->_scriptAdded == false) {
 
             $this->_scriptAdded = true;
             return [
-                $asset,
+                $asset, $betterthumbsCSS, $betterthumbsJS, $ioObserverPoly, $ioLazy
             ];
         } else {
 
             $this->_scriptAdded = true;
 
-            return null;
+            return [
+                $betterthumbsCSS, $betterthumbsJS, $ioObserverPoly, $ioLazy
+            ];
         }
 
     }
