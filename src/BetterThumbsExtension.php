@@ -3,6 +3,7 @@
 namespace Bolt\Extension\cdowdy\betterthumbs;
 
 use Bolt\Asset\File\JavaScript;
+use Bolt\Asset\File\Stylesheet;
 use Bolt\Controller\Zone;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsBackendController;
 use Bolt\Extension\cdowdy\betterthumbs\Controller\BetterThumbsController;
