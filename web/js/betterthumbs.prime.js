@@ -81,7 +81,7 @@ $(document).ready(function () {
     var prime = function (target, img, configName, modType) {
         $.ajax({
             type: "POST",
-            url: $( "BODY").data("bolt-path") + '/betterthumbs/files/prime/do',
+            url: $( "#boltPath").data("bolt-path") + '/betterthumbs/files/prime/do',
             data: {
                 'modType' : modType,
                 'configName' : configName,

@@ -1,4 +1,6 @@
 $(document).ready(function () {
+ var boltPath = $('#boltPath').data("bolt-path");
+
 
     $(".image-container").on( 'click', ".deletebutton", function (event) {
         var img = this.id;
@@ -6,7 +8,7 @@ $(document).ready(function () {
         var spinner = $('<div class="cp-spinner cp-skeleton"></div><p>Removing Image</p>');
         $.ajax({
             type: "POST",
-            url: $( "BODY").data("bolt-path") + '/betterthumbs/files/delete',
+            url: boltPath + '/betterthumbs/files/delete',
             data: {'img': img},
 
             beforeSend: function () {
@@ -36,7 +38,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: $( "BODY").data("bolt-path") + '/betterthumbs/files/delete/all',
+            url: boltPath + '/betterthumbs/files/delete/all',
             data: { 'all' : all },
 
             beforeSend: function () {
