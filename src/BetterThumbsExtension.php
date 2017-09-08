@@ -175,7 +175,7 @@ class BetterThumbsExtension extends SimpleExtension {
 
 
         $betterthumbsJS = JavaScript::create()
-            ->setFileName('js/betterthumbs.80ad8c34.min.js')
+            ->setFileName('js/betterthumbs.js')
             ->setPriority(99)
             ->setZone(Zone::BACKEND);
 
@@ -190,7 +190,7 @@ class BetterThumbsExtension extends SimpleExtension {
             ->setPriority(99)
             ->setZone(Zone::BACKEND);
 
-        $betterthumbsCSS = Stylesheet::create('css/betterthumbs-rewrite.css')
+        $betterthumbsCSS = Stylesheet::create('css/betterthumbs.css')
             ->setPriority(10)
             ->setZone(Zone::BACKEND);
 
