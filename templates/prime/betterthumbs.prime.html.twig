@@ -1,31 +1,27 @@
-{% extends '@betterthumbs/base.betterthumbs.html.twig' %}
-{% set betterthumbsTitle = 'BetterThumbs :: Cache Files' %}
-
-{% block css %}
-    {{ parent() }}
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/magnific-popup.css">
+{% extends '_base/_page-nav.twig' %}
+{% from '@bolt/_buic/_moment.twig' import buic_moment %}
 
 
-{% endblock css %}
 
-{% block js %}
-    {{ parent() }}
-    <script src="/extensions/vendor/cdowdy/betterthumbs/js/jquery.magnific-popup.min.js"></script>
-{% endblock js %}
+{% block page_title __("BetterThumbs Prime The Cache") %}
 
-{% block bodyContent %}
-    <div class="ext-docs-grid-container">
-        <div class="small-12 medium-6 column column-blocks">
+{% block page_main %}
+    <div id="boltPath" data-bolt-path="{{ bthumbsRoute }}" class="row">
+        <div class="col-xs-12 col-md-6">
             <h1 class="heading">Prime The Image Cache</h1>
+            <p>
+                Here you can "prime" your image cache. All the images located in your <code>Files</code> directory can be found here. Select the image you wish to pre-generate and a config setting. Then press the "create" button associated with it.
+            </p>
         </div>
-        <div class="small-12 medium-6 column column-blocks">
+        <div class="col-xs-12 col-md-6">
             <h1 class="heading"><a href="{{ path( "betterthumbs_files" ) }}">View Cached Files</a></h1>
         </div>
     </div>
 
-    <div id="prime-grid" class="row ">
+
+    <div id="prime-grid" class="row betterthumbs-prime-spacer">
         {% for obj, key in allFiles %}
-            <div class="medium-4 columns">
+            <div class="col-md-4">
                 <div class="betterthumbs-card">
                     <div class="betterthumbs-card-divider">
                         <p>{{ key.filename }}</p>
@@ -63,7 +59,7 @@
             </div>
             <!-- /.medium-4 columns -->
 
-            <div class="medium-8 columns prime-cache-container">
+            <div class="col-md-8 prime-cache-container">
                 <div class="betterthumbs-card">
                     <div class="betterthumbs-card-divider">
                         <p>Prime Cache Settings For: {{ key.filename }}</p>
@@ -72,9 +68,9 @@
                     <form method="POST" id="{{ key.filename }}-{{ loop.index }}">
                         <!-- extension config settings dropdown -->
                         <fieldset class="row fieldset">
-                            <div class="medium-8 columns select-container">
+                            <div class="col-md-8 columns select-container">
                                 <label>Choose a Config
-                                    <select class="prime-cache-dropdown"
+                                    <select class="prime-cache-dropdown form-control"
                                             id="{{ key.filename }}-{{ loop.index }}"
                                             name="{{ key.filename }}-{{ loop.index }} "
                                             aria-describedby="helptext-{{ key.filename }}-{{ loop.index }}">
@@ -83,12 +79,12 @@
                                         {% endfor %}
                                     </select>
                                 </label>
-                                <p id="helptext-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                <p id="helptext-{{ key.filename }}-{{ loop.index }}" class="help-block">
                                     choose a betterthumbs config to generate your images
                                 </p>
                             </div>
-                            <div class="medium-4 columns">
-                                <button class="button prime-cache prime-config" type="button"
+                            <div class="col-md-4 columns">
+                                <button class="btn btn-primary prime-cache prime-config" type="button"
                                         data-bthumb-name="{{ key.imagePath }}" >
                                     Create Config images
                                 </button>
@@ -97,16 +93,16 @@
                         <!-- extension config settings dropdown -->
                         <!-- preset config settings button -->
                         <fieldset class="row fieldset">
-                            <div class="medium-8 columns">
-                                <p for="preset-{{ key.filename }}-{{ loop.index }}" class="text-right middle">Preset
+                            <div class="col-md-8 columns">
+                                <p for="preset-{{ key.filename }}-{{ loop.index }}" class=" middle">Preset
                                     Settings</p>
                                 <p id="helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
                                     use the betterthumbs presets to generate images
                                 </p>
                             </div>
-                            <div class="medium-4 columns">
+                            <div class="col-md-4 columns">
                                 <button type="button"
-                                        class="button prime-cache prime-presets"
+                                        class="btn btn-primary prime-cache prime-presets"
                                         data-presets="presets"
                                         id="preset-{{ key.filename }}-{{ loop.index }}"
                                         aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
@@ -116,23 +112,28 @@
                         <!-- preset config settings button -->
                         <!-- Single Image config input and button -->
                         <fieldset class="row fieldset">
-                            <div class="small-12 columns">
+                            <div class="col-xs-12">
                                 <label>
                                     Single Image
-                                    <input type="text"
-                                           class="prime-cache-single-input"
+                                    <input list="prime-single-list"
+                                           class="prime-cache-single-input form-control awesomplete"
                                            placeholder="Single Image Config Name">
+                                    <datalist id="prime-single-list">
+                                        {% for value in extConfig %}
+                                            <option value="{{ value }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </datalist>
                                 </label>
                                 <p class="prime-single-error" hidden>
                                     <strong>Enter A Config Name Before Submitting</strong>
                                 </p>
-                                <p id="helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-text">
+                                <p id="helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-block">
                                     Enter the single config name you wish to use
                                 </p>
                             </div>
-                            <div class="small-12 columns">
+                            <div class="col-xs-12 columns">
                                 <button type="button"
-                                        class="button prime-cache prime-single"
+                                        class=" prime-cache prime-single btn btn-primary"
                                         aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}"
                                         data-bthumb-type="single"
                                         data-bthumb-name="{{ key.filename }}" >Create Single Image</button>
@@ -143,20 +144,19 @@
                 </div>
             </div>
             <!-- /.mediium-8 .columns -->
-            <hr>
+            <hr class="col-xs-12" />
         {% endfor %}
     </div><!-- /#prime-grid -->
 
-{% endblock bodyContent %}
+{% endblock page_main %}
 
-{% block footerJavascript %}
+{% block page_script %}
+    {{ parent() }}
     <script>
-        $('.image-popup-fit-width').magnificPopup({
-            type: 'image',
-            closeOnContentClick: true,
-            image: {
-                verticalFit: false
-            }
+        document.addEventListener("DOMContentLoaded", function () {
+            new IOlazy({
+                image: '.lazy'
+            });
         });
     </script>
-{% endblock footerJavascript %}
+{% endblock page_script %}

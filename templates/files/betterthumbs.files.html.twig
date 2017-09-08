@@ -1,22 +1,37 @@
+{#
+ Use Bolt's _page-nav.twig and extend it to build our backend page:
+#}
 
-{% extends '@betterthumbs/base.betterthumbs.html.twig' %}
-{% set betterthumbsTitle = 'BetterThumbs Files' %}
+{##
+ # HTML page template for pages with navigation
+ #
+ # Blocks: page_nav:      Navigation path, like: "Dashboard", "Settings/Configuration", "Content/*", ...
+ #         page_main:     content
+ #         page_title:    used as html title
+ #         page_subtitle: used as html title (optional)
+ #         page_script:   script added after the body tag (script tags needed!)
+ #}
+{% extends '_base/_page-nav.twig' %}
+{% from '@bolt/_buic/_moment.twig' import buic_moment %}
 
-{% block bodyContent %}
 
-    <div class="ext-docs-grid-container">
+
+{% block page_title __("BetterThumbs Files") %}
+
+{% block page_main %}
+<div id="boltPath" data-bolt-path="{{ bthumbsRoute }}"  class="row">
     {% if cachedImage %}
-        <div class="medium-6 column column-blocks">
+        <div class="col-xs-12 col-md-6">
             <h1 class="heading">Delete All Images</h1>
             <p>
                 This will remove all images from the BetterThumbs Cache
             </p>
             <button type="button" data-all="{{ allFiles }}"
-                    class="button delete-all">Delete All Images
+                    class="btn btn-primary delete-all">Delete All Images
             </button>
         </div>
     {% endif %}
-    <div class="small-12 medium-6 column column-blocks">
+    <div class="col-xs-12 col-md-6">
         <h1 class="heading">Prime The Image Cache</h1>
         <p>
             This will "prime" (create images) and place them in the cache.
@@ -25,43 +40,69 @@
         <a href="{{ path("betterthumbs_prime") }}">Go To The Prime Cache Page</a>
     </div>
     {% if cachedImage %}
+        <hr>
         </div>
 
-        <div class="ext-docs-grid-container">
-        <div class="small-12 columns">
-            <h1 class="heading">Delete An Image From Cache</h1>
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="heading">Delete An Image From Cache</h1>
+                <p>
+                    These Images are in your BetterThumbs Cache.
+                </p>
+            </div>
         </div>
 
-        <div id="image-grid" class="small-up-1 medium-up-2 large-up-3">
-            {% for key, value in cachedImage %}
-                <div id="cachedImage-{{ loop.index }}" class="column column-block image-container">
-                    <div class="betterthumbs-card">
-                        <div id="container" class="img-container">
-                            <img id="{{ key }}-{{ loop.index }}"
-                                 class="image-to-delete lazy"
-                                 data-src="/files/{{ key }}"
-                                 alt="{{ value.name }}">
-                        </div>
-                        <div class="betterthumbs-card-section">
-                            <ul class="betterthumbs-card-list">
-                                <li class="cached-image-name">
-                                    <strong>Name: </strong> {{ value.name }}
-                                </li>
-                            </ul>
-                            <button class="button deletebutton"
-                                    type="button"
-                                    id="{{ value.path }}">
-                                Delete Image
-                            </button>
+
+
+        <div id="image-grid" class="row">
+            <div class="betterthumbs-block-grid">
+
+
+                {% for key, value in cachedImage %}
+                    <div id="cachedImage-{{ loop.index }}" class="betterthumbs-block-grid-item image-container" >
+                        <div class=" betterthumbs-card ">
+
+                            <div id="container" class="img-container">
+                                <img id="{{ key }}-{{ loop.index }}"
+                                     class="image-to-delete lazy"
+                                     data-src="/files/{{ key }}"
+                                     alt="{{ value.name }}">
+                            </div>
+                            <div class="betterthumbs-card-section">
+                                <ul class="betterthumbs-card-list">
+                                    <li class="cached-image-name">
+                                        <strong>Name: </strong> {{ value.name }}
+                                    </li>
+                                </ul>
+                                <button class="btn btn-primary deletebutton"
+                                        type="button"
+                                        id="{{ value.path }}">
+                                    Delete Image
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div> <!-- /#image-grid .small-up-1 -->
+                {% endfor %}
+            </div>
+        </div>
+
     {% else %}
-        <div class="small-12 columns">
-            <h1 class="heading">No Images Found In The Better Thumbs Cache...</h1>
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="heading">No Images Found In The Better Thumbs Cache...</h1>
+            </div>
         </div>
     {% endif %}
-    </div><!-- /.ext-docs-grid-container -->
-{% endblock bodyContent %}
+
+{% endblock page_main %}
+
+{% block page_script %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new IOlazy({
+                image: '.lazy'
+            });
+        });
+    </script>
+{% endblock page_script %}

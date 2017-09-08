@@ -1,132 +1,117 @@
-{%  set cssUpdate = "115502ea" %}
-<!doctype html>
-<html lang="{{ htmllang() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>BetterThumbs Documentation</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/extensions/vendor/cdowdy/betterthumbs/css/betterthumbs.{{ cssUpdate }}.min.css">
+{% extends '_base/_page-nav.twig' %}
+{% from '@bolt/_buic/_moment.twig' import buic_moment %}
 
-</head>
-<body>
-<header class="ext-docs-masthead ext-docs-header-container ">
-    <div class="ext-docs-header-title">
-        <h1><a href="{{ path('dashboard') }}">Bolt Admin</a></h1>
-    </div>
-    <div class="ext-docs-header-title">
-        <h2>BetterThumbs Docs</h2>
-    </div>
-</header>
 
-<main class="ext-docs-grid-container" id="main">
 
-    <nav class="ext-docs-navigation-container">
-        <ul class="ext-docs-navigation-menu">
-            <li class="ext-docs-navigation-menu--item "><a href="#setup">Initial Setup</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#delete">Remove IMG From Cache</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#prime">Prime The Cache</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#original">Use Original Image</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#single">Output A Single Image</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#lazyloading">Lazy Loading Images</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#orientation">Image Orientation</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#crop">Cropping</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#size">Size</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#pixeldensity">Pixel Density</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#adjustments">Adjustments</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#effects">Effects</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#watermark">WaterMarks</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#bg">Background</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#border">Borders</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#encode">Change IMG Format</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#examples">Usage Examples</a></li>
-            <li class="ext-docs-navigation-menu--item "><a href="#faq">FAQ's</a></li>
+{% block page_title __("BetterThumbs Docs") %}
+
+{% block page_main %}
+
+    <nav>
+        <ul>
+            <li><a href="#setup">Initial Setup</a></li>
+            <li><a href="#delete">Remove IMG From Cache</a></li>
+            <li><a href="#prime">Prime The Cache</a></li>
+            <li><a href="#original">Use Original Image</a></li>
+            <li><a href="#single">Output A Single Image</a></li>
+            <li><a href="#lazyloading">Lazy Loading Images</a></li>
+            <li><a href="#orientation">Image Orientation</a></li>
+            <li><a href="#crop">Cropping</a></li>
+            <li><a href="#size">Size</a></li>
+            <li><a href="#pixeldensity">Pixel Density</a></li>
+            <li><a href="#adjustments">Adjustments</a></li>
+            <li><a href="#effects">Effects</a></li>
+            <li><a href="#watermark">WaterMarks</a></li>
+            <li><a href="#bg">Background</a></li>
+            <li><a href="#border">Borders</a></li>
+            <li><a href="#encode">Change IMG Format</a></li>
+            <li><a href="#examples">Usage Examples</a></li>
+            <li><a href="#faq">FAQ's</a></li>
             {#<li class="ext-docs-navigation-menu--item "><a href="#trouble">Troubleshooting</a></li>#}
         </ul>
     </nav>
-    <div class="ext-docs-content">
-        <section id="setup">
-            <h1 class="heading">Initial Setup</h1>
-            <p>
-                If you're using Nginx you'll need to add a location block to your sites nginx (sites-available) config
-            </p>
-            <pre class="language-nginx"><code># Generated thumbnail images from the betterthumbs extension
+
+    <section class="betterthumbs-doc-spacer" id="setup">
+        <h1 class="heading">Initial Setup</h1>
+        <p>
+            If you're using Nginx you'll need to add a location block to your sites nginx (sites-available) config
+        </p>
+        <pre class="language-nginx"><code># Generated thumbnail images from the betterthumbs extension
 location ~* /img/(.*)$ {
   try_files $uri $uri/ /index.php?$query_string;
 }</code></pre>
 
-            <h2 class="subheading">Config Setup</h2>
-            <p>
-                There are four areas you can adjust once the extension is installed.
-            </p>
-            <div class="ext-docs-card">
-                <ol>
-                    <li>Filesystem</li>
-                    <li>Image Driver</li>
-                    <li>Security</li>
-                    <li>Defaults</li>
-                    <li>Presets</li>
-                </ol>
-            </div>
-            <p>
-                The only one you'll need to supply yourself if the secure sign key under security. You can create this key with Openssl or you can use Composer and require
-                <a href="https://github.com/AndrewCarterUK/CryptoKey">CryptoKey</a> to generate a key.
-            </p>
+        <h2 class="subheading">Config Setup</h2>
+        <p>
+            There are four areas you can adjust once the extension is installed.
+        </p>
+        <div class="ext-docs-card">
+            <ol>
+                <li>Filesystem</li>
+                <li>Image Driver</li>
+                <li>Security</li>
+                <li>Defaults</li>
+                <li>Presets</li>
+            </ol>
+        </div>
+        <p>
+            The only one you'll need to supply yourself if the secure sign key under security. You can create this key with Openssl or you can use Composer and require
+            <a href="https://github.com/AndrewCarterUK/CryptoKey">CryptoKey</a> to generate a key.
+        </p>
 
-            <h3 class="subheading">Filesystem</h3>
-            <p>
-                By default this extension uses the local file system to save modified images. An image is requested, modified and saved to disk. On subsequent visits a 304 Not Modified response is sent with a Cache-Control and Expires directive of 1 Year from the time it was created.
-            </p>
-            <p>
-                In most instances this is pretty good for **most** sites. If you use Varnish you may not want to save these modified images to the cache and let Varnish deal with caching. To do this you need to modify the "Filesystem" portion of the config.
-            </p>
-            <p>
-                The default, commented out portion of the config looks as follows.
-            </p>
-            <pre class="language-yaml"><code>Filesystem:
+        <h3 class="subheading">Filesystem</h3>
+        <p>
+            By default this extension uses the local file system to save modified images. An image is requested, modified and saved to disk. On subsequent visits a 304 Not Modified response is sent with a Cache-Control and Expires directive of 1 Year from the time it was created.
+        </p>
+        <p>
+            In most instances this is pretty good for **most** sites. If you use Varnish you may not want to save these modified images to the cache and let Varnish deal with caching. To do this you need to modify the "Filesystem" portion of the config.
+        </p>
+        <p>
+            The default, commented out portion of the config looks as follows.
+        </p>
+        <pre class="language-yaml"><code>Filesystem:
   adapter: local</code></pre>
 
-            <p>
-                To use the In Memory FlySystem Adapter uncomment the filesystem portion and enter in memory in place of local.
-            </p>
-            <pre class="language-yaml"><code>Filesystem:
+        <p>
+            To use the In Memory FlySystem Adapter uncomment the filesystem portion and enter in memory in place of local.
+        </p>
+        <pre class="language-yaml"><code>Filesystem:
   adapter: memory</code></pre>
 
-            <p>
-                After doing this images will no longer be saved to your disk cache.
-            </p>
+        <p>
+            After doing this images will no longer be saved to your disk cache.
+        </p>
 
-            <h3 class="subheading">Image Driver Options</h3>
-            <p>
-                By default this extension uses GD. This is the same driver used by Bolt Thumbnail handler. You can Also use ImageMagick. You'll need the imagick php extension for this to work. See
-                <a href="http://php.net/manual/en/book.imagick.php">http://php.net/manual/en/book.imagick.php</a>
-            </p>
-            <pre class="language-yaml"><code>Image_Driver: 'gd'</code></pre>
+        <h3 class="subheading">Image Driver Options</h3>
+        <p>
+            By default this extension uses GD. This is the same driver used by Bolt Thumbnail handler. You can Also use ImageMagick. You'll need the imagick php extension for this to work. See
+            <a href="http://php.net/manual/en/book.imagick.php">http://php.net/manual/en/book.imagick.php</a>
+        </p>
+        <pre class="language-yaml"><code>Image_Driver: 'gd'</code></pre>
 
-            <h3 class="subheading">Responsive Images Polyfill</h3>
-            <p>
-                For browsers that don't support Responsive Images (<a href="http://caniuse.com/#feat=srcset">Browser support from caniuse.com</a>) you have an option to use a polyfill to give support to those browsers. The polyfill used is
-                <a href="https://scottjehl.github.io/picturefill/">Picturefill</a>.
-            </p>
-            <p>
-                This is off by default. Older browsers should use the image provided in the <code>src</code> attribute in the image. This will be the first image size in any of your modifications. To provide responsive images to unsupported browsers change this to true.
-            </p>
-            <pre class="language-yaml"><code>picturefill: true</code></pre>
-            <p>
-                This will give you in the head of your rendered HTML underneath all CSS files
-            </p>
-            <pre class="language-markup"><code>&lt;script src="extensions/vendor/cdowdy/betterthumbs/picturefill/3.02/picturefill.min.js" async defer&gt;&lt;/script&gt;</code></pre>
+        <h3 class="subheading">Responsive Images Polyfill</h3>
+        <p>
+            For browsers that don't support Responsive Images (<a href="http://caniuse.com/#feat=srcset">Browser support from caniuse.com</a>) you have an option to use a polyfill to give support to those browsers. The polyfill used is
+            <a href="https://scottjehl.github.io/picturefill/">Picturefill</a>.
+        </p>
+        <p>
+            This is off by default. Older browsers should use the image provided in the <code>src</code> attribute in the image. This will be the first image size in any of your modifications. To provide responsive images to unsupported browsers change this to true.
+        </p>
+        <pre class="language-yaml"><code>picturefill: true</code></pre>
+        <p>
+            This will give you in the head of your rendered HTML underneath all CSS files
+        </p>
+        <pre class="language-markup"><code>&lt;script src="extensions/vendor/cdowdy/betterthumbs/picturefill/3.02/picturefill.min.js" async defer&gt;&lt;/script&gt;</code></pre>
 
 
-            <h3 class="subheading">404 Image</h3>
-            <p>
-                If an image is not found in your files directory Bolt's not found image will be served with the width of the first entry in your modifications array.
-            </p>
-            <p>
-                A config like this:
-            </p>
-            <pre class="language-yaml"><code>srcset:
+        <h3 class="subheading">404 Image</h3>
+        <p>
+            If an image is not found in your files directory Bolt's not found image will be served with the width of the first entry in your modifications array.
+        </p>
+        <p>
+            A config like this:
+        </p>
+        <pre class="language-yaml"><code>srcset:
   sizes: [ '100vw'  ]
   modifications:
     small: { 'w': 340 }
@@ -134,35 +119,35 @@ location ~* /img/(.*)$ {
     large: { 'w': 800 }
     xlarge: { 'w': 1260 }</code></pre>
 
-            <p>
-                Will give you a width of 340 for your 404 Image.
-            </p>
-            <p>
-                To have your own 404 image instead of Bolt's default not found image enter the path to your image. Typically this will be the path to your theme folder.
-            </p>
+        <p>
+            Will give you a width of 340 for your 404 Image.
+        </p>
+        <p>
+            To have your own 404 image instead of Bolt's default not found image enter the path to your image. Typically this will be the path to your theme folder.
+        </p>
 
-            <pre class="language-yaml"><code>404_Image: /theme/base-2016/images/not-found.png</code></pre>
+        <pre class="language-yaml"><code>404_Image: /theme/base-2016/images/not-found.png</code></pre>
 
-            <h3 class="subheading">Security</h3>
-            <p>
-                <strong>Sign Key:</strong> This prevents image flooding attacks (requesting a bunch of images, filling up storage) that could lock up your server or cause a denial of service. This is required. Without this key this extension will not generate any images. If a url is modified in the address bar or through curl and not initiated by your server then an Image will not be generated and a 403 HTTP response code will be sent.
-            </p>
-            <pre class="language-yaml"><code>security:
+        <h3 class="subheading">Security</h3>
+        <p>
+            <strong>Sign Key:</strong> This prevents image flooding attacks (requesting a bunch of images, filling up storage) that could lock up your server or cause a denial of service. This is required. Without this key this extension will not generate any images. If a url is modified in the address bar or through curl and not initiated by your server then an Image will not be generated and a 403 HTTP response code will be sent.
+        </p>
+        <pre class="language-yaml"><code>security:
   secure_sign_key: 'really long sign key here'</code></pre>
 
-            <p>
-                <strong>Max Image Size</strong> limits how large images can be generated see: <a
+        <p>
+            <strong>Max Image Size</strong> limits how large images can be generated see: <a
                     href="http://glide.thephpleague.com/1.0/config/security/#max-image-size">http://glide.thephpleague.com/1.0/config/security/#max-image-size</a>
-            </p>
-            <pre class="language-yaml"><code>security:
+        </p>
+        <pre class="language-yaml"><code>security:
   secure_sign_key: 'sign key here'
   max_image_size: 4000000</code></pre>
 
-            <h3 class="subheading">Setting Defaults</h3>
-            <p>
-                Defaults are used for <strong>each and every image manipulation</strong> done - ie have a watermark on each image. The quality is set to 80 to mimic Bolt's thumbnail handler. You can change this to your preferred quality but be warned. A higher quality will make the image file size a lot bigger.
-            </p>
-            <pre class="language-yaml"><code># Current 'default' settings
+        <h3 class="subheading">Setting Defaults</h3>
+        <p>
+            Defaults are used for <strong>each and every image manipulation</strong> done - ie have a watermark on each image. The quality is set to 80 to mimic Bolt's thumbnail handler. You can change this to your preferred quality but be warned. A higher quality will make the image file size a lot bigger.
+        </p>
+        <pre class="language-yaml"><code># Current 'default' settings
 defaults:
   q: 80
 
@@ -171,14 +156,14 @@ defaults:
   q: 80
   mark: 'watermark.png'</code></pre>
 
-            <h3 class="subheading">Setting Presets</h3>
-            <p>
-                Presets are like defaults but are only used when they are invoked in either a config section or through a template. These are also the 'fallback' settings that will be used if 'modifications' are left out of a named config block.
-            </p>
-            <p>
-                This extension ships with a set of presets that are used as fall backs. You can name yours whatever you like and have any of the Glide modifications available used here.
-            </p>
-            <pre class="language-yaml"><code># Default Presets
+        <h3 class="subheading">Setting Presets</h3>
+        <p>
+            Presets are like defaults but are only used when they are invoked in either a config section or through a template. These are also the 'fallback' settings that will be used if 'modifications' are left out of a named config block.
+        </p>
+        <p>
+            This extension ships with a set of presets that are used as fall backs. You can name yours whatever you like and have any of the Glide modifications available used here.
+        </p>
+        <pre class="language-yaml"><code># Default Presets
 presets:
   small:
     w: 175
@@ -193,21 +178,21 @@ presets:
     w: 1400
     fit: stretch</code></pre>
 
-        </section><!-- /#setup -->
+    </section><!-- /#setup -->
 
-        <section id="delete">
-            <h1 class="heading">Deleting Images From The Cache</h1>
-            <p>
-                To remove images with a gui a backend Bolt Admin page found can be found at
-                <a href="{{ path("betterthumbs_files") }}">{{ path("betterthumbs_files") }}</a>. The backend page will allow you to view a small thumbnail of the image you are removing. You can remove an individual image or all from the cache.
-            </p>
-            <p>
-                A "nut" command is provided with this extension to delete all or a single image from the BetterThumbs cache. This command will remove all the associated images from the cache. If a single image is removed from the cache all of its related modifications are removed as well.
-            </p>
-            <p>
-                To delete images from the cache open a terminal and use
-            </p>
-            <pre class="language-bash"><code>php app/nut betterthumbs:cacheClear all
+    <section class="betterthumbs-doc-spacer" id="delete">
+        <h1 class="heading">Deleting Images From The Cache</h1>
+        <p>
+            To remove images with a gui a backend Bolt Admin page found can be found at
+            <a href="{{ path("betterthumbs_files") }}">{{ path("betterthumbs_files") }}</a>. The backend page will allow you to view a small thumbnail of the image you are removing. You can remove an individual image or all from the cache.
+        </p>
+        <p>
+            A "nut" command is provided with this extension to delete all or a single image from the BetterThumbs cache. This command will remove all the associated images from the cache. If a single image is removed from the cache all of its related modifications are removed as well.
+        </p>
+        <p>
+            To delete images from the cache open a terminal and use
+        </p>
+        <pre class="language-bash"><code>php app/nut betterthumbs:cacheClear all
 
 # windows users with a broken symlink can use:
 php vendor/bolt/bolt/app/nut betterthumbs:cacheClear all
@@ -217,24 +202,24 @@ php app/nut betterthumbs:cacheClear filename.jpg
 
 # windows users with a broken symlink can use:
 php vendor/bolt/bolt/app/nut betterthumbs:cacheClear filename.jpg</code></pre>
-        </section>
-        <!-- /#delete -->
+    </section>
+    <!-- /#delete -->
 
-        <section id="prime">
-            <h1 class="heading">Prime The Image Cache</h1>
-            <!-- /.heading -->
-            <p>
-                You can "Prime" the image cache from a back end page located at
-                <a href="{{ path("betterthumbs_prime") }}">{{ path("betterthumbs_prime") }}</a>.
-            </p>
-            <p>
-                Priming the cache means you will create the images before hand and place them in the cache. That way requests for images can serve the file from the BetterThumbs cache instead of creating those on demand and checking for the signature. You will be presented with the image and a form with three (3) areas to choose from.
-            </p>
-            <h2 class="subheading">Using A Named Config</h2>
-            <p>
-                The first one is all of the named config blocks found in the BetterThumbs extension config that contain a modifications array. Here is an example of what the first dropdown in the form is looking for.
-            </p>
-            <pre class="language-yaml"><code># The "defaults" using a repeated node and using the settings found in "presets"
+    <section class="betterthumbs-doc-spacer" id="prime">
+        <h1 class="heading">Prime The Image Cache</h1>
+        <!-- /.heading -->
+        <p>
+            You can "Prime" the image cache from a back end page located at
+            <a href="{{ path("betterthumbs_prime") }}">{{ path("betterthumbs_prime") }}</a>.
+        </p>
+        <p>
+            Priming the cache means you will create the images before hand and place them in the cache. That way requests for images can serve the file from the BetterThumbs cache instead of creating those on demand and checking for the signature. You will be presented with the image and a form with three (3) areas to choose from.
+        </p>
+        <h2 class="subheading">Using A Named Config</h2>
+        <p>
+            The first one is all of the named config blocks found in the BetterThumbs extension config that contain a modifications array. Here is an example of what the first dropdown in the form is looking for.
+        </p>
+        <pre class="language-yaml"><code># The "defaults" using a repeated node and using the settings found in "presets"
 betterthumbs:
   save_data: true
   altText: ~
@@ -256,15 +241,15 @@ myNamedConfig:
     third:
       w: 800
       fit: 'stretch'</code></pre>
-            <p>
-                Any named config block with a <code class="language-yaml">modifications: </code> array in it will be able to be chosen from. Then click the button titled "Create Config Image" to create these images. You may also hit "ENTER" key while the config you wish to use is highlighted/chosen in the dropdown.
-            </p>
+        <p>
+            Any named config block with a <code class="language-yaml">modifications: </code> array in it will be able to be chosen from. Then click the button titled "Create Config Image" to create these images. You may also hit "ENTER" key while the config you wish to use is highlighted/chosen in the dropdown.
+        </p>
 
-            <h2 class="subheading">Using Preset Settings</h2>
-            <p>
-                To use the presets found in the "presets" config click the "Use Presets" button. Any moodifications found in the presets will be applied and the images created. As a refresher here is the "default" presets that ship with this extension.
-            </p>
-            <pre class="language-yaml"><code>presets: &presets
+        <h2 class="subheading">Using Preset Settings</h2>
+        <p>
+            To use the presets found in the "presets" config click the "Use Presets" button. Any moodifications found in the presets will be applied and the images created. As a refresher here is the "default" presets that ship with this extension.
+        </p>
+        <pre class="language-yaml"><code>presets: &presets
   small:
     w: 200
     fit: stretch
@@ -279,37 +264,37 @@ myNamedConfig:
     w: 1400
     fit: stretch</code></pre>
 
-            <h2 class="subheading">Creating a Single Image</h2>
-            <p>
-                To create and place a single image in the cache you will need to enter in the name of the single image config block. You can see
-                <a href="{{ path("betterthumbs_docs") }}#single">the single image docs section</a> on the setup required for this.
-            </p>
-            <p>The "named" single config is similar too</p>
-            <pre class="language-yaml"><code>single:
+        <h2 class="subheading">Creating a Single Image</h2>
+        <p>
+            To create and place a single image in the cache you will need to enter in the name of the single image config block. You can see
+            <a href="{{ path("betterthumbs_docs") }}#single">the single image docs section</a> on the setup required for this.
+        </p>
+        <p>The "named" single config is similar too</p>
+        <pre class="language-yaml"><code>single:
   w: 400
   h: 225
   filt: 'sepia'</code></pre>
-            <p>
-                Enter in the name (single in the example above) and hit enter or click the "Create Single Image" button.
-            </p>
-        </section>
-        <!-- /#prime -->
+        <p>
+            Enter in the name (single in the example above) and hit enter or click the "Create Single Image" button.
+        </p>
+    </section>
+    <!-- /#prime -->
 
-        <section id="original">
-            <h1 class="heading">Use the Original Image</h1>
-            <p>
-                This setting allows you to pass the original image through without making any modifications. This is useful in instances you already have a highly optimized file at the width you want but still want to either create smaller images from it or bigger ones.
-            </p>
-            <p>
-                In each named config block enter in the 'key' of <code class="language-yaml">use_original:</code> followed by either the width or density you want this image used at.
-            </p>
-            <h2 class="subheading">
-                Using original with a Width Descriptor
-            </h2>
-            <p>
-                Using an 800px wide image and the 'width' descriptor at 800w.
-            </p>
-                <pre class="language-yaml"><code>namedConfig:
+    <section class="betterthumbs-doc-spacer" id="original">
+        <h1 class="heading">Use the Original Image</h1>
+        <p>
+            This setting allows you to pass the original image through without making any modifications. This is useful in instances you already have a highly optimized file at the width you want but still want to either create smaller images from it or bigger ones.
+        </p>
+        <p>
+            In each named config block enter in the 'key' of <code class="language-yaml">use_original:</code> followed by either the width or density you want this image used at.
+        </p>
+        <h2 class="subheading">
+            Using original with a Width Descriptor
+        </h2>
+        <p>
+            Using an 800px wide image and the 'width' descriptor at 800w.
+        </p>
+        <pre class="language-yaml"><code>namedConfig:
 # other settings
   widthDensity: 'w'
   use_original: 800
@@ -322,10 +307,10 @@ myNamedConfig:
       w: 700
     xlarge:
       w: 1400</code></pre>
-            <p>
-                Will produce the following
-            </p>
-            <pre class="language-markup"><code>&lt;img sizes="100vw"
+        <p>
+            Will produce the following
+        </p>
+        <pre class="language-markup"><code>&lt;img sizes="100vw"
      srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 200w ,
        /img/original-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 350w ,
        /img/original-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 700w ,
@@ -334,11 +319,11 @@ myNamedConfig:
      src="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5"
      alt="" &gt;</code></pre>
 
-            <p>
-                To use the original image in place of a modification in your config remove that modification from the config file. Using a 700px image with the original config above.
-            </p>
+        <p>
+            To use the original image in place of a modification in your config remove that modification from the config file. Using a 700px image with the original config above.
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings
   widthDensity: 'w'
   use_original: 700
@@ -350,7 +335,7 @@ myNamedConfig:
     xlarge:
       w: 1400</code></pre>
 
-              <pre class="language-markup"><code>&lt;img sizes="100vw"
+        <pre class="language-markup"><code>&lt;img sizes="100vw"
      srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 200w ,
        /img/original-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 350w ,
        /files/original-file.jpg 700w ,
@@ -358,21 +343,21 @@ myNamedConfig:
      src="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5"
      alt="" &gt;</code></pre>
 
-            <h2 class="subheading">Using the Original with a Density Descriptor</h2>
-            <p>
-                To use the original image with the density descriptor your'll need to enter in the density where the image should be used.
-            </p>
-            <p>
-                The key difference here is that the original image will replace one of the resolutions found in your <code class="language-yaml"> resolutions: </code> array.
-            </p>
-            <p>
-                The original resolutions settings looked as follows:
-            </p>
-            <pre class="language-yaml"><code>  resolutions: [ 1, 2, 2.5, 3 ]</code></pre>
-            <p>
-                To use the original image at 2x displays we will remove the '2' from the above resolutions and place it in the <code class="language-yaml"> use_original: </code> config settings.
-            </p>
-            <pre class="language-yaml"><code>namedConfig:
+        <h2 class="subheading">Using the Original with a Density Descriptor</h2>
+        <p>
+            To use the original image with the density descriptor your'll need to enter in the density where the image should be used.
+        </p>
+        <p>
+            The key difference here is that the original image will replace one of the resolutions found in your <code class="language-yaml"> resolutions: </code> array.
+        </p>
+        <p>
+            The original resolutions settings looked as follows:
+        </p>
+        <pre class="language-yaml"><code>  resolutions: [ 1, 2, 2.5, 3 ]</code></pre>
+        <p>
+            To use the original image at 2x displays we will remove the '2' from the above resolutions and place it in the <code class="language-yaml"> use_original: </code> config settings.
+        </p>
+        <pre class="language-yaml"><code>namedConfig:
 # other settings
   widthDensity: 'x'
   resolutions: [ 1, 2.5, 3 ]
@@ -384,10 +369,10 @@ myNamedConfig:
       w: 350
     large:
       w: 700</code></pre>
-            <p>
-                Will produce the following
-            </p>
-            <pre class="language-markup"><code>&lt;img srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
+        <p>
+            Will produce the following
+        </p>
+        <pre class="language-markup"><code>&lt;img srcset="/img/original-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
         /files/original-file.jpg 2x ,
         /img/original-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 2.5x ,
         /img/original-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"
@@ -395,36 +380,36 @@ myNamedConfig:
     alt="" &gt;</code></pre>
 
 
-        </section>
-        <!-- /#original -->
+    </section>
+    <!-- /#original -->
 
-        <section id="single">
-            <h1 class="heading">Single Image</h1>
-            <!-- /.heading -->
-            <p>
-                To render a single image you'll need to use the bthumb tag: <code class="language-twig">&lbrace;&lbrace; bthumb( record.image, 'namedConfig') &rbrace;&rbrace;</code>
-            </p>
-            <p>
-                This will give you: <code class="language-markup">/img/your-image.jpg?your-modifications&s=accf4b6f5584ecfc3c2cbf3f0fab98c8</code>
-            </p>
-            <p>
-                The config for a single image is different from a regular BetterThumbs config block. You don't need any of the image tag attributes ( id, classes, data-attributes, widthDesnity descriptors etc). You only need to supply a config name and the modifications you wish to apply to the image.
-            </p>
-            <pre class="language-yaml"><code>single:
+    <section class="betterthumbs-doc-spacer" id="single">
+        <h1 class="heading">Single Image</h1>
+        <!-- /.heading -->
+        <p>
+            To render a single image you'll need to use the bthumb tag: <code class="language-twig">&lbrace;&lbrace; bthumb( record.image, 'namedConfig') &rbrace;&rbrace;</code>
+        </p>
+        <p>
+            This will give you: <code class="language-markup">/img/your-image.jpg?your-modifications&s=accf4b6f5584ecfc3c2cbf3f0fab98c8</code>
+        </p>
+        <p>
+            The config for a single image is different from a regular BetterThumbs config block. You don't need any of the image tag attributes ( id, classes, data-attributes, widthDesnity descriptors etc). You only need to supply a config name and the modifications you wish to apply to the image.
+        </p>
+        <pre class="language-yaml"><code>single:
   w: 400
   h: 225
   fit: 'crop-bottom-right'</code></pre>
 
-            <h2 class="subheading">Single Image Usage</h2>
-            <p>
-                Create a named config block similar to the one in the above paragraph. Then in your twig templates use the bthumb tag with the name of the config block you created.
-            </p>
+        <h2 class="subheading">Single Image Usage</h2>
+        <p>
+            Create a named config block similar to the one in the above paragraph. Then in your twig templates use the bthumb tag with the name of the config block you created.
+        </p>
 
-            <p>
-                Example using a single image  as inline background image.
-            </p>
+        <p>
+            Example using a single image  as inline background image.
+        </p>
 
-            <pre class="language-twig"><code>&lt;style&gt;
+        <pre class="language-twig"><code>&lt;style&gt;
   .single {
     background-image: url('&lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;');
     width: 200px;
@@ -435,45 +420,45 @@ myNamedConfig:
 &lt;div class="single"&gt;&lt;/div&gt;
 &lt;!-- or --&gt;
 &lt;div style="background-image: url('&lbrace;&lbrace; bthumb(record.image, 'single') &rbrace;&rbrace;' ); width: 200px; height: 200px; "&gt;&lt;/div&gt;</code></pre>
-        </section>
-        <!-- /#single -->
-        <section id="lazyloading">
-            <h1 class="heading">Lazy Loading Images</h1>
-            <p>
-                If you want to lazy load images you'll have to build the image tag yourself using the tags of: <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName' ) &rbrace;&rbrace;</code> for the srcset string and <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;</code> for the src string.
-            </p>
-            <p>
-                This works the same as the regular BetterThumbs function tag but it outputs the string instead of the full image tag. We build the tag manually since there is no way for the extension to know what pattern your lazy loading library uses. 
-            </p>
-            <p>
-                For an easy to use responsive image lazy loading library look to <a
-                        href="https://github.com/aFarkas/lazysizes">LazySizes</a> or my lazy loading library that uses Intersection Observer &mdash;
-                <a href="https://cdowdy.github.io/io-lazyload/">ioLazy</a>
-            </p>
-            <p>
-                The <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName' ) &rbrace;&rbrace;</code> tag will ouptut:
-            </p>
-            <pre class="language-markup"><code>srcset="/img/your-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
+    </section>
+    <!-- /#single -->
+    <section class="betterthumbs-doc-spacer" id="lazyloading">
+        <h1 class="heading">Lazy Loading Images</h1>
+        <p>
+            If you want to lazy load images you'll have to build the image tag yourself using the tags of: <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName' ) &rbrace;&rbrace;</code> for the srcset string and <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;</code> for the src string.
+        </p>
+        <p>
+            This works the same as the regular BetterThumbs function tag but it outputs the string instead of the full image tag. We build the tag manually since there is no way for the extension to know what pattern your lazy loading library uses.
+        </p>
+        <p>
+            For an easy to use responsive image lazy loading library look to <a
+                    href="https://github.com/aFarkas/lazysizes">LazySizes</a> or my lazy loading library that uses Intersection Observer &mdash;
+            <a href="https://cdowdy.github.io/io-lazyload/">ioLazy</a>
+        </p>
+        <p>
+            The <code class="language-twig">&lbrace;&lbrace; srcset(record.image, 'configName' ) &rbrace;&rbrace;</code> tag will ouptut:
+        </p>
+        <pre class="language-markup"><code>srcset="/img/your-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
         /files/your-file.jpg 2x ,
         /img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 2.5x ,
         /img/your-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"</code></pre>
 
-            <p>
-                The <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;</code> tag will ouptut:
-            </p>
-            <pre class="language-markup"><code>src="img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950"</code></pre>
-            <h2 class="subheading">Example Using Lazy Sizes</h2>
-            <p>
-                Here is how you would use lazy sizes <a href="https://github.com/aFarkas/lazysizes#combine-data-srcset-with-data-src">combined</a> pattern.
-            </p>
-            <pre class="language-twig"><code>&lt;img class="lazyload"
+        <p>
+            The <code class="language-twig">&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;</code> tag will ouptut:
+        </p>
+        <pre class="language-markup"><code>src="img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950"</code></pre>
+        <h2 class="subheading">Example Using Lazy Sizes</h2>
+        <p>
+            Here is how you would use lazy sizes <a href="https://github.com/aFarkas/lazysizes#combine-data-srcset-with-data-src">combined</a> pattern.
+        </p>
+        <pre class="language-twig"><code>&lt;img class="lazyload"
   data-sizes="auto"
   data-&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;
   data-&lbrace;&lbrace; srcset(record.image, 'configName') &rbrace;&rbrace; /&gt;</code></pre>
-            <p>
-                Which will give you:
-            </p>
-            <pre class="language-markup"><code>&lt;img class="lazyload"
+        <p>
+            Which will give you:
+        </p>
+        <pre class="language-markup"><code>&lt;img class="lazyload"
     data-sizes="auto"
     data-srcset="/img/your-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
         /img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 2.5x ,
@@ -482,41 +467,41 @@ myNamedConfig:
 
 
 
-            <h2 class="subheading">Example Using IOLazy</h2>
+        <h2 class="subheading">Example Using IOLazy</h2>
 
-            <pre class="language-twig"><code>&lt;img class="lazyload"
+        <pre class="language-twig"><code>&lt;img class="lazyload"
   data-sizes="auto"
   data-&lbrace;&lbrace; btsrc(record.image, 'configName') &rbrace;&rbrace;
   data-&lbrace;&lbrace; srcset(record.image, 'configName') &rbrace;&rbrace; /&gt;</code></pre>
 
 
-            <p>
-                Which will give you:
-            </p>
+        <p>
+            Which will give you:
+        </p>
 
-            <pre class="language-markup"><code>&lt;img class="lazyload" sizes="100vw"
+        <pre class="language-markup"><code>&lt;img class="lazyload" sizes="100vw"
     data-srcset="/img/your-file.jpg?w=200&amp;s=32566d6ed62dc4d87a44c099033650d5 1x ,
         /img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950 2.5x ,
         /img/your-file.jpg?w=700&amp;s=ertq4e3tqefasdfnuih98fqervg87y9780 3x"
     data-src="img/your-file.jpg?w=350&amp;s=dd1374de85dd1e5c6eafb394309cc950" /&gt;</code></pre>
 
-        </section>
+    </section>
 
-        <section id="orientation">
-            <h1 class="heading">Image Orientation</h1>
-            <p>
-                You can rotate the image in the following directions:
-            </p>
-            <div class="ext-docs-card">
-                <ul>
-                    <li>Auto - uses Exif data to automatically orient images</li>
-                    <li>90</li>
-                    <li>180</li>
-                    <li>270</li>
-                </ul>
-            </div>
-            <details>
-                <summary><strong>See Usage Examples</strong></summary>
+    <section class="betterthumbs-doc-spacer" id="orientation">
+        <h1 class="heading">Image Orientation</h1>
+        <p>
+            You can rotate the image in the following directions:
+        </p>
+        <div class="ext-docs-card">
+            <ul>
+                <li>Auto - uses Exif data to automatically orient images</li>
+                <li>90</li>
+                <li>180</li>
+                <li>270</li>
+            </ul>
+        </div>
+        <details>
+            <summary><strong>See Usage Examples</strong></summary>
 
             <!--<p><strong>Usage Examples</strong></p>-->
             <pre class="language-yaml"><code># Setting it as a default manipulation:
@@ -557,24 +542,24 @@ yourNamedConfig:
         'medium': &lbrace; 'w': 600, 'h': 600, 'or' : 90 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-            </details>
-            <!--<hr>-->
-        </section> <!-- /#orientation -->
+        </details>
+        <!--<hr>-->
+    </section> <!-- /#orientation -->
 
-        <section id="crop">
-            <h1 class="heading">Image Cropping</h1>
-            <p>
-                Image cropping can take four (4) different options. These all currently <strong>require a width and height</strong> to be used.
-            </p>
-            <h2 class="subheading">Fit Crop</h2>
+    <section class="betterthumbs-doc-spacer" id="crop">
+        <h1 class="heading">Image Cropping</h1>
+        <p>
+            Image cropping can take four (4) different options. These all currently <strong>require a width and height</strong> to be used.
+        </p>
+        <h2 class="subheading">Fit Crop</h2>
 
-            <p>
-                Resize the Image to fill the width and height.
-            </p>
-            <details>
-                <summary><strong>See Usage Examples</strong></summary>
-                <p>In the Extensions Config</p>
-                <pre class="language-yaml"><code>namedConfig:
+        <p>
+            Resize the Image to fill the width and height.
+        </p>
+        <details>
+            <summary><strong>See Usage Examples</strong></summary>
+            <p>In the Extensions Config</p>
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -593,8 +578,8 @@ yourNamedConfig:
       w: 1400
       h: 1400
       fit: 'crop'</code></pre>
-                <p>In a twig template</p>
-                <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
     'modifications': &lbrace;
         'small': &lbrace;'w': 400, 'h' 400', 'fit':'crop' &rbrace;,
         'medium': &lbrace;'w': 600, 'h' 600', 'fit':'crop' &rbrace;,
@@ -602,26 +587,26 @@ yourNamedConfig:
         'xlarge': &lbrace;'w': 100, 'h' 100', 'fit':'crop' &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-            </details>
-            <h2 class="subheading">Crop Position</h2>
-            <p>Sets the crop position. Things like crop from the top left of an image. Available crop-position options are</p>
-            <div class="ext-docs-card">
-                <ul>
-                    <li>crop-top-left</li>
-                    <li>crop-top</li>
-                    <li>crop-top-right</li>
-                    <li>crop-left</li>
-                    <li>crop-center - <strong>Default</strong></li>
-                    <li>crop-right</li>
-                    <li>crop-bottom-left</li>
-                    <li>crop-bottom</li>
-                    <li>crop-bottom-right</li>
-                </ul>
-            </div>
-            <details>
-                <summary><strong>See Usage Examples</strong></summary>
-                <p>In the Extensions Config</p>
-                <pre class="language-yaml"><code>namedConfig:
+        </details>
+        <h2 class="subheading">Crop Position</h2>
+        <p>Sets the crop position. Things like crop from the top left of an image. Available crop-position options are</p>
+        <div class="ext-docs-card">
+            <ul>
+                <li>crop-top-left</li>
+                <li>crop-top</li>
+                <li>crop-top-right</li>
+                <li>crop-left</li>
+                <li>crop-center - <strong>Default</strong></li>
+                <li>crop-right</li>
+                <li>crop-bottom-left</li>
+                <li>crop-bottom</li>
+                <li>crop-bottom-right</li>
+            </ul>
+        </div>
+        <details>
+            <summary><strong>See Usage Examples</strong></summary>
+            <p>In the Extensions Config</p>
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -640,8 +625,8 @@ yourNamedConfig:
       w: 1400
       h: 1400
       fit: 'crop-bottom-right'</code></pre>
-                <p>In a twig template</p>
-                <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
     'modifications': &lbrace;
         'small': &lbrace;'w': 400, 'h' 400', 'fit':'crop-left' &rbrace;,
         'medium': &lbrace;'w': 600, 'h' 600', 'fit':'crop-left' &rbrace;,
@@ -649,15 +634,15 @@ yourNamedConfig:
         'xlarge': &lbrace;'w': 100, 'h' 100', 'fit':'crop-left' &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-            </details>
-            <h2 class="subheading">Crop Focal Point</h2>
-            <p>
-                Sets a crop focal point using two offset percentages
-            </p>
-            <details>
-                <summary><strong>See Usage Examples</strong></summary>
-                <p>In the Extensions Config</p>
-                <pre class="language-yaml"><code>namedConfig:
+        </details>
+        <h2 class="subheading">Crop Focal Point</h2>
+        <p>
+            Sets a crop focal point using two offset percentages
+        </p>
+        <details>
+            <summary><strong>See Usage Examples</strong></summary>
+            <p>In the Extensions Config</p>
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -676,8 +661,8 @@ yourNamedConfig:
       w: 1400
       h: 1400
       fit: 'crop-10-80'</code></pre>
-                <p>In a twig template</p>
-                <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
     'modifications': &lbrace;
         'small': &lbrace;'w': 400, 'h' 400', 'fit':'crop-25-65' &rbrace;,
         'medium': &lbrace;'w': 600, 'h' 600', 'fit':'crop-25-65' &rbrace;,
@@ -685,13 +670,13 @@ yourNamedConfig:
         'xlarge': &lbrace;'w': 100, 'h' 100', 'fit':'crop-25-65' &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-            </details>
-            <h2 class="subheading">Crop</h2>
-            <p>Crops the image to a specific dimension</p>
-            <details>
-                <summary><strong>See Usage Examples</strong></summary>
-                <p>In the Extensions Config</p>
-                <pre class="language-yaml"><code>namedConfig:
+        </details>
+        <h2 class="subheading">Crop</h2>
+        <p>Crops the image to a specific dimension</p>
+        <details>
+            <summary><strong>See Usage Examples</strong></summary>
+            <p>In the Extensions Config</p>
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -710,49 +695,49 @@ yourNamedConfig:
       w: 1400
       h: 1400
       crop: '100,200,915,155'</code></pre>
-            </details>
+        </details>
 
-        </section><!-- /#crop -->
+    </section><!-- /#crop -->
 
-        <section id="size">
-            <h1 class="heading">Size</h1>
-            <p>
-                Sizes the width and height of an image in pixels. Can also supply a fit type. A <strong>Width Is Required if using the 'w' width density descriptor</strong>. The options for fit are:
-            </p>
+    <section class="betterthumbs-doc-spacer" id="size">
+        <h1 class="heading">Size</h1>
+        <p>
+            Sizes the width and height of an image in pixels. Can also supply a fit type. A <strong>Width Is Required if using the 'w' width density descriptor</strong>. The options for fit are:
+        </p>
 
-            <div class="ext-docs-card">
-                <ul>
-                    <li>Contain
-                        <ul>
-                            <li><strong>Default</strong>. Resizes the image to fit within the width and height boundaries without cropping, distorting or altering the aspect ratio.</li>
-                        </ul>
-                    </li>
-                    <li>Max
-                        <ul>
-                            <li>Resizes the image to fit within the width and height boundaries without cropping, distorting or altering the aspect ratio, and will also not increase the size of the image if it is smaller than the output size</li>
-                        </ul>
-                    </li>
-                    <li>Fill
-                        <ul>
-                            <li> Resizes the image to fit within the width and height boundaries without cropping or distorting the image, and the remaining space is filled with the background color. The resulting image will match the constraining dimensions.</li>
-                        </ul>
-                    </li>
-                    <li>Stretch
-                        <ul>
-                            <li>Stretches the image to fit the constraining dimensions exactly. The resulting image will fill the dimensions, and will not maintain the aspect ratio of the input image.</li>
-                        </ul>
-                    </li>
-                    <li>Crop
-                        <ul>
-                            <li>Resizes the image to fill the width and height boundaries and crops any excess image data. The resulting image will match the width and height constraints without distorting the image. See crop for more information.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <details>
-                <summary><strong>See Usage Examples</strong></summary>
-                <p>In the Extensions Config</p>
-                <pre class="language-yaml"><code>namedConfig:
+        <div class="ext-docs-card">
+            <ul>
+                <li>Contain
+                    <ul>
+                        <li><strong>Default</strong>. Resizes the image to fit within the width and height boundaries without cropping, distorting or altering the aspect ratio.</li>
+                    </ul>
+                </li>
+                <li>Max
+                    <ul>
+                        <li>Resizes the image to fit within the width and height boundaries without cropping, distorting or altering the aspect ratio, and will also not increase the size of the image if it is smaller than the output size</li>
+                    </ul>
+                </li>
+                <li>Fill
+                    <ul>
+                        <li> Resizes the image to fit within the width and height boundaries without cropping or distorting the image, and the remaining space is filled with the background color. The resulting image will match the constraining dimensions.</li>
+                    </ul>
+                </li>
+                <li>Stretch
+                    <ul>
+                        <li>Stretches the image to fit the constraining dimensions exactly. The resulting image will fill the dimensions, and will not maintain the aspect ratio of the input image.</li>
+                    </ul>
+                </li>
+                <li>Crop
+                    <ul>
+                        <li>Resizes the image to fill the width and height boundaries and crops any excess image data. The resulting image will match the width and height constraints without distorting the image. See crop for more information.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <details>
+            <summary><strong>See Usage Examples</strong></summary>
+            <p>In the Extensions Config</p>
+            <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -770,8 +755,8 @@ yourNamedConfig:
       w: 1400
       h: 1400
       fit: 'stretch'</code></pre>
-                <p>In a twig template</p>
-                <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
+            <p>In a twig template</p>
+            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'blogposts', &lbrace;
     'modifications': &lbrace;
         'small': &lbrace;'w': 400, 'h' 400', 'fit':'contain' &rbrace;,
         'medium': &lbrace;'w': 600, 'h' 600', 'fit':'fill' &rbrace;,
@@ -779,16 +764,16 @@ yourNamedConfig:
         'xlarge': &lbrace;'w': 100, 'h' 100', 'fit':'crop' &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-            </details>
-        </section><!-- /#size -->
+        </details>
+    </section><!-- /#size -->
 
-        <section id="pixeldensity">
-            <h1 class="heading">Pixel Density</h1>
-            <p>
-                You can adjust the pixel density for the image. Values you can use are from one (1) to eight (8). The default density is 1. <strong>A width or a height is required</strong>.
-            </p>
-            <p>Usage Examples</p>
-            <pre class="language-yaml"><code>namedConfig:
+    <section class="betterthumbs-doc-spacer" id="pixeldensity">
+        <h1 class="heading">Pixel Density</h1>
+        <p>
+            You can adjust the pixel density for the image. Values you can use are from one (1) to eight (8). The default density is 1. <strong>A width or a height is required</strong>.
+        </p>
+        <p>Usage Examples</p>
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
@@ -803,8 +788,8 @@ yourNamedConfig:
     xlarge:
       w: 1400
       dpr: 'stretch'</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'dpr':'1' &rbrace;,
          'medium': &lbrace;'w': 600, 'h' 600', 'dpr':'2' &rbrace;,
@@ -812,208 +797,208 @@ yourNamedConfig:
          'xlarge': &lbrace;'w': 100, 'h' 100', 'dpr':'3.5' &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-        </section>
-        <!-- /#pixeldensity -->
+    </section>
+    <!-- /#pixeldensity -->
 
-        <section id="adjustments">
-            <h1 class="heading">Image Adjustments</h1>
-            <p>
-                You can adjust/correct four (4) areas of an image.
-            </p>
-            <ol>
-                <li>Brightness</li>
-                <li>Contrast</li>
-                <li>Gamma Correction</li>
-                <li>Sharpness</li>
-            </ol>
-            <h2 class="subheading">Adjusting Brightness</h2>
-            <p>
-                Values available to adjust bright range from <code>-100</code> to <code>100</code>. A value of <code>0</code> represents no change.
-            </p>
-            <p>
-                The parameter needed to adjust brightness is <code class="language-yaml"> bri </code>.
-            </p>
-            <pre class="language-yaml"><code>namedConfig:
+    <section class="betterthumbs-doc-spacer" id="adjustments">
+        <h1 class="heading">Image Adjustments</h1>
+        <p>
+            You can adjust/correct four (4) areas of an image.
+        </p>
+        <ol>
+            <li>Brightness</li>
+            <li>Contrast</li>
+            <li>Gamma Correction</li>
+            <li>Sharpness</li>
+        </ol>
+        <h2 class="subheading">Adjusting Brightness</h2>
+        <p>
+            Values available to adjust bright range from <code>-100</code> to <code>100</code>. A value of <code>0</code> represents no change.
+        </p>
+        <p>
+            The parameter needed to adjust brightness is <code class="language-yaml"> bri </code>.
+        </p>
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       bri: 80</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'bri': 25 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Adjusting Contrast</h2>
-            <p>
-                Values available to adjust contrast range from <code>-100</code> to <code>100</code>. A value of <code>0</code> represents no change.
-            </p>
-            <p>
-                The parameter needed to adjust contrast is <code class="language-yaml"> con </code>.
-            </p>
+        <h2 class="subheading">Adjusting Contrast</h2>
+        <p>
+            Values available to adjust contrast range from <code>-100</code> to <code>100</code>. A value of <code>0</code> represents no change.
+        </p>
+        <p>
+            The parameter needed to adjust contrast is <code class="language-yaml"> con </code>.
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       con: 80</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'con': 25 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Gamma Correction</h2>
-            <p>
-                Values available for gamma correction range from <code>0.1</code> to <code>9.99</code>.
-            </p>
-            <p>
-                The parameter needed for gamma correction is <code class="language-yaml"> gam </code>.
-            </p>
+        <h2 class="subheading">Gamma Correction</h2>
+        <p>
+            Values available for gamma correction range from <code>0.1</code> to <code>9.99</code>.
+        </p>
+        <p>
+            The parameter needed for gamma correction is <code class="language-yaml"> gam </code>.
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       gam: 2.22</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'gam': 0.55 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Adjust Sharpness</h2>
-            <p>
-                Values available to adjust sharpness range from <code>0</code> to <code>100</code>.
-            </p>
-            <p>
-                The parameter needed to adjust sharpness is <code class="language-yaml"> sharp </code>.
-            </p>
+        <h2 class="subheading">Adjust Sharpness</h2>
+        <p>
+            Values available to adjust sharpness range from <code>0</code> to <code>100</code>.
+        </p>
+        <p>
+            The parameter needed to adjust sharpness is <code class="language-yaml"> sharp </code>.
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       sharp: 80</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'sharp': 2 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-        </section>
-        <!-- /#adjustments -->
+    </section>
+    <!-- /#adjustments -->
 
-        <section id="effects">
-            <h1 class="heading">Image Effects</h1>
-            <p>
-                There are four (4) image effects you can apply to an image.
-            </p>
-            <ol>
-                <li>Blur: <strong>Very Performance Intensive with large amounts of Blur When Using the GD (default) Driver.</strong>
-                </li>
-                <li>Pixelate</li>
-                <li>Filters (greyscale or sepia)</li>
-            </ol>
+    <section class="betterthumbs-doc-spacer" id="effects">
+        <h1 class="heading">Image Effects</h1>
+        <p>
+            There are four (4) image effects you can apply to an image.
+        </p>
+        <ol>
+            <li>Blur: <strong>Very Performance Intensive with large amounts of Blur When Using the GD (default) Driver.</strong>
+            </li>
+            <li>Pixelate</li>
+            <li>Filters (greyscale or sepia)</li>
+        </ol>
 
-            <h2 class="subheading">Blurring an Image</h2>
-            <p><strong>Very Performance Intensive When Using The Default GD Driver</strong></p>
-            <p>
-                Adds a blur effect to an image. Values available for this range from <code>0</code> to <code>100</code>
-            </p>
-            <p>
-                The parameter used to add a blur effect is <code class="language-yaml">blur</code>
-            </p>
+        <h2 class="subheading">Blurring an Image</h2>
+        <p><strong>Very Performance Intensive When Using The Default GD Driver</strong></p>
+        <p>
+            Adds a blur effect to an image. Values available for this range from <code>0</code> to <code>100</code>
+        </p>
+        <p>
+            The parameter used to add a blur effect is <code class="language-yaml">blur</code>
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       blur: 10</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'blur': 2 &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Pixelating an Image</h2>
-            <p>
-                Adds a pixelation effect to an image. Values available for this range from <code>0</code> to <code>1000</code>
-            </p>
-            <p>
-                The parameter used to add a pixelation effect is <code class="language-yaml">pixel</code>
-            </p>
+        <h2 class="subheading">Pixelating an Image</h2>
+        <p>
+            Adds a pixelation effect to an image. Values available for this range from <code>0</code> to <code>1000</code>
+        </p>
+        <p>
+            The parameter used to add a pixelation effect is <code class="language-yaml">pixel</code>
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       pixel: 10</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'pixel': 100  &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Adding a Filter to an Image</h2>
-            <p>
-                Adds a greyscale or sepaia tone filter to an image
-            </p>
-            <p>
-                The parameter used to add a filter to an image is <code class="language-yaml">filt</code>
-            </p>
+        <h2 class="subheading">Adding a Filter to an Image</h2>
+        <p>
+            Adds a greyscale or sepaia tone filter to an image
+        </p>
+        <p>
+            The parameter used to add a filter to an image is <code class="language-yaml">filt</code>
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       filt: 'greyscale'</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'filt': 'sepia'  &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-        </section>
-        <!-- /#effects -->
+    </section>
+    <!-- /#effects -->
 
-        <section id="watermark">
-            <h1 class="heading">Watermarking an Image</h1>
-            <p>
-                To add a Watermark to your images you'll need to provide a watermark image file. Upload this file to the <code>Files</code> directory in your web root. Typically this would be in <code>public/files</code>
-            </p>
+    <section class="betterthumbs-doc-spacer" id="watermark">
+        <h1 class="heading">Watermarking an Image</h1>
+        <p>
+            To add a Watermark to your images you'll need to provide a watermark image file. Upload this file to the <code>Files</code> directory in your web root. Typically this would be in <code>public/files</code>
+        </p>
 
-            <p>
-                We can adjust how this watermark looks and it's position in your image through Glide's watermark filters.
-            </p>
-            <div class="ext-docs-card">
-                <ul>
-                    <li>Watermark Width</li>
-                    <li>Watermark Height</li>
-                    <li>Watermark Fit</li>
-                    <li>Watermark X-Offset</li>
-                    <li>Watermark Y-Offset</li>
-                    <li>Padding</li>
-                    <li>Position</li>
-                    <li>Alpha Transparency</li>
-                </ul>
-            </div>
-            <h2 class="subheading">Using a Watermark</h2>
-            <p>
-                Once the image you wish to use as a watermark is uploaded to your files directory open up the extensions config and add in the <code>mark</code> key into any named config, defaults or presets you wish to use a watermark on.
-            </p>
-            <p></p>
-            <p>
-                In a named config block you'll need to supply the watermark config setting for each image you want watermarked.
-            </p>
-            <pre class="language-yaml"><code># Your Named Config Block
+        <p>
+            We can adjust how this watermark looks and it's position in your image through Glide's watermark filters.
+        </p>
+        <div class="ext-docs-card">
+            <ul>
+                <li>Watermark Width</li>
+                <li>Watermark Height</li>
+                <li>Watermark Fit</li>
+                <li>Watermark X-Offset</li>
+                <li>Watermark Y-Offset</li>
+                <li>Padding</li>
+                <li>Position</li>
+                <li>Alpha Transparency</li>
+            </ul>
+        </div>
+        <h2 class="subheading">Using a Watermark</h2>
+        <p>
+            Once the image you wish to use as a watermark is uploaded to your files directory open up the extensions config and add in the <code>mark</code> key into any named config, defaults or presets you wish to use a watermark on.
+        </p>
+        <p></p>
+        <p>
+            In a named config block you'll need to supply the watermark config setting for each image you want watermarked.
+        </p>
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1024,27 +1009,27 @@ waterMarkedIMG:
     large:
       mark: 'myfancy-watermark-logo.png'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace;'mark': 'myfancy-watermark-logo.png' &rbrace;,
         'medium': &lbrace;'mark': 'myfancy-watermark-logo.png' &rbrace;,
         'large': &lbrace;'mark': 'myfancy-watermark-logo.png' &rbrace;,
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-            <p>
-                If every image you are going to use in your site will be watermarked you should set the watermark as a default as seen above in the Defaults section.
-            </p>
+        <p>
+            If every image you are going to use in your site will be watermarked you should set the watermark as a default as seen above in the Defaults section.
+        </p>
 
 
-            <h2 class="subheading">Controlling Watermark Width and Heights</h2>
-            <p>
-                To control the width and height of a watermark you'll need to set either <code>markw</code> or <code>markh</code> in defaults, presets or your named config block. You can use relative dimensions (percentages) for this. Since we are using responsive images you should use these dimensions.
-            </p>
-            <p>
-                To use a relative dimension, simply provide a percentage as a number (between 0 and 100), followed by a w (width) or h (height). For example, 5w represents 5% of the width of the main image.
-            </p>
-            <pre class="language-yaml"><code># Your Named Config Block
+        <h2 class="subheading">Controlling Watermark Width and Heights</h2>
+        <p>
+            To control the width and height of a watermark you'll need to set either <code>markw</code> or <code>markh</code> in defaults, presets or your named config block. You can use relative dimensions (percentages) for this. Since we are using responsive images you should use these dimensions.
+        </p>
+        <p>
+            To use a relative dimension, simply provide a percentage as a number (between 0 and 100), followed by a w (width) or h (height). For example, 5w represents 5% of the width of the main image.
+        </p>
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1058,8 +1043,8 @@ waterMarkedIMG:
       mark: 'myfancy-watermark-logo.png'
       markw: '10w'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace;'mark': 'myfancy-watermark-logo.png', 'markw' : '10w' &rbrace;,
         'medium': &lbrace;'mark': 'myfancy-watermark-logo.png', 'markw' : '10w'  &rbrace;,
@@ -1067,32 +1052,32 @@ waterMarkedIMG:
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Watermark Fit</h2>
-            <p>
-                Sets how the watermark is fitted to its target dimensions.
-            </p>
-            <p>
-                Available options are:
-            </p>
-            <ul>
-                <li><strong>contain</strong>: Default. Resizes the image to fit within the width and height boundaries without cropping,
-                    distorting or altering the aspect ratio
-                </li>
-                <li><strong>max</strong>: Resizes the image to fit within the width and height boundaries without cropping, distorting or
-                    altering the aspect ratio, and will also not increase the size of the image if it is smaller than
-                    the output size.
-                </li>
-                <li><strong>fill</strong>: Resizes the image to fit within the width and height boundaries without cropping or distorting
-                    the image, and the remaining space is filled with the background color. The resulting image will
-                    match the constraining dimensions.
-                </li>
-                <li><strong>stretch</strong>: Stretches the image to fit the constraining dimensions exactly. The resulting image will
-                    fill the dimensions, and will not maintain the aspect ratio of the input image.
-                </li>
-                <li><strong>crop</strong>: Resizes the image to fill the width and height boundaries and crops any excess image data. The resulting image will match the width and height constraints without distorting the image. See crop for more information.</li>
-            </ul>
+        <h2 class="subheading">Watermark Fit</h2>
+        <p>
+            Sets how the watermark is fitted to its target dimensions.
+        </p>
+        <p>
+            Available options are:
+        </p>
+        <ul>
+            <li><strong>contain</strong>: Default. Resizes the image to fit within the width and height boundaries without cropping,
+                distorting or altering the aspect ratio
+            </li>
+            <li><strong>max</strong>: Resizes the image to fit within the width and height boundaries without cropping, distorting or
+                altering the aspect ratio, and will also not increase the size of the image if it is smaller than
+                the output size.
+            </li>
+            <li><strong>fill</strong>: Resizes the image to fit within the width and height boundaries without cropping or distorting
+                the image, and the remaining space is filled with the background color. The resulting image will
+                match the constraining dimensions.
+            </li>
+            <li><strong>stretch</strong>: Stretches the image to fit the constraining dimensions exactly. The resulting image will
+                fill the dimensions, and will not maintain the aspect ratio of the input image.
+            </li>
+            <li><strong>crop</strong>: Resizes the image to fill the width and height boundaries and crops any excess image data. The resulting image will match the width and height constraints without distorting the image. See crop for more information.</li>
+        </ul>
 
-            <pre class="language-yaml"><code># Your Named Config Block
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1109,8 +1094,8 @@ waterMarkedIMG:
       markw: '10w'
       markfit: 'stretch'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace; 'markfit: 'stretch' &rbrace;,
         'medium': &lbrace; 'markfit: 'stretch'  &rbrace;,
@@ -1118,11 +1103,11 @@ waterMarkedIMG:
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Watermark Offsets</h2>
-            <p>
-                This will set how far the watermark is from the left or right edges (markx) or the top of bottom (marky) of your image. You may set this in pixels or relative units (preferred). These will be ignored if markpos is set to center.
-            </p>
-            <pre class="language-yaml"><code># Your Named Config Block
+        <h2 class="subheading">Watermark Offsets</h2>
+        <p>
+            This will set how far the watermark is from the left or right edges (markx) or the top of bottom (marky) of your image. You may set this in pixels or relative units (preferred). These will be ignored if markpos is set to center.
+        </p>
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1139,8 +1124,8 @@ waterMarkedIMG:
       markx: '10w'
       marky: '10h'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace; 'marky: '10h' , 'markx' : '10w' &rbrace;,
         'medium': &lbrace; 'marky: '10h' , 'markx' : '10w'  &rbrace;,
@@ -1148,12 +1133,12 @@ waterMarkedIMG:
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Controlling Watermark Padding</h2>
-            <p>
-                Sets how far the watermark is away from edges of the image. A shortcut for using both markx and marky. Set in pixels, or using relative dimensions. Ignored if markpos is set to center.
-            </p>
+        <h2 class="subheading">Controlling Watermark Padding</h2>
+        <p>
+            Sets how far the watermark is away from edges of the image. A shortcut for using both markx and marky. Set in pixels, or using relative dimensions. Ignored if markpos is set to center.
+        </p>
 
-            <pre class="language-yaml"><code># Your Named Config Block
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1167,8 +1152,8 @@ waterMarkedIMG:
       mark: 'myfancy-watermark-logo.png'
       markpad: '20'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace; 'markpad: '20' &rbrace;,
         'medium': &lbrace; 'markpad: '20'  &rbrace;,
@@ -1176,26 +1161,26 @@ waterMarkedIMG:
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Setting the Watermark Position</h2>
-            <p>
-                Sets where the watermark is positioned. Default is center.
-            </p>
-            <p>Available Options</p>
-            <div class="ext-docs-card">
-                <ul>
-                    <li>top-left</li>
-                    <li>top</li>
-                    <li>top-right</li>
-                    <li>left</li>
-                    <li>center</li>
-                    <li>right</li>
-                    <li>bottom-left</li>
-                    <li>bottom</li>
-                    <li>bottom-right</li>
-                </ul>
-            </div>
+        <h2 class="subheading">Setting the Watermark Position</h2>
+        <p>
+            Sets where the watermark is positioned. Default is center.
+        </p>
+        <p>Available Options</p>
+        <div class="ext-docs-card">
+            <ul>
+                <li>top-left</li>
+                <li>top</li>
+                <li>top-right</li>
+                <li>left</li>
+                <li>center</li>
+                <li>right</li>
+                <li>bottom-left</li>
+                <li>bottom</li>
+                <li>bottom-right</li>
+            </ul>
+        </div>
 
-            <pre class="language-yaml"><code># Your Named Config Block
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1209,8 +1194,8 @@ waterMarkedIMG:
       mark: 'myfancy-watermark-logo.png'
       markpos: 'top-left'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace; 'markpos: 'top-left' &rbrace;,
         'medium': &lbrace; 'markpos: 'top-left'  &rbrace;,
@@ -1218,11 +1203,11 @@ waterMarkedIMG:
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-            <h2 class="subheading">Setting Watermark Opacity</h2>
-            <p>
-                Sets the opacity of the watermark. Use values between 0 and 100, where 100 is fully opaque, and 0 is fully transparent. The default value is 100.
-            </p>
-            <pre class="language-yaml"><code># Your Named Config Block
+        <h2 class="subheading">Setting Watermark Opacity</h2>
+        <p>
+            Sets the opacity of the watermark. Use values between 0 and 100, where 100 is fully opaque, and 0 is fully transparent. The default value is 100.
+        </p>
+        <pre class="language-yaml"><code># Your Named Config Block
 waterMarkedIMG:
   # other settings
   modifications:
@@ -1236,88 +1221,88 @@ waterMarkedIMG:
       mark: 'myfancy-watermark-logo.png'
       markalpha: 30</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'waterMarkedIMG', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace; 'markalpha: 30 &rbrace;,
         'medium': &lbrace; 'markalpha: 30  &rbrace;,
         'large': &lbrace; 'markalpha: 30  &rbrace;,
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-        </section>
-        <!-- /#watermark -->
+    </section>
+    <!-- /#watermark -->
 
-        <section id="bg">
-            <h1 class="heading">Background</h1>
-            <p>
-                Adds a colored background to an image. See <a href="http://glide.thephpleague.com/1.0/api/colors/">Glide's page on color formats</a> available to use.
-            </p>
+    <section class="betterthumbs-doc-spacer" id="bg">
+        <h1 class="heading">Background</h1>
+        <p>
+            Adds a colored background to an image. See <a href="http://glide.thephpleague.com/1.0/api/colors/">Glide's page on color formats</a> available to use.
+        </p>
 
-            <p>
-                The parameter used to add a background to an image is <code class="language-yaml">bg</code>
-            </p>
+        <p>
+            The parameter used to add a background to an image is <code class="language-yaml">bg</code>
+        </p>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       bg: 'papayawhip'</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'bg': '1fbbcf'  &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-        </section>
-        <!-- /#bg -->
+    </section>
+    <!-- /#bg -->
 
-        <section id="border">
-            <h1 class="heading">Image Borders</h1>
-            <p>
-                Adds a border to an image. <strong>Required:</strong> <code>width, color, method</code>
-            </p>
-            <ul>
-                <li>Width: in pixels or <a href="http://glide.thephpleague.com/1.0/api/relative-dimensions/">relative dimensions</a></li>
-                <li>Color. see <a href="http://glide.thephpleague.com/1.0/api/colors/">Glide's page on color formats</a></li>
-                <li>Method:
-                    <ul>
-                        <li>overlay: Place border on top of image (default).</li>
-                        <li>shrink: Shrink image within border (canvas does not change).</li>
-                        <li>expand: Expands canvas to accommodate border</li>
-                    </ul>
-                </li>
-            </ul>
+    <section class="betterthumbs-doc-spacer" id="border">
+        <h1 class="heading">Image Borders</h1>
+        <p>
+            Adds a border to an image. <strong>Required:</strong> <code>width, color, method</code>
+        </p>
+        <ul>
+            <li>Width: in pixels or <a href="http://glide.thephpleague.com/1.0/api/relative-dimensions/">relative dimensions</a></li>
+            <li>Color. see <a href="http://glide.thephpleague.com/1.0/api/colors/">Glide's page on color formats</a></li>
+            <li>Method:
+                <ul>
+                    <li>overlay: Place border on top of image (default).</li>
+                    <li>shrink: Shrink image within border (canvas does not change).</li>
+                    <li>expand: Expands canvas to accommodate border</li>
+                </ul>
+            </li>
+        </ul>
 
-            <pre class="language-yaml"><code>namedConfig:
+        <pre class="language-yaml"><code>namedConfig:
 # other settings:
   modifications:
     small:
       w: 500
       border: '10,black,expand'</code></pre>
-            <p>In a twig template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
+        <p>In a twig template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'namedConfig', &lbrace;
     'modifications': &lbrace;
          'small': &lbrace;'w': 400, 'h' 400', 'border': '3,1fbbcf,overlay'  &rbrace;
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
-        </section>
-        <!-- /#border -->
+    </section>
+    <!-- /#border -->
 
-        <section id="encode">
-            <h1 class="heading">Changing The Image Format</h1>
-            <p>
-                You can 'encode' or change the image format that is delivered. The available options are
-            </p>
-            <div class="ext-docs-card">
-                <ul>
-                    <li>JPG (jpg)</li>
-                    <li>Progressive Jpeg (pjpg)</li>
-                    <li>Gif (gif)</li>
-                    <li>PNG (png)</li>
-                </ul>
-            </div>
+    <section class="betterthumbs-doc-spacer" id="encode">
+        <h1 class="heading">Changing The Image Format</h1>
+        <p>
+            You can 'encode' or change the image format that is delivered. The available options are
+        </p>
+        <div class="ext-docs-card">
+            <ul>
+                <li>JPG (jpg)</li>
+                <li>Progressive Jpeg (pjpg)</li>
+                <li>Gif (gif)</li>
+                <li>PNG (png)</li>
+            </ul>
+        </div>
 
-            <pre class="language-yaml"><code># Your Named Config Block
+        <pre class="language-yaml"><code># Your Named Config Block
 convertFormat:
   # other settings
   modifications:
@@ -1328,8 +1313,8 @@ convertFormat:
     large:
       fm: 'png'</code></pre>
 
-            <p>In a template</p>
-            <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'convertFormat', &lbrace;
+        <p>In a template</p>
+        <pre class="language-twig"><code>&lbrace;&lbrace; img(record.image, 'convertFormat', &lbrace;
   'modifications': &lbrace;
         'small': &lbrace; 'fm' : 'pjpg' &rbrace;,
         'medium': &lbrace; 'fm' : 'pjpg'  &rbrace;,
@@ -1337,16 +1322,16 @@ convertFormat:
     &rbrace; ,
 &rbrace; ) &rbrace;&rbrace;</code></pre>
 
-        </section>
-        <!-- /#encode -->
+    </section>
+    <!-- /#encode -->
 
-        <section id="examples">
-            <h1 class="heading">Usage Examples</h1>
-            <h2 class="subheading">Controlling the SRC image</h2>
-            <p>
-                The <code class="language-html">src</code> image produced from your config settings is the "middle". This means in the 'betterthumbs' config that ships with this extension using the 'defaults' will give you a src image of 700px.
-            </p>
-            <pre class="language-yaml"><code>betterthumbs:
+    <section class="betterthumbs-doc-spacer" id="examples">
+        <h1 class="heading">Usage Examples</h1>
+        <h2 class="subheading">Controlling the SRC image</h2>
+        <p>
+            The <code class="language-html">src</code> image produced from your config settings is the "middle". This means in the 'betterthumbs' config that ships with this extension using the 'defaults' will give you a src image of 700px.
+        </p>
+        <pre class="language-yaml"><code>betterthumbs:
   altText: ~
   widthDensity: 'w'
   sizes: [ '100vw' ]
@@ -1364,33 +1349,33 @@ convertFormat:
     xlarge:
       w: 1400
       fit: stretch</code></pre>
-            <p>
-                If you're not using a polyfill for responsive images (ie: picturefill) and the "middle" source isn't good enough for you, then you can control which image gets used in the src attribute the following ways.
-            </p>
-            <p>
-                Each one of this will <strong>need</strong> to use the <code class="language-twig">srcset()</code> BetterThumbs tag to create the srcset attribute.
-            </p>
-            <h3 class="subheading">Using A Single Config</h3>
-            <p>
-                You can create a single config block ( <a href="#single">docs single config</a> ) and then use the <code class="language-twig">&lbrace;&lbrace; bthumb() &rbrace;&rbrace;</code> BetterThumbs tag.
-            </p>
-            <p>
-                This allows you to control what modifications get made to the image and it's size. The downside is you will need to duplicate your config and there could be a lot of them. Which is never nice to work with.
-            </p>
+        <p>
+            If you're not using a polyfill for responsive images (ie: picturefill) and the "middle" source isn't good enough for you, then you can control which image gets used in the src attribute the following ways.
+        </p>
+        <p>
+            Each one of this will <strong>need</strong> to use the <code class="language-twig">srcset()</code> BetterThumbs tag to create the srcset attribute.
+        </p>
+        <h3 class="subheading">Using A Single Config</h3>
+        <p>
+            You can create a single config block ( <a href="#single">docs single config</a> ) and then use the <code class="language-twig">&lbrace;&lbrace; bthumb() &rbrace;&rbrace;</code> BetterThumbs tag.
+        </p>
+        <p>
+            This allows you to control what modifications get made to the image and it's size. The downside is you will need to duplicate your config and there could be a lot of them. Which is never nice to work with.
+        </p>
 
-            <pre class="language-yaml"><code># The single config we'll use
+        <pre class="language-yaml"><code># The single config we'll use
 singleSRC:
   w: 900
   fit: 'stretch'</code></pre>
-            <pre class="language-twig"><code>&lbrace;# our twig template #&rbrace;
+        <pre class="language-twig"><code>&lbrace;# our twig template #&rbrace;
 &lt;img sizes="100vw"
     &lbrace;&lbrace; srcset(record.image, 'betterthumbs' ) &rbrace;&rbrace;
     src="&lbrace;&lbrace; bthumb( record.image, 'singleSRC' ) &rbrace;&rbrace;"
     alt=" your alt text" /&gt;</code></pre>
-            <p>
-                Result:
-            </p>
-            <pre class="language-html"><code>&lt;img sizes="100vw"
+        <p>
+            Result:
+        </p>
+        <pre class="language-html"><code>&lt;img sizes="100vw"
   srcset="/img/filename-here.jpg?p=small&s=signatureHashHere 175w,
     /img/filename-here.jpg?p=medium&s=signatureHashHere 350w,
     /img/filename-here.jpg?p=large&s=signatureHashHere 700w,
@@ -1398,12 +1383,12 @@ singleSRC:
   src="/img/filename-here.jpg?w=900&fit=stretch&s=signatureHashHere"
   alt="your alt text"&gt; </code></pre>
 
-            <h3 class="subheading">Using The Original File</h3>
-            <p>
-                Here we are passing in the original file from '/files/'. You could also use <a href="https://docs.bolt.cm/3.2/templating/templatetags#thumbnail">Bolt's thumbnail handler</a> here to generate a cropped or resized image.
-            </p>
+        <h3 class="subheading">Using The Original File</h3>
+        <p>
+            Here we are passing in the original file from '/files/'. You could also use <a href="https://docs.bolt.cm/3.2/templating/templatetags#thumbnail">Bolt's thumbnail handler</a> here to generate a cropped or resized image.
+        </p>
 
-            <pre class="language-html"><code>&lt;img sizes="your sizes if using w descriptor"
+        <pre class="language-html"><code>&lt;img sizes="your sizes if using w descriptor"
   &lbrace;&lbrace; srcset(record.image, 'betterthumbs' &rbrace;&rbrace;
   src="/files/path/to/your/image.jpg"
   alt=" your alt text" /&gt;
@@ -1420,41 +1405,37 @@ singleSRC:
   src="&lbrace;&lbrace; record.image|thumbnail(320, 240) &rbrace;&rbrace;"
   alt=" your alt text" /&gt;
                 </code></pre>
-        </section>
-        <!-- /#examples -->
+    </section>
+    <!-- /#examples -->
 
-        <section id="faq">
-            <h1 class="heading">Frequently Asked Questions</h1>
-            <h2 class="subheading">Animated Gif's no longer Animating</h2>
-            <p>
-                Unfortunately the image processing library used by this extension, <a
-                        href="http://image.intervention.io/ ">Intervention</a>, doesn't support animated gifs. Yeah this is a pain point but there is nothing we can currently do about this until Intervention supports them. See the
-                <a href="https://github.com/Intervention/image/issues/578">Github issue on Intervention's Github page</a>.
-            </p>
-            <h2 class="subheading">Output is stripped of tags</h2>
-            <p>
-                a recent bolt update made their html cleaner more strict. If your image doesn't contain the right tags you'll need to add these to the htmlcleaner config section:
-            </p>
-            <pre class="language-yaml"><code>
+    <section class="betterthumbs-doc-spacer" id="faq">
+        <h1 class="heading">Frequently Asked Questions</h1>
+        <h2 class="subheading">Animated Gif's no longer Animating</h2>
+        <p>
+            Unfortunately the image processing library used by this extension, <a
+                    href="http://image.intervention.io/ ">Intervention</a>, doesn't support animated gifs. Yeah this is a pain point but there is nothing we can currently do about this until Intervention supports them. See the
+            <a href="https://github.com/Intervention/image/issues/578">Github issue on Intervention's Github page</a>.
+        </p>
+        <h2 class="subheading">Output is stripped of tags</h2>
+        <p>
+            a recent bolt update made their html cleaner more strict. If your image doesn't contain the right tags you'll need to add these to the htmlcleaner config section:
+        </p>
+        <pre class="language-yaml"><code>
 htmlcleaner:
     allowed_tags: [ tags from config here :) ]
     allowed_attributes: [ srcset, sizes, data-your-attribute, other tags from config here...]
                 </code></pre>
-        </section>
-        <!-- /#faq -->
+    </section>
+    <!-- /#faq -->
 
-        {#<section id="trouble">#}
-            {#<h1 class="heading">Trouble Shooting</h1>#}
-            {#<div class="ext-docs-card">#}
-                {#<p><strong>Coming Soon!</strong></p>#}
-            {#</div>#}
-        {#</section>#}
-        <!-- /#trouble -->
-        <a href="#main">back to top</a>
-    </div>
+    {#<section class="betterthumbs-doc-spacer" id="trouble">#}
+    {#<h1 class="heading">Trouble Shooting</h1>#}
+    {#<div class="ext-docs-card">#}
+    {#<p><strong>Coming Soon!</strong></p>#}
+    {#</div>#}
+    {#</section>#}
+    <!-- /#trouble -->
+    <a href="#main">back to top</a>
 
-</main>
 
-<script src="/extensions/vendor/cdowdy/betterthumbs/js/prism.js"></script>
-</body>
-</html>
+{% endblock page_main %}
