@@ -158,5 +158,13 @@
                 image: '.lazy'
             });
         });
+
+        $('.image-popup-fit-width').magnificPopup({
+            type: 'image',
+            closeOnContentClick: true,
+            image: {
+                verticalFit: false
+            }
+        });
     </script>
 {% endblock page_script %}
