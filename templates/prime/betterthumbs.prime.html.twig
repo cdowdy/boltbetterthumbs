@@ -16,10 +16,67 @@
         <div class="col-xs-12 col-md-6">
             <h1 class="heading"><a href="{{ path( "betterthumbs_files" ) }}">View Cached Files</a></h1>
         </div>
+        <hr class="col-xs-12" />
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <p>
+                You Are Currently in: <b>{{ currentDir }}</b>
+            </p>
+
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#betterthumbs-primecache-dirs" aria-expanded="false" aria-controls="betterthumbs-primecache-dirs">
+                Show Directories
+            </button>
+        </div>
+
+        <div id="betterthumbs-primecache-dirs" class="col-xs-12 collapse">
+            <table class="dashboardlisting">
+                <thead>
+                <tr>
+                    <th>Directories</th>
+                    <th>Sub Directories</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="{{ path("betterthumbs_prime") }}">
+                            Files
+                        </a>
+                    </td>
+                    <td></td>
+                </tr>
+                    {% for key, value in allDirectories %}
+                <tr>
+                    <td>
+                        <a href="{{ path("betterthumbs_prime") }}/{{ value.directory.path }}">
+                            {{ value.directory.path  }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if value.subdirectory %}
+                            {% for key, value in value.subdirectory %}
+                                <p>
+                                    <a href="{{ path("betterthumbs_prime") }}/{{ value }}">
+                                        {{ value }}
+                                    </a>
+                                </p>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
     </div>
 
 
     <div id="prime-grid" class="row betterthumbs-prime-spacer">
+        {% if allFiles %}
         {% for obj, key in allFiles %}
             <div class="col-md-4">
                 <div class="betterthumbs-card">
@@ -106,7 +163,7 @@
                                         data-presets="presets"
                                         id="preset-{{ key.filename }}-{{ loop.index }}"
                                         aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
-                                        data-bthumb-name="{{ key.filename }}" >Use Presets</button>
+                                        data-bthumb-name="{{ key.imagePath }}" >Use Presets</button>
                             </div>
                         </fieldset>
                         <!-- preset config settings button -->
@@ -136,7 +193,7 @@
                                         class=" prime-cache prime-single btn btn-primary"
                                         aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}"
                                         data-bthumb-type="single"
-                                        data-bthumb-name="{{ key.filename }}" >Create Single Image</button>
+                                        data-bthumb-name="{{ key.imagePath }}" >Create Single Image</button>
                             </div>
                         </fieldset>
                         <!-- Single Image config input and button -->
@@ -146,18 +203,22 @@
             <!-- /.mediium-8 .columns -->
             <hr class="col-xs-12" />
         {% endfor %}
+        {% else %}
+        <h1>No Images In this Directory</h1>
+        {% endif %}
     </div><!-- /#prime-grid -->
 
 {% endblock page_main %}
 
 {% block page_script %}
     {{ parent() }}
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             new IOlazy({
                 image: '.lazy'
             });
-        });
+
 
         $('.image-popup-fit-width').magnificPopup({
             type: 'image',
@@ -165,6 +226,20 @@
             image: {
                 verticalFit: false
             }
+        });
+
+        $( "[data-toggle]" ).on( "click", function () {
+
+            $("#betterthumbs-primecache-dirs").toggleClass('in');
+
+            if ($("#betterthumbs-primecache-dirs").hasClass('in')) {
+                $(this).attr('aria-expanded', 'true');
+                $(this).text('Close Directories');
+            } else {
+                $(this).attr('aria-expanded', 'false');
+                $(this).text('Show Directories');
+            }
+        } );
         });
     </script>
 {% endblock page_script %}

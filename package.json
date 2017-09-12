@@ -4,7 +4,7 @@
   "description": "NPM stuff for bolt betterthumbs docs page",
   "main": "gulpfile.js",
   "devDependencies": {
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-cachebust": "0.0.6",
     "gulp-concat": "^2.6.1",
@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "browser-sync": "^2.18.2",
-    "gulp-autoprefixer": "^3.1.0"
+    "gulp-autoprefixer": "^3.1.0",
+    "sanitize.css": "^4.1.0"
   },
   "scripts": {
     "start": "gulp",

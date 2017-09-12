@@ -71,7 +71,9 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 		$ctr->post( '/files/delete/all', [ $this, 'deleteAll' ] )
 		    ->bind( 'betterthumbs_delete_all' );
 
-		$ctr->get( '/files/prime', [ $this, 'primeCache' ] )
+		$ctr->get( '/files/prime/{directory}', [ $this, 'primeCache' ] )
+            ->assert( "directory", '.+' )
+            ->value( "directory", "index" )
 		    ->bind( 'betterthumbs_prime' );
 
 		$ctr->post( '/files/prime/do', [ $this, 'doPrime' ] )
@@ -212,42 +214,47 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 	 *
 	 * @return mixed
 	 */
-	public function primeCache( Application $app )
+	public function primeCache( Application $app, $directory )
 	{
 		$adapter    = new Local( (new FilePathHelper( $app ) )->boltFilesPath() );
 		$filesystem = new Filesystem( $adapter );
 
-		$fileList = $filesystem->listContents( null, true );
+        if ( $directory == 'index' ) {
+            $fileList = $filesystem->listContents( null, false );
+        } else {
+            $fileList = $filesystem->listContents( $directory, false );
+
+        }
 
 		// load in the config helper and get the driver set in the config
-		$configHelper = new ConfigHelper( $this->config );
-		$imageDriver  = $configHelper->setImageDriver();
+//		$configHelper = new ConfigHelper( $this->config );
+//		$imageDriver  = $configHelper->setImageDriver();
 		// get the accepted mime types array
-		$expectedMimes = $this->checkAccpetedTypes( $imageDriver );
+//		$expectedMimes = $this->checkAccpetedTypes( $imageDriver );
 
 
-		$files = [];
+//		$files = [];
 
 		// only loop over objects in the filespath that are of the type 'file'
 		// don't get any images or files from the cache directory
 		// finally use flysystem, get each objects mimetype and compare it to the accepted ones
 		// found from $expectedMimes
-		foreach ( $fileList as $object ) {
-
-			if ( $object['type'] == 'file'
-			     && ! preg_match_all( '/^.cache\//i', $object['dirname'] )
-			     && in_array( strtolower( $filesystem->getMimetype( $object['path'] ) ), $expectedMimes )
-			) {
-
-				$files[] = [
-					'filename'  => $object['basename'],
-					'located'   => $object['dirname'],
-					'imagePath' => $object['path'],
-					'mimeType'  => $filesystem->getMimetype( $object['path'] ),
-//                    'isCached' => $app['betterthumbs']->cache
-				];
-			}
-		}
+//		foreach ( $fileList as $object ) {
+//
+//			if ( $object['type'] == 'file'
+//			     && ! preg_match_all( '/^.cache\//i', $object['dirname'] )
+//			     && in_array( strtolower( $filesystem->getMimetype( $object['path'] ) ), $expectedMimes )
+//			) {
+//
+//				$files[] = [
+//					'filename'  => $object['basename'],
+//					'located'   => $object['dirname'],
+//					'imagePath' => $object['path'],
+//					'mimeType'  => $filesystem->getMimetype( $object['path'] ),
+////                    'isCached' => $app['betterthumbs']->cache
+//				];
+//			}
+//		}
 
 
 		$config         = $this->config;
@@ -267,17 +274,62 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 			}
 		}
 
+        $paths = $filesystem->listContents( null );
+        $dirs = $this->getAllDirectories($app, $paths );
+
+        if ( $directory == 'index') {
+            $directory = 'files';
+        }
 
 		$context = [
 
-			'allFiles'  => $files,
+//			'allFiles'  => $files,
+            'allFiles' => $this->listFilesToPrime($app, $fileList),
 			'extConfig' => $selectOptions,
 			'presets'   => $presetSettings,
+            'allDirectories' => $dirs,
+            'currentDir' => $directory,
             'bthumbsRoute' => $this->buildProperExtensionPath($app)
 		];
 
 		return $app['twig']->render( '@betterthumbs/prime/betterthumbs.prime.html.twig', $context );
 	}
+
+	protected function listFilesToPrime( Application $app, $fileList )
+    {
+        $adapter    = new Local( (new FilePathHelper( $app ) )->boltFilesPath() );
+        $filesystem = new Filesystem( $adapter );
+// load in the config helper and get the driver set in the config
+        $configHelper = new ConfigHelper( $this->config );
+        $imageDriver  = $configHelper->setImageDriver();
+        // get the accepted mime types array
+        $expectedMimes = $this->checkAccpetedTypes( $imageDriver );
+
+        $files = [];
+
+        // only loop over objects in the filespath that are of the type 'file'
+        // don't get any images or files from the cache directory
+        // finally use flysystem, get each objects mimetype and compare it to the accepted ones
+        // found from $expectedMimes
+        foreach ( $fileList as $object ) {
+
+            if ( $object['type'] == 'file'
+                && ! preg_match_all( '/^.cache\//i', $object['dirname'] )
+                && in_array( strtolower( $filesystem->getMimetype( $object['path'] ) ), $expectedMimes )
+            ) {
+
+                $files[] = [
+                    'filename'  => $object['basename'],
+                    'located'   => $object['dirname'],
+                    'imagePath' => $object['path'],
+                    'mimeType'  => $filesystem->getMimetype( $object['path'] ),
+//                    'isCached' => $app['betterthumbs']->cache
+                ];
+            }
+        }
+
+        return $files;
+    }
 
 	/**
 	 * @param Application $app
@@ -383,5 +435,78 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
         }
 
         return $dashboardRoute . '/' . $extensionsRoute ;
+    }
+
+    /**
+     * @param $app
+     * @param $fileList
+     * @return array
+     */
+    protected function getAllDirectories( $app, $fileList )
+    {
+        $filesystem = $this->fsSetup( $app );
+
+        $files = [];
+
+        foreach ( $fileList as $object ) {
+            if ( $object['type'] == 'dir'
+                && ! preg_match_all( '/.cache/i', $object['dirname'] )
+                && ! preg_match_all( '/.cache/i', $object['basename'] )
+            ) {
+
+                $listPaths = $filesystem->listContents( $object['path'], true );
+
+                $files[] = [
+                    'directory'    => $object,
+                    'subdirectory' => $this->listFileSystemPaths( $listPaths )
+                ];
+            }
+
+        }
+
+        return $files;
+
+    }
+
+    protected function listFileSystemPaths( $paths )
+    {
+        $pathsList = [];
+
+        foreach ( $paths as $object ) {
+            if ( $object['type'] == 'dir'
+                && ! preg_match_all( '/.cache/i', $object['dirname'] )
+                && ! preg_match_all( '/.cache/i', $object['basename'] )
+            ) {
+                $pathsList[] = $object['path'];
+            }
+        }
+
+        return $pathsList;
+
+    }
+
+    /**
+     * @param Application $app
+     * @return Filesystem
+     */
+    private function fsSetup( Application $app )
+    {
+        // for bolt's new filesystem since $app['resources'] and getPath() are deprecated in 3.3+
+        // and will be removed in 4.0
+
+//        if (Version::compare( '3.3.0', '>=')) {
+//            $boltFilesPath =  $app['path_resolver']->resolve('files');
+//        } else {
+//            $boltFilesPath = $app['resources']->getPath( 'filespath' );
+//
+//        }
+
+//        $boltFilesPath = $this->boltFilesPath($app);
+        $boltFilesPath = (new FilePathHelper( $app ) )->boltFilesPath() ;
+
+        $adapter       = new Local( $boltFilesPath );
+        $filesystem    = new Filesystem( $adapter );
+
+        return $filesystem;
     }
 }
