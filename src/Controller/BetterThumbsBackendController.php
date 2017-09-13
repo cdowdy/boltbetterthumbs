@@ -323,6 +323,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
                     'located'   => $object['dirname'],
                     'imagePath' => $object['path'],
                     'mimeType'  => $filesystem->getMimetype( $object['path'] ),
+                    'imageSize' => getimagesize(  (new FilePathHelper( $app ) )->boltFilesPath() . '/' . $object['path'] )
 //                    'isCached' => $app['betterthumbs']->cache
                 ];
             }
