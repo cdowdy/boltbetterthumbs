@@ -228,11 +228,13 @@
             }
         });
 
+        var cacheDirs = $("#betterthumbs-primecache-dirs");
+
         $( "[data-toggle]" ).on( "click", function () {
 
-            $("#betterthumbs-primecache-dirs").toggleClass('in');
+            cacheDirs.toggleClass('in');
 
-            if ($("#betterthumbs-primecache-dirs").hasClass('in')) {
+            if (cacheDirs.hasClass('in')) {
                 $(this).attr('aria-expanded', 'true');
                 $(this).text('Close Directories');
             } else {
