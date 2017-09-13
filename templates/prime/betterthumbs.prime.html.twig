@@ -108,6 +108,12 @@
                             <li>
                                 <b>Location:</b> {% if key.located %}{{ key.located }}{% else %}Files{% endif %}
                             </li>
+                            <li>
+                                <b>Width:</b> {{ key.imageSize.0 }}px
+                            </li>
+                            <li>
+                                <b>Height:</b> {{ key.imageSize.1 }}px
+                            </li>
                         </ul>
                     </div>
 
