@@ -78,7 +78,7 @@
     <div id="prime-grid" class="row betterthumbs-prime-spacer">
         {% if allFiles %}
         {% for obj, key in allFiles %}
-            <div class="col-md-4">
+            <div class="col-xs-12 col-md-4">
                 <div class="betterthumbs-card">
                     <div class="betterthumbs-card-divider">
                         <p>{{ key.filename }}</p>
@@ -116,7 +116,7 @@
             </div>
             <!-- /.medium-4 columns -->
 
-            <div class="col-md-8 prime-cache-container">
+            <div class="col-xs-12 col-md-8 prime-cache-container">
                 <div class="betterthumbs-card">
                     <div class="betterthumbs-card-divider">
                         <p>Prime Cache Settings For: {{ key.filename }}</p>
@@ -125,7 +125,7 @@
                     <form method="POST" id="{{ key.filename }}-{{ loop.index }}">
                         <!-- extension config settings dropdown -->
                         <fieldset class="row fieldset">
-                            <div class="col-md-8 columns select-container">
+                            <div class="col-xs-12 col-md-8 columns select-container">
                                 <label>Choose a Config
                                     <select class="prime-cache-dropdown form-control"
                                             id="{{ key.filename }}-{{ loop.index }}"
@@ -140,7 +140,7 @@
                                     choose a betterthumbs config to generate your images
                                 </p>
                             </div>
-                            <div class="col-md-4 columns">
+                            <div class="col-xs-12 col-md-4 columns">
                                 <button class="btn btn-primary prime-cache prime-config" type="button"
                                         data-bthumb-name="{{ key.imagePath }}" >
                                     Create Config images
@@ -150,14 +150,14 @@
                         <!-- extension config settings dropdown -->
                         <!-- preset config settings button -->
                         <fieldset class="row fieldset">
-                            <div class="col-md-8 columns">
+                            <div class="col-xs-12 col-md-8 columns">
                                 <p for="preset-{{ key.filename }}-{{ loop.index }}" class=" middle">Preset
                                     Settings</p>
                                 <p id="helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
                                     use the betterthumbs presets to generate images
                                 </p>
                             </div>
-                            <div class="col-md-4 columns">
+                            <div class="col-xs-12 col-md-4 columns">
                                 <button type="button"
                                         class="btn btn-primary prime-cache prime-presets"
                                         data-presets="presets"
