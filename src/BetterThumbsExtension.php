@@ -167,30 +167,31 @@ class BetterThumbsExtension extends SimpleExtension {
 
         $pictureFillJS = '/extensions/' . $vendor . $extName . 'picturefill/' . $this->_currentPictureFill . '/picturefill.min.js';
 
-        $asset = JavaScript::create()
-            ->setFileName($pictureFillJS)
+        $asset = new JavaScript();
+        $asset->setFileName($pictureFillJS)
             ->setPriority(5)
             ->setAttributes(['defer', 'async'])
             ->setZone(Zone::FRONTEND);
 
 
-        $betterthumbsJS = JavaScript::create()
-            ->setFileName('js/betterthumbs.js')
+        $betterthumbsJS = new JavaScript();
+        $betterthumbsJS->setFileName('js/betterthumbs.js')
             ->setPriority(99)
             ->setZone(Zone::BACKEND);
 
-        $ioObserverPoly = JavaScript::create()
-            ->setFileName('js/intersection-observer.51a7683a.js')
+        $ioObserverPoly = new JavaScript();
+        $ioObserverPoly->setFileName('js/intersection-observer.51a7683a.js')
             ->setPriority(99)
             ->setZone(Zone::BACKEND);
 
-        $ioLazy = JavaScript::create()
-            ->setFilename('js/iolazy.min.7665ef3e.js')
+        $ioLazy = new JavaScript();
+        $ioLazy->setFilename('js/iolazy.min.7665ef3e.js')
             ->setAttributes(['defer'])
             ->setPriority(99)
             ->setZone(Zone::BACKEND);
 
-        $betterthumbsCSS = Stylesheet::create('css/betterthumbs.css')
+        $betterthumbsCSS = new Stylesheet();
+        $betterthumbsCSS->setFileName('css/betterthumbs.css')
             ->setPriority(10)
             ->setZone(Zone::BACKEND);
 
