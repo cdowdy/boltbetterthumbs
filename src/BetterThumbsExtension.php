@@ -905,7 +905,7 @@ class BetterThumbsExtension extends SimpleExtension {
 	{
 		$config = $this->getConfig();
 
-		if ( Version::compare('3.3.0', '>=')) {
+		if ( version_compare( Version::VERSION , '3.3.0', '>=' ) ) {
             return [
                 '/extensions/betterthumbs' => new BetterThumbsBackendController( $config ),
             ];

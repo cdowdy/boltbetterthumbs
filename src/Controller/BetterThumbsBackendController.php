@@ -429,7 +429,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
         $urlGenerator = $app['url_generator'];
         $dashboardRoute = $urlGenerator->generate( 'dashboard' );
 
-        if (Version::compare('3.3.0', '>=')) {
+        if ( version_compare( Version::VERSION , '3.3.0', '>=' ) ) {
             $extensionsRoute = 'extensions';
         } else {
             $extensionsRoute = 'extend';
@@ -492,17 +492,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
      */
     private function fsSetup( Application $app )
     {
-        // for bolt's new filesystem since $app['resources'] and getPath() are deprecated in 3.3+
-        // and will be removed in 4.0
 
-//        if (Version::compare( '3.3.0', '>=')) {
-//            $boltFilesPath =  $app['path_resolver']->resolve('files');
-//        } else {
-//            $boltFilesPath = $app['resources']->getPath( 'filespath' );
-//
-//        }
-
-//        $boltFilesPath = $this->boltFilesPath($app);
         $boltFilesPath = (new FilePathHelper( $app ) )->boltFilesPath() ;
 
         $adapter       = new Local( $boltFilesPath );
