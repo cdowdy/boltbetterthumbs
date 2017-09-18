@@ -124,6 +124,11 @@ class BetterThumbsExtension extends SimpleExtension {
 
 		$thumb = $this->buildSrcset( $file, $config, $configName, $widthDensity, $resolutions, $finalMods );
 
+//		$cachedFile = [];
+//
+//        foreach ( $finalMods as $mod ) {
+//            $cachedFile[] = $this->cacheTest( $file, $mod );
+//        }
 
 		$context = [
 			'srcImg'         => $srcImg,
@@ -138,13 +143,24 @@ class BetterThumbsExtension extends SimpleExtension {
 			'notFoundSize'   => $notFoundSize,
 			'notFoundImg'    => $notFoundImg,
 
+//            'cacheExists' => $this->cacheTest( $file, $srcImgParams)
+//            'cacheExists' => $cachedFile
 		];
 
 		// TODO: put the srcset.thumb.html template back in before commit
-		$renderTemplate = $this->renderTemplate( 'srcset.thumb.html.twig', $context );
+		$renderTemplate = $this->renderTemplate( '@betterthumbs/thumb.html.twig', $context );
 
 		return new \Twig_Markup( $renderTemplate, 'UTF-8' );
 	}
+
+
+//	protected function cacheTest( $image, $parameters ) {
+//        $app = $this->getContainer();
+//
+//
+//	    return $app['betterthumbs']->getCachePath( $image, $parameters ) ;
+//
+//    }
 
 
 
