@@ -62,7 +62,7 @@
                     <div id="cachedImage-{{ loop.index }}" class="betterthumbs-block-grid-item image-container" >
                         <div class=" betterthumbs-card ">
 
-                            <div id="container" class="img-container">
+                            <div id="{{ key }}-{{ loop.index }}-container" class="img-container">
                                 <img id="{{ key }}-{{ loop.index }}"
                                      class="image-to-delete lazy"
                                      data-src="/files/{{ key }}"

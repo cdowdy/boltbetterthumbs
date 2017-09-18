@@ -134,8 +134,8 @@
                             <div class="col-xs-12 col-md-8 columns select-container">
                                 <label>Choose a Config
                                     <select class="prime-cache-dropdown form-control"
-                                            id="{{ key.filename }}-{{ loop.index }}"
-                                            name="{{ key.filename }}-{{ loop.index }} "
+                                            id="prime-cache-dropdown-{{ key.filename }}-{{ loop.index }}"
+                                            name="prime-cache-dropdown-{{ key.filename }}-{{ loop.index }} "
                                             aria-describedby="helptext-{{ key.filename }}-{{ loop.index }}">
                                         {% for value in extConfig %}
                                             <option value="{{ value }}">{{ value }}</option>
@@ -178,10 +178,10 @@
                             <div class="col-xs-12">
                                 <label>
                                     Single Image
-                                    <input list="prime-single-list"
-                                           class="prime-cache-single-input form-control awesomplete"
+                                    <input list="prime-single-list-{{ loop.index }}"
+                                           class="prime-cache-single-input form-control"
                                            placeholder="Single Image Config Name">
-                                    <datalist id="prime-single-list">
+                                    <datalist id="prime-single-list-{{ loop.index }}">
                                         {% for value in extConfig %}
                                             <option value="{{ value }}">{{ value }}</option>
                                         {% endfor %}
