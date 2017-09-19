@@ -226,40 +226,11 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 
         }
 
-		// load in the config helper and get the driver set in the config
-//		$configHelper = new ConfigHelper( $this->config );
-//		$imageDriver  = $configHelper->setImageDriver();
-		// get the accepted mime types array
-//		$expectedMimes = $this->checkAccpetedTypes( $imageDriver );
 
-
-//		$files = [];
-
-		// only loop over objects in the filespath that are of the type 'file'
-		// don't get any images or files from the cache directory
-		// finally use flysystem, get each objects mimetype and compare it to the accepted ones
-		// found from $expectedMimes
-//		foreach ( $fileList as $object ) {
-//
-//			if ( $object['type'] == 'file'
-//			     && ! preg_match_all( '/^.cache\//i', $object['dirname'] )
-//			     && in_array( strtolower( $filesystem->getMimetype( $object['path'] ) ), $expectedMimes )
-//			) {
-//
-//				$files[] = [
-//					'filename'  => $object['basename'],
-//					'located'   => $object['dirname'],
-//					'imagePath' => $object['path'],
-//					'mimeType'  => $filesystem->getMimetype( $object['path'] ),
-////                    'isCached' => $app['betterthumbs']->cache
-//				];
-//			}
-//		}
-
-
-		$config         = $this->config;
-		$selectOptions  = [];
-		$presetSettings = [];
+        $config         = $this->config;
+        $selectOptions  = [];
+        $presetSettings = [];
+        $singleConfig   = [];
 
 		// for each config array check to make sure a key of modifications exists.
 		// also get the presets in the presets array that don't have a modifications key
@@ -272,10 +243,16 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 			if ( is_array( $values ) && $key == strtolower( 'presets' ) ) {
 				$presetSettings[] = $key;
 			}
+
+
+            if ( is_array( $values ) && !in_array( $key, [ 'Filesystem', 'defaults', 'presets', 'security' ] ) && !array_key_exists( 'modifications', $values ) ) {
+                $singleConfig[] = $key;
+            }
+
 		}
 
-        $paths = $filesystem->listContents( null );
-        $dirs = $this->getAllDirectories($app, $paths );
+        $paths = $filesystem->listContents(null);
+        $dirs  = $this->getAllDirectories($app, $paths);
 
         if ( $directory == 'index') {
             $directory = 'files';
@@ -286,6 +263,7 @@ class BetterThumbsBackendController implements ControllerProviderInterface {
 //			'allFiles'  => $files,
             'allFiles' => $this->listFilesToPrime($app, $fileList),
 			'extConfig' => $selectOptions,
+            'singleConfig' => $singleConfig,
 			'presets'   => $presetSettings,
             'allDirectories' => $dirs,
             'currentDir' => $directory,
