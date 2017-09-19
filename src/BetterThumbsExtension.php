@@ -192,6 +192,7 @@ class BetterThumbsExtension extends SimpleExtension {
 
         $betterthumbsJS = new JavaScript();
         $betterthumbsJS->setFileName('js/betterthumbs.js')
+            ->setAttributes(['defer'])
             ->setPriority(99)
             ->setZone(Zone::BACKEND);
 
