@@ -1,0 +1,59 @@
+
+{% macro directoryList( Directory ) %}
+    {# the main location to bolt's files directory. This is user configurable so we just give the path
+       then insert the word 'Files' since it could be anything
+    #}
+    <tr>
+        <td>
+            <a href="{{ path("betterthumbs_prime") }}">
+                Files
+            </a>
+        </td>
+        <td></td>
+    </tr>
+    {# the directory 'loop' each dir gets a Table row with it's associated data.
+    #}
+    {% for key, value in Directory %}
+        <tr>
+            <td>
+                <a href="{{ path("betterthumbs_prime") }}/{{ value.directory.path }}">
+                    {{ value.directory.path  }}
+                </a>
+            </td>
+            <td>
+                {% if value.subdirectory %}
+                    {% for key, value in value.subdirectory %}
+                        <p>
+                            <a href="{{ path("betterthumbs_prime") }}/{{ value }}">
+                                {{ value }}
+                            </a>
+                        </p>
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+{% endmacro directoryList %}
+
+
+
+{#{% for key, value in allDirectories %}#}
+    {#<tr>#}
+        {#<td>#}
+            {#<a href="{{ path("betterthumbs_prime") }}/{{ value.directory.path }}">#}
+                {#{{ value.directory.path  }}#}
+            {#</a>#}
+        {#</td>#}
+        {#<td>#}
+            {#{% if value.subdirectory %}#}
+                {#{% for key, value in value.subdirectory %}#}
+                    {#<p>#}
+                        {#<a href="{{ path("betterthumbs_prime") }}/{{ value }}">#}
+                            {#{{ value }}#}
+                        {#</a>#}
+                    {#</p>#}
+                {#{% endfor %}#}
+            {#{% endif %}#}
+        {#</td>#}
+    {#</tr>#}
+{#{% endfor %}#}

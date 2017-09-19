@@ -1,0 +1,98 @@
+{% macro primeCacheDropdown( key, extConfig ) %}
+<!-- extension config settings dropdown -->
+<fieldset class="row fieldset">
+  <div class="col-xs-12 col-md-8 columns select-container">
+    <label>Choose a Config
+      <select class="prime-cache-dropdown form-control"
+                id="prime-cache-dropdown-{{ key.filename }}"
+                name="prime-cache-dropdown-{{ key.filename }} "
+                aria-describedby="helptext-{{ key.filename }}">
+      {% for value in extConfig %}
+      <option value="{{ value }}">{{ value }}</option>
+      {% endfor %}
+      </select>
+    </label>
+    <p id="helptext-{{ key.filename }}" class="help-block">
+     choose a betterthumbs config to generate your images
+    </p>
+  </div>
+  <div class="col-xs-12 col-md-4 columns">
+    <button class="btn btn-primary prime-cache prime-config" type="button"
+          data-bthumb-name="{{ key.imagePath }}" >
+      Create Config images
+    </button>
+  </div>
+</fieldset><!-- extension config settings dropdown -->
+{% endmacro primeCacheDropdown %}
+
+{% macro primePresets( key ) %}
+    <!-- preset config settings button -->
+    <fieldset class="row fieldset">
+        <div class="col-xs-12 col-md-8 columns">
+            <p for="preset-{{ key.filename }}" class=" middle">Preset
+                Settings</p>
+            <p id="helptext-preset-{{ key.filename }}" class="help-text">
+                use the betterthumbs presets to generate images
+            </p>
+        </div>
+        <div class="col-xs-12 col-md-4 columns">
+            <button type="button"
+                    class="btn btn-primary prime-cache prime-presets"
+                    data-presets="presets"
+                    id="preset-{{ key.filename }}"
+                    aria-describedby="helptext-preset-{{ key.filename }}"
+                    data-bthumb-name="{{ key.imagePath }}" >Use Presets</button>
+        </div>
+    </fieldset><!-- preset config settings button -->
+{% endmacro primePresets %}
+
+{% macro primeSingle( key, singleConfig ) %}
+    <!-- Single Image config input and button -->
+    <fieldset class="row fieldset">
+        <div class="col-xs-12">
+            <label>
+                Single Image
+                <input list="prime-single-list"
+                       class="prime-cache-single-input form-control"
+                       placeholder="Single Image Config Name">
+                <datalist id="prime-single-list">
+                    {% for value in singleConfig %}
+                        <option value="{{ value }}">{{ value }}</option>
+                    {% endfor %}
+                </datalist>
+            </label>
+            <p class="prime-single-error" hidden>
+                <strong>Enter A Config Name Before Submitting</strong>
+            </p>
+            <p id="helptext-single-{{ key.filename }}" class="help-block">
+                Enter the single config name you wish to use
+            </p>
+        </div>
+        <div class="col-xs-12 columns">
+            <button type="button"
+                    class=" prime-cache prime-single btn btn-primary"
+                    aria-describedby="helptext-single-{{ key.filename }}"
+                    data-bthumb-type="single"
+                    data-bthumb-name="{{ key.imagePath }}" >Create Single Image</button>
+        </div>
+    </fieldset>
+    <!-- Single Image config input and button -->
+{% endmacro primeSingle %}
+
+
+{% macro buildPrimeForm( key, extConfig, singleConfig ) %}
+    {% import _self as build %}
+<div class="col-xs-12 col-md-8 prime-cache-container">
+    <div class="betterthumbs-card">
+        <div class="betterthumbs-card-divider">
+            <p>Prime Cache Settings For: {{ key.filename }}</p>
+        </div>
+
+        <form method="POST" id="{{ key.filename }}">
+            {{ build.primeCacheDropdown( key, extConfig ) }}
+            {{ build.primePresets( key ) }}
+            {{ build.primeSingle( key, singleConfig ) }}
+        </form>
+    </div>
+</div>
+{% endmacro buildPrimeForm %}

@@ -1,0 +1,55 @@
+{# The actual image in a lightbox #}
+{% macro image( key ) %}
+    <div class="img-container">
+        {% if key.mimeType != 'image/tiff' %}
+            <a href="/thumbs/1000x0r/{{ key.imagePath }}"
+               class="image-popup-fit-width"
+               title="Preview: {{ key.filename }}">
+                <img data-src="/files/{{ key.imagePath }}"
+                     alt="{{ key.filename }}"
+                     id="{{ key.filename }}"
+                     class="prime-cache-img lazy">
+            </a>
+        {% else %}
+            <p style="color: #fff">Tif Images Cannot Be Displayed In a Browser</p>
+        {% endif %}
+    </div><!-- /.img-container -->
+{% endmacro image %}
+
+
+{# The images from image() data #}
+{% macro imageData( key ) %}
+    <div class="betterthumbs-card-section">
+        <ul class="betterthumbs-card-list">
+            <li>
+                <b>Name:</b> {{ key.filename }}
+            </li>
+            <li>
+                <b>Location:</b> {% if key.located %}{{ key.located }}{% else %}Files{% endif %}
+            </li>
+            <li>
+                <b>Width:</b> {{ key.imageSize.0 }}px
+            </li>
+            <li>
+                <b>Height:</b> {{ key.imageSize.1 }}px
+            </li>
+        </ul>
+    </div>
+{% endmacro imageData %}
+
+
+{% macro buildPrimeImage( allFiles, extConfig , singleConfig) %}
+   {% import _self as build %} {% import '@betterthumbs/macros/backend/betterthumbs.prime.form.html.twig' as form %}
+    {% for obj, key in allFiles %}
+        <div class="col-xs-12 col-md-4">
+            <div class="betterthumbs-card">
+                <div class="betterthumbs-card-divider">
+                    <p>{{ key.filename }}</p>
+                </div><!-- /.betterthumbs-card-divider -->
+                {{ build.image( key ) }}
+                {{ build.imageData( key ) }}
+            </div><!-- /.betterthumbs-card -->
+        </div><!-- /.medium-4 columns -->
+        {{ form.buildPrimeForm( key, extConfig, singleConfig ) }}
+    {% endfor %}
+{% endmacro buildPrimeImage %}

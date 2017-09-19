@@ -39,35 +39,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ path("betterthumbs_prime") }}">
-                            Files
-                        </a>
-                    </td>
-                    <td></td>
-                </tr>
-                    {% for key, value in allDirectories %}
-                <tr>
-                    <td>
-                        <a href="{{ path("betterthumbs_prime") }}/{{ value.directory.path }}">
-                            {{ value.directory.path  }}
-                        </a>
-                    </td>
-                    <td>
-                        {% if value.subdirectory %}
-                            {% for key, value in value.subdirectory %}
-                                <p>
-                                    <a href="{{ path("betterthumbs_prime") }}/{{ value }}">
-                                        {{ value }}
-                                    </a>
-                                </p>
-                            {% endfor %}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-
+                {% import '@betterthumbs/macros/backend/betterthumbs.directories.html.twig' as Dirlist %}
+                {{ Dirlist.directoryList( allDirectories ) }}
                 </tbody>
 
             </table>
@@ -77,138 +50,8 @@
 
     <div id="prime-grid" class="row betterthumbs-prime-spacer">
         {% if allFiles %}
-        {% for obj, key in allFiles %}
-            <div class="col-xs-12 col-md-4">
-                <div class="betterthumbs-card">
-                    <div class="betterthumbs-card-divider">
-                        <p>{{ key.filename }}</p>
-                    </div>
-                    <!-- /.betterthumbs-card-divider -->
-                    <div class="img-container">
-                        {% if key.mimeType != 'image/tiff' %}
-                            <a href="/thumbs/1000x0r/{{ key.imagePath }}"
-                               class="image-popup-fit-width"
-                               title="Preview: {{ key.filename }}">
-                                <img data-src="/files/{{ key.imagePath }}"
-                                     alt="{{ key.filename }}"
-                                     id="{{ key.filename }}"
-                                     class="prime-cache-img lazy">
-                            </a>
-                        {% else %}
-                            <p style="color: #fff">Tif Images Cannot Be Displayed In a Browser</p>
-                        {% endif %}
-                    </div>
-
-                    <!-- /.img-container -->
-                    <div class="betterthumbs-card-section">
-                        <ul class="betterthumbs-card-list">
-                            <li>
-                                <b>Name:</b> {{ key.filename }}
-                            </li>
-                            <li>
-                                <b>Location:</b> {% if key.located %}{{ key.located }}{% else %}Files{% endif %}
-                            </li>
-                            <li>
-                                <b>Width:</b> {{ key.imageSize.0 }}px
-                            </li>
-                            <li>
-                                <b>Height:</b> {{ key.imageSize.1 }}px
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-                <!-- /.betterthumbs-card -->
-            </div>
-            <!-- /.medium-4 columns -->
-
-            <div class="col-xs-12 col-md-8 prime-cache-container">
-                <div class="betterthumbs-card">
-                    <div class="betterthumbs-card-divider">
-                        <p>Prime Cache Settings For: {{ key.filename }}</p>
-                    </div>
-
-                    <form method="POST" id="{{ key.filename }}-{{ loop.index }}">
-                        <!-- extension config settings dropdown -->
-                        <fieldset class="row fieldset">
-                            <div class="col-xs-12 col-md-8 columns select-container">
-                                <label>Choose a Config
-                                    <select class="prime-cache-dropdown form-control"
-                                            id="prime-cache-dropdown-{{ key.filename }}-{{ loop.index }}"
-                                            name="prime-cache-dropdown-{{ key.filename }}-{{ loop.index }} "
-                                            aria-describedby="helptext-{{ key.filename }}-{{ loop.index }}">
-                                        {% for value in extConfig %}
-                                            <option value="{{ value }}">{{ value }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-                                <p id="helptext-{{ key.filename }}-{{ loop.index }}" class="help-block">
-                                    choose a betterthumbs config to generate your images
-                                </p>
-                            </div>
-                            <div class="col-xs-12 col-md-4 columns">
-                                <button class="btn btn-primary prime-cache prime-config" type="button"
-                                        data-bthumb-name="{{ key.imagePath }}" >
-                                    Create Config images
-                                </button>
-                            </div>
-                        </fieldset>
-                        <!-- extension config settings dropdown -->
-                        <!-- preset config settings button -->
-                        <fieldset class="row fieldset">
-                            <div class="col-xs-12 col-md-8 columns">
-                                <p for="preset-{{ key.filename }}-{{ loop.index }}" class=" middle">Preset
-                                    Settings</p>
-                                <p id="helptext-preset-{{ key.filename }}-{{ loop.index }}" class="help-text">
-                                    use the betterthumbs presets to generate images
-                                </p>
-                            </div>
-                            <div class="col-xs-12 col-md-4 columns">
-                                <button type="button"
-                                        class="btn btn-primary prime-cache prime-presets"
-                                        data-presets="presets"
-                                        id="preset-{{ key.filename }}-{{ loop.index }}"
-                                        aria-describedby="helptext-preset-{{ key.filename }}-{{ loop.index }}"
-                                        data-bthumb-name="{{ key.imagePath }}" >Use Presets</button>
-                            </div>
-                        </fieldset>
-                        <!-- preset config settings button -->
-                        <!-- Single Image config input and button -->
-                        <fieldset class="row fieldset">
-                            <div class="col-xs-12">
-                                <label>
-                                    Single Image
-                                    <input list="prime-single-list-{{ loop.index }}"
-                                           class="prime-cache-single-input form-control"
-                                           placeholder="Single Image Config Name">
-                                    <datalist id="prime-single-list-{{ loop.index }}">
-                                        {% for value in extConfig %}
-                                            <option value="{{ value }}">{{ value }}</option>
-                                        {% endfor %}
-                                    </datalist>
-                                </label>
-                                <p class="prime-single-error" hidden>
-                                    <strong>Enter A Config Name Before Submitting</strong>
-                                </p>
-                                <p id="helptext-single-{{ key.filename }}-{{ loop.index }}" class="help-block">
-                                    Enter the single config name you wish to use
-                                </p>
-                            </div>
-                            <div class="col-xs-12 columns">
-                                <button type="button"
-                                        class=" prime-cache prime-single btn btn-primary"
-                                        aria-describedby="helptext-single-{{ key.filename }}-{{ loop.index }}"
-                                        data-bthumb-type="single"
-                                        data-bthumb-name="{{ key.imagePath }}" >Create Single Image</button>
-                            </div>
-                        </fieldset>
-                        <!-- Single Image config input and button -->
-                    </form>
-                </div>
-            </div>
-            <!-- /.mediium-8 .columns -->
-            <hr class="col-xs-12" />
-        {% endfor %}
+        {% import '@betterthumbs/macros/backend/betterthumbs.prime.images.html.twig' as primeFiles %}
+            {{ primeFiles.buildPrimeImage( allFiles, extConfig, singleConfig ) }}
         {% else %}
         <h1>No Images In this Directory</h1>
         {% endif %}
