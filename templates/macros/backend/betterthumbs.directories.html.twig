@@ -16,7 +16,7 @@
     {% for key, value in Directory %}
         <tr>
             <td>
-                <a href="{{ path("betterthumbs_prime") }}/{{ value.directory.path }}">
+                <a href="{{ path("betterthumbs_prime", { 'directory': value.directory.path } ) }}">
                     {{ value.directory.path  }}
                 </a>
             </td>
@@ -24,7 +24,7 @@
                 {% if value.subdirectory %}
                     {% for key, value in value.subdirectory %}
                         <p>
-                            <a href="{{ path("betterthumbs_prime") }}/{{ value }}">
+                            <a href="{{ path("betterthumbs_prime", { 'directory': value } ) }}">
                                 {{ value }}
                             </a>
                         </p>
