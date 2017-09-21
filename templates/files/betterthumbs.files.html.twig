@@ -19,14 +19,14 @@
 {% block page_title __("BetterThumbs Files") %}
 
 {% block page_main %}
-<div id="boltPath" data-bolt-path="{{ bthumbsRoute }}"  class="row">
+<div class="row">
     {% if cachedImage %}
         <div class="col-xs-12 col-md-6">
             <h1 class="heading">Delete All Images</h1>
             <p>
                 This will remove all images from the BetterThumbs Cache
             </p>
-            <button type="button" data-all="{{ allFiles }}"
+            <button type="button" data-all="{{ allFiles }}" data-betterthumbs-path="{{ path('betterthumbs_delete_all') }}"
                     class="btn btn-primary delete-all">Delete All Images
             </button>
         </div>
@@ -75,6 +75,7 @@
                                     </li>
                                 </ul>
                                 <button class="btn btn-primary deletebutton"
+                                        data-betterthumbs-path="{{ path('betterthumbs_delete') }}"
                                         type="button"
                                         id="{{ value.path }}">
                                     Delete Image
