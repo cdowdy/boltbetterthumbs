@@ -148,7 +148,7 @@ class BetterThumbsExtension extends SimpleExtension {
 		];
 
 		// TODO: put the srcset.thumb.html template back in before commit
-		$renderTemplate = $this->renderTemplate( '@betterthumbs/thumb.html.twig', $context );
+		$renderTemplate = $this->renderTemplate( '@betterthumbs/srcset.thumb.html.twig', $context );
 
 		return new \Twig_Markup( $renderTemplate, 'UTF-8' );
 	}
@@ -193,23 +193,23 @@ class BetterThumbsExtension extends SimpleExtension {
         $betterthumbsJS = new JavaScript();
         $betterthumbsJS->setFileName('js/betterthumbs.js')
             ->setAttributes(['defer'])
-            ->setPriority(99)
+            ->setPriority(5)
             ->setZone(Zone::BACKEND);
 
         $ioObserverPoly = new JavaScript();
         $ioObserverPoly->setFileName('js/intersection-observer.51a7683a.js')
-            ->setPriority(99)
+            ->setPriority(5)
             ->setZone(Zone::BACKEND);
 
         $ioLazy = new JavaScript();
         $ioLazy->setFilename('js/iolazy.min.7665ef3e.js')
             ->setAttributes(['defer'])
-            ->setPriority(99)
+            ->setPriority(5)
             ->setZone(Zone::BACKEND);
 
         $betterthumbsCSS = new Stylesheet();
         $betterthumbsCSS->setFileName('css/betterthumbs.css')
-            ->setPriority(10)
+            ->setPriority(1)
             ->setZone(Zone::BACKEND);
 
 //        $this->backendAssets();
