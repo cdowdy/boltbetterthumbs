@@ -1,3 +1,5 @@
+# NO LONGER MAINTAINED. NO FIXES OR UPDATES WILL BE DONE FOR THE CURRENT SUPPORTED VERSION BOLT OR ANY FUTURE VERSIONS OF BOLT CMS
+
 # Bolt BetterThumbs Extension  
 
 A bolt extension that uses [Glide](http://glide.thephpleague.com/) for thumbnails. With this extension you get responsive images (using img and srcset) by default and the ability to load a polyfill to support older browsers that don't recognize responsive images. No extra work needed on your end with exception of setting your thumbnail widths.  
